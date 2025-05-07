@@ -3,12 +3,52 @@ import { useDispatch, useSelector } from "react-redux";
 import { Table, Input, Space, DatePicker, Form, Button, message, Spin } from "antd";
 import { fetchAllVegetables, fetchFavoriteVegetables } from "../../redux/actions/vegesAction";
 import { AppDispatch, RootState } from "../../redux/store";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { AddOrder, GetBillNo, GetLrNo } from "../../services/orderAPI";
 import { Vegetable } from "../../redux/slice/vegesSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import 'dayjs/locale/en';
+import 'dayjs/locale/hi';
+import '../../locales/dayJs-gu.ts';
+
+import localeEn from 'antd/es/date-picker/locale/en_US';
+import localeHi from 'antd/es/date-picker/locale/hi_IN';
+// interface Props {
+//   billDate: Dayjs;
+//   handleDateChange: (date: Dayjs | null) => void;
+// }
+
 
 const AllOrders = () => {
+
+  const { t, i18n } = useTranslation();
+  useEffect(() => {
+    dayjs.locale(i18n.language);
+  }, [i18n.language]);
+
+  // Return the right AntD locale
+  const getAntdLocale = () => {
+    switch (i18n.language) {
+      case 'hi':
+        return localeHi;
+      case 'gu':
+        return {
+          ...localeEn,
+          lang: {
+            ...localeEn.lang,
+            locale: 'gu',
+            placeholder: 'તારીખ પસંદ કરો',
+            yearPlaceholder: 'વર્ષ પસંદ કરો',
+            monthPlaceholder: 'મહિનો પસંદ કરો',
+            today: 'આજ',
+          },
+        };
+      default:
+        return localeEn;
+    }
+  };
+
   const dispatch = useDispatch<AppDispatch>();
   const { favorites, loading, all } = useSelector((state: RootState) => state.vegetables);
   const [quantities, setQuantities] = useState<Record<string, string>>({});
@@ -202,9 +242,9 @@ const AllOrders = () => {
       setQuantities({});
       await handleDateChange(billDate);
       await handleGetBillNo();
-      message.success("Order added successfully");
+      message.success(t('allOrders.orderAdded'));
     } catch (error) {
-      message.error("Failed to add order");
+      message.error(t('allOrders.orderAddFailed'));
       console.error("Error while adding order: ", error);
     } finally {
       setAddLoding(false);
@@ -214,22 +254,22 @@ const AllOrders = () => {
 
   const columns = [
     {
-      title: "Sr No.",
+      title: t('allOrders.srNo'),
       key: "serial",
       render: (_: unknown, __: unknown, index: number) => index + 1,
     },
     {
-      title: "Item Name",
+      title: t('allOrders.itemName'),
       dataIndex: "Itm_Name",
       key: "Itm_Name",
     },
     {
-      title: "Group Name",
+      title: t('allOrders.groupName'),
       dataIndex: "IGP_NAME",
       key: "IGP_NAME",
     },
     {
-      title: "Quantity",
+      title: t('allOrders.quantity'),
       key: "quantity",
       render: (_: unknown, record: Vegetable) => (
         <Input
@@ -242,7 +282,7 @@ const AllOrders = () => {
       ),
     },
     {
-      title: "Unit",
+      title: t('allOrders.unit'),
       dataIndex: "Uni_Name",
       key: "Uni_Name",
     },
@@ -283,19 +323,17 @@ const AllOrders = () => {
     try {
       setAddLoding(true);
       await AddOrder(payload);
-      message.success("Order updated successfully");
+      message.success(t('allOrders.orderUpdated'));
       navigate("/");
-    } catch (error) {
-      message.error("Failed to update order");
-      console.error("Error while updating order: ", error);
+    } catch {
+      message.error(t('allOrders.orderUpdateFailed'));
     } finally {
       setAddLoding(false);
     }
   };
 
-  const disablePastDates = (current: dayjs.Dayjs | null): boolean => {
-    // Disable all dates before today
-    return current !== null && current < dayjs().endOf('day');
+  const disablePastDates = (current: Dayjs) => {
+    return current && current < dayjs().startOf('day');
   };
 
   return (
@@ -308,6 +346,7 @@ const AllOrders = () => {
         <>
           <div className="flex flex-wrap gap-2 mb-4">
             <DatePicker
+              locale={getAntdLocale()}
               value={billDate}
               onChange={handleDateChange}
               format="dddd, DD-MM-YYYY"
@@ -315,18 +354,18 @@ const AllOrders = () => {
               disabledDate={disablePastDates}
             />
 
-            <Form.Item label="Order No." colon={false} style={{ marginBottom: 0 }}>
+            <Form.Item label={t('allOrders.orderNo')} colon={false} style={{ marginBottom: 0 }}>
               <Input
-                placeholder="Order Number"
+                placeholder={(t('allOrders.orderNo'))}
                 value={billNo || ""}
                 size="small"
                 disabled
               />
             </Form.Item>
 
-            <Form.Item label="Order Count" colon={false} style={{ marginBottom: 0 }}>
+            <Form.Item label={t('allOrders.orderCount')} colon={false} style={{ marginBottom: 0 }}>
               <Input
-                placeholder="Order Count"
+                placeholder={(t('allOrders.orderCount'))}
                 value={lrNo || ""}
                 size="small"
                 disabled
@@ -336,17 +375,17 @@ const AllOrders = () => {
 
           <div className="flex flex-wrap gap-3 justify-start mt-4 mb-4">
             <Button type="primary" onClick={orderData ? handleUpdateOrder : handleAddOrder}>
-              {orderData ? "Update Order" : "Add Order"}
+              {orderData ? t('allOrders.updateOrder') : t('allOrders.addOrder')}
             </Button>
             {orderData && (
               <Button type="default" onClick={() => navigate("/")}>
-                Cancel
+                {t('allOrders.cancel')}
               </Button>
             )}
           </div>
           <Space direction="vertical" style={{ width: "100%" }}>
             <Input.Search
-              placeholder="Search by vegetable name"
+              placeholder={t('allOrders.searchPlaceholder')}
               allowClear
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}

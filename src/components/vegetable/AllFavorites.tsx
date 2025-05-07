@@ -48,7 +48,7 @@ const FavoriteVeges = () => {
             key: "Itm_Name",
         },
         {
-            title: "Group Name",
+            title: t('favorite.groupName'),
             dataIndex: "IGP_NAME",
             key: "IGP_NAME",
         },

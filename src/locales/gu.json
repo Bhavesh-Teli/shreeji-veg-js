@@ -1,5 +1,5 @@
 {
-  "login":{
+  "login": {
     "userName": "યુઝરનામ",
     "enterUsername": "મહેરબાની કરીને યુઝરનામ દાખલ કરો!",
     "usernamePlaceholder": "તમારું યુઝરનામ દાખલ કરો",
@@ -13,7 +13,7 @@
     "loginSuccess": "લોગિન સફળ થયું!",
     "unexpectedError": "અનપેક્ષિત ભૂલ થઈ"
   },
-   "Regester":{
+  "Regester": {
     "userName": "યુઝરનામ",
     "mobileNumber": "મોબાઈલ નંબર",
     "password": "પાસવર્ડ",
@@ -44,7 +44,8 @@
     "name": "નામ",
     "action": "ક્રિયા",
     "removeSuccess": "શાકભાજીને સફળતાપૂર્વક પસંદીદામાંથી હટાવવામાં આવ્યું!",
-    "removeError": "અમાન્ય શાકભાજી આઈડી."
+    "removeError": "અમાન્ય શાકભાજી આઈડી.",
+    "groupName": "ગ્રુપ નામ"
   },
   "vegetable": {
     "title": "બધી શાકભાજી",
@@ -53,11 +54,53 @@
     "srNo": "ક્રમ નંબર",
     "name": "નામ",
     "action": "ક્રિયા",
+    "groupName": "ગ્રુપ નામ",
     "addSuccess": "શાકભાજીને સફળતાપૂર્વક પસંદીદામાં ઉમેરવામાં આવ્યું!",
     "addError": "અમાન્ય શાકભાજી આઈડી.",
-    "unactableError":"અનપેક્ષિત ભૂલ થઈ.",
+    "unactableError": "અનપેક્ષિત ભૂલ થઈ.",
     "removeSuccess": "શાકભાજીને સફળતાપૂર્વક પસંદીદામાંથી હટાવવામાં આવ્યું!",
     "removeError": "પસંદીદામાંથી કાઢતી વખતે ભૂલ"
+  },
+  "allOrders": {
+    "addOrder": "ઓર્ડર ઉમેરો",
+    "updateOrder": "ઓર્ડર અપડેટ કરો",
+    "cancel": "રદ કરો",
+    "searchPlaceholder": "શાકભાજી નામથી શોધો",
+    "srNo": "ક્રમ સંખ્યા",
+    "itemName": "આઇટમ નામ",
+    "groupName": "ગ્રુપ નામ",
+    "quantity": "જથ્થો",
+    "unit": "એકમ",
+    "orderNo": "ઓર્ડર નંબર",
+    "orderCount": "ઓર્ડર ગણતરી",
+    "orderAdded": "ઓર્ડર સફળતાપૂર્વક ઉમેરાયો",
+    "orderUpdated": "ઓર્ડર સફળતાપૂર્વક અપડેટ થયો",
+    "orderAddFailed": "ઓર્ડર ઉમેરવામાં નિષ્ફળ",
+    "orderUpdateFailed": "ઓર્ડર અપડેટ કરવામાં નિષ્ફળ"
+  },
+  "viewOrders": {
+    "account_code": "ખાતાની કોડ",
+    "account_name": "ખાતાનું નામ",
+    "order_number": "ઓર્ડર નંબર",
+    "order_date": "ઓર્ડર તારીખ",
+    "action": "ક્રિયા",
+    "invalidBillNo": "અમાન્ય બિલ નંબર",
+    "select_year": "વર્ષ પસંદ કરો",
+    "select_financial_year": "આર્થિક વર્ષ પસંદ કરો",
+    "select_date": "તારીખ પસંદ કરો",
+    "add_order": "ઓર્ડર ઉમેરો",
+    "item_details": "આઇટમ વિગતો",
+    "sr_no": "ક્રમ નં.",
+    "itemName": "આઇટમ નામ",
+    "groupName": "ગ્રુપ નામ",
+    "quantity": "જથ્થો",
+    "unit": "એકમ",
+    "delete_title": "શું તમે ખરેખર આ ઓર્ડર કાઢી નાખવા માંગો છો?",
+    "order_no": "ઓર્ડર નં",
+    "ok": "હાં",
+    "danger": "ખતરો",
+    "cancel": "રદ કરો",
+    "orderDelete": "ઓર્ડર સફળતાપૂર્વક કાઢી નાખવામાં આવ્યો",
+    "failDelete": "ઓર્ડર કાઢવામાં નિષ્ફળ"
   }
-
-  }
+}

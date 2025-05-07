@@ -7,6 +7,8 @@ const Notifications = () => {
   interface Notification {
     Ac_Id: string;
     Cat: string;
+    Noti_Date_Time: string;
+    Noti: string;
   }
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -43,8 +45,9 @@ const Notifications = () => {
                 bordered={false}
                 hoverable
               >
-                <p><strong>Bill Date:</strong> {notification.Cat}</p>
+                <p><strong>Bill Date:</strong> {notification.Noti}</p>
                 <p><strong>Account Name:</strong> {notification.Cat}</p>
+                <p><strong>Time:</strong>  {notification.Noti_Date_Time.split("T")[1].split(".")[0]}</p>
               </Card>
             </Col>
           ))}

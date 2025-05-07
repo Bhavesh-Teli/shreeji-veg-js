@@ -7,6 +7,7 @@ import { fetchOrders } from "../../redux/actions/ordersAction";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Deleteorder, GetAllYear } from "../../services/orderAPI";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 
 interface OrderRecord {
@@ -14,6 +15,7 @@ interface OrderRecord {
 }
 
 const ViewOrders = () => {
+    const { t } = useTranslation();
     const dispatch = useDispatch<AppDispatch>();
     const { orders, loading } = useSelector((state: RootState) => state.orders) as { orders: any[] | null; loading: boolean };
     const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean } | null };
@@ -33,6 +35,7 @@ const ViewOrders = () => {
                 const data = res?.data || [];
                 setAllYear(data);
 
+                
                 const currentYear = data.find((item: { db_name: string; year1: string; year2: string; year_type: string }) => item.year_type === "C");
                 if (currentYear) {
                     setSelectedYear(currentYear.db_name);
@@ -69,20 +72,20 @@ const ViewOrders = () => {
     const columns = [
         ...(user && user.isAdmin
             ? [{
-                title: "Account Code",
+                title: t('viewOrders.account_code') ,
                 dataIndex: "Ac_Code",
                 key: "Ac_Code",
             }]
             : []),
         ...(user && user.isAdmin
             ? [{
-                title: "Account Name",
+                title: t('viewOrders.account_name'),
                 dataIndex: "Ac_Name",
                 key: "Ac_Name",
             }]
             : []),
         {
-            title: "Order Number",
+            title:t('viewOrders.order_number'),
             dataIndex: "Bill_No",
             key: "Bill_No",
             sorter: (a: any, b: any) => {
@@ -92,7 +95,7 @@ const ViewOrders = () => {
             },
         },
         {
-            title: "Order Date",
+            title:t('viewOrders.order_date'),
             dataIndex: "Bill_Date",
             key: "Bill_Date",
             render: (date: string) => dayjs(date).format("DD-MM-YYYY"),
@@ -100,7 +103,7 @@ const ViewOrders = () => {
         ...(user && !user.isAdmin
             ? [
                 {
-                    title: "Action",
+                    title: t('viewOrders.action'),
                     key: "action",
                     render: (_: unknown, record: OrderRecord) => (
                         <div className="flex items-center gap-3">
@@ -130,27 +133,27 @@ const ViewOrders = () => {
             // Passing data via state
             navigate("/add-orders", { state: { orderData: record } });
         } else {
-            message.error("Invalid Bill Number");
+            message.error(t('viewOrders.invalidBillNo'));
         }
     };
 
 
     const handleDelete = async (record: OrderRecord) => {
         if (!record?.Bill_No) {
-            message.error("Invalid Bill Number");
+            message.error(t('viewOrders.invalidBillNo'));
             return;
         }
 
         Modal.confirm({
-            title: "Are you sure you want to delete this order?",
-            content: `Order No: ${record.Bill_No}`,
-            okText: "Yes",
+            title: t('viewOrders.delete_title'),
+            content: `t('viewOrders.order_no'): ${record.Bill_No}`,
+            okText: t('viewOrders.order_no'),
             okType: "danger",
-            cancelText: "Cancel",
+            cancelText: t('viewOrders.cancel'),
             onOk: async () => {
                 try {
                     await Deleteorder(record.Bill_No);
-                    message.success("Order deleted successfully");
+                    message.success(t('viewOrders.orderDelete'));
                     setSelectedOrderItems([]);
                     if (selectedDates) {
                         dispatch(fetchOrders({
@@ -160,7 +163,7 @@ const ViewOrders = () => {
                         }));
                     }
                 } catch {
-                    message.error("Failed to delete order");
+                    message.error(t('viewOrders.failDelete'));
                 }
             },
         });
@@ -194,9 +197,9 @@ const ViewOrders = () => {
                         user && user.isAdmin && (
                             <Col xs={24} sm={12} md={8} lg={6}>
 
-                                <Form.Item label="Account Name" colon={false}>
+                                <Form.Item label={t('viewOrders.account_name')} colon={false}>
                                     <Input.Search
-                                        placeholder="Account Name"
+                                        placeholder={t('viewOrders.account_name')}
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         size="small"
@@ -207,11 +210,11 @@ const ViewOrders = () => {
                             </Col>
                         )}
                     <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item label="Select Year" colon={false} className={user && user.isAdmin ? "date-select" : "select-year"}>
+                        <Form.Item label={t('viewOrders.select_year')} colon={false} className={user && user.isAdmin ? "date-select" : "select-year"}>
                             <Select
                                 value={selectedYear}
                                 onChange={handleYearChange}
-                                placeholder="Select Financial Year"
+                                placeholder={t('viewOrders.select_financial_year')}
                                 style={{ width: "100%" }}
                             >
                                 {allYear?.map((year) => (
@@ -224,7 +227,7 @@ const ViewOrders = () => {
                     </Col>
 
                     <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item label="Select Date" colon={false} className={user && user.isAdmin ? "date-select" : ""}>
+                        <Form.Item label={t('viewOrders.select_date')} colon={false} className={user && user.isAdmin ? t( 'viewOrders.select_date') : ""}>
                             <RangePicker size="small" style={{ width: '100%' }}
                                 format="DD-MM-YYYY"
                                 value={selectedDates}
@@ -242,7 +245,7 @@ const ViewOrders = () => {
                     {user && !user.isAdmin && (
                         <Col xs={24} sm={12} md={8} lg={6}>
                             <Button className="ml-0 md:ml-3" type="primary" onClick={() => navigate("/add-orders")}>
-                                Add Orders
+                            {t('viewOrders.add_order')} 
                             </Button>
                         </Col>
                     )}
@@ -270,7 +273,7 @@ const ViewOrders = () => {
 
                     {selectedOrderItems.length > 0 && (
                         <>
-                            <h2 style={{ marginTop: "3px", marginBottom: "3px" }}>Item Details</h2>
+                            <h2 style={{ marginTop: "3px", marginBottom: "3px" }}>{t('viewOrders.item_details')} </h2>
                             <Table
                                 dataSource={[...selectedOrderItems].sort((a, b) => a.SrNo - b.SrNo)}
                                 pagination={false}
@@ -279,27 +282,27 @@ const ViewOrders = () => {
                                 size="small"
                                 columns={[
                                     {
-                                        title: "Sr No.",
+                                        title: t('viewOrders.sr_no') ,
                                         dataIndex: "SrNo",
                                         key: "SrNo",
                                     },
                                     {
-                                        title: "Item Name",
+                                        title: t('viewOrders.itemName'),
                                         dataIndex: "Itm_Name",
                                         key: "Itm_Name",
                                     },
                                     {
-                                        title: "Group Name",
+                                        title: t('viewOrders.groupName'),
                                         dataIndex: "IGP_NAME",
                                         key: "IGP_NAME",
                                     },
                                     {
-                                        title: "Quantity",
+                                        title: t('viewOrders.quantity'),
                                         dataIndex: "Qty",
                                         key: "Qty",
                                     },
                                     {
-                                        title: "Unit",
+                                        title: t('viewOrders.unit'),
                                         dataIndex: "Uni_Name",
                                         key: "Uni_Name",
                                     },

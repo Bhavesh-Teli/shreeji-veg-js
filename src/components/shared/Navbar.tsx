@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Layout, Menu, Button, Drawer, Grid, Popover, Avatar, Space, message, theme, Input } from 'antd';
+import { Layout, Menu, Button, Drawer, Grid, Popover, Avatar, Space, message, theme, Input, Badge } from 'antd';
 import { BellOutlined, GlobalOutlined, LogoutOutlined, MenuOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { setUser } from '../../redux/slice/authSlice';
 import Cookies from 'js-cookie';
 import { LogoutApi } from '../../services/authAPI';
 import dayjs from 'dayjs';
+import { GetNotifaction, MarkNotificationAsSeen } from '../../services/notificationAPI';
 
 const { Header } = Layout;
 const { useBreakpoint } = Grid;
@@ -26,11 +27,40 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
   const location = useLocation();
   const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean } | null };
   const [currentDate, setCurrentDate] = useState('');
+  const [hasNewNotification, setHasNewNotification] = useState(false);
+
+  useEffect(() => {
+    const checkNotifications = async () => {
+      try {
+        const response = await GetNotifaction();
+        const unseen: boolean = response.data.some((noti: { IsSeen: boolean }) => !noti.IsSeen);
+        console.log("response", response.data);
+        console.log("unseen", unseen);
+        setHasNewNotification(unseen);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+
+    checkNotifications();
+  }, []);
 
   useEffect(() => {
     const formattedDate = dayjs().format('DD-MM-YYYY'); // Format as DD-MM-YYYY
     setCurrentDate(formattedDate);
   }, []);
+
+  const handleNotificationClick = async () => {
+    try {
+      const res = await MarkNotificationAsSeen();
+      console.log("res2", res);
+      setHasNewNotification(false); // remove badge dot
+      navigate('/notification');
+    } catch (err) {
+      console.error("Failed to mark notifications as seen", err);
+    }
+  };
+  
 
   // Map path to key
   const pathToKey: { [key: string]: string } = {
@@ -104,8 +134,10 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
         {
           key: 'notification', label:
             (
-              <a onClick={() => navigate("/notification")} style={{ border: "none", background: "transparent", marginTop: "0px" }}>
-                <BellOutlined style={{ fontSize: "19px", color: "#fff" }} />
+              <a onClick={handleNotificationClick} style={{ border: "none", background: "transparent", marginTop: "0px" }}>
+                <Badge dot={hasNewNotification} offset={[-2, 2]}>
+                  <BellOutlined style={{ fontSize: "19px", color: "#fff" }} />
+                </Badge>
               </a>
             )
         },
@@ -211,8 +243,10 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
         <>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             {user && user.isAdmin && (
-              <Button onClick={() => navigate("/notification")} style={{ border: "none", background: "transparent" }}>
-                <BellOutlined style={{ fontSize: "22px", color: "#fff" }} />
+              <Button onClick={handleNotificationClick} style={{ border: "none", background: "transparent" }}>
+                <Badge dot={hasNewNotification} offset={[-2, 2]}>
+                  <BellOutlined style={{ fontSize: "22px", color: "#fff" }} />
+                </Badge>
               </Button>
             )}
             <Avatar size="small" style={{ backgroundColor: '#bbf7d0', color: '#000' }}>
@@ -229,7 +263,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
             title={
               <>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, justifyContent: 'end' }}>
-                <span style={{ color: '' }}>{user?.Ac_Name}</span>
+                  <span style={{ color: '' }}>{user?.Ac_Name}</span>
                   <Button onClick={onToggleTheme} style={{ border: "none", background: "transparent" }}>
                     {currentTheme === "light" ? <MoonOutlined style={{ fontSize: "22px" }} /> : <SunOutlined style={{ fontSize: "22px", color: "#fff" }} />}
                   </Button>

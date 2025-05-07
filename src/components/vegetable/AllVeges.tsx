@@ -80,7 +80,7 @@ const AllVeges = () => {
             key: "Itm_Name",
         },
         {
-            title: "Group Name",
+            title: t('vegetable.groupName'),
             dataIndex: "IGP_NAME",
             key: "IGP_NAME",
         },

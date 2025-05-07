@@ -9,7 +9,20 @@ export const GetNotifaction = async () => {
         })
         return res.data
     } catch (error) {
-        console.error('Error While getting the LR No:', error)
+        console.error('Error While getting the Notification:', error)
+        throw error;
+    }
+}
+
+export const MarkNotificationAsSeen = async () => {
+    try {
+        const res = await axios.put(`${API_END_POINT}/updateAllUnseenNotifications`, {}, {
+            headers: getAuthHeaders(),
+        })
+        console.log("res", res)
+        return res.data
+    } catch (error) {
+        console.error('Error While updating the Notification:', error)
         throw error;
     }
 }

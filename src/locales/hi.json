@@ -44,7 +44,8 @@
     "name": "नाम",
     "action": "क्रिया",
     "removeSuccess": "सब्ज़ी को पसंदीदा से सफलतापूर्वक हटाया गया!",
-    "removeError": "अमान्य सब्ज़ी आईडी।"
+    "removeError": "अमान्य सब्ज़ी आईडी।",
+    "groupName": "समूह नाम"
   },
   "vegetable": {
     "title": "सभी सब्जियाँ",
@@ -53,10 +54,53 @@
     "srNo": "क्रम संख्या",
     "name": "नाम",
     "action": "क्रिया",
+    "groupName": "समूह नाम",
     "addSuccess": "सब्जी को सफलतापूर्वक पसंदीदा में जोड़ा गया!",
     "addError": "अमान्य सब्जी आईडी।",
     "unactableError": "कुछ गलत हो गया है।",
     "removeSuccess": "सब्जी को सफलतापूर्वक पसंदीदा से हटाया गया!",
     "removeError": "पसंदीदा से हटाते समय त्रुटि"
+  },
+  "allOrders": {
+    "addOrder": "ऑर्डर जोड़ें",
+    "updateOrder": "ऑर्डर अपडेट करें",
+    "cancel": "रद्द करें",
+    "searchPlaceholder": "सब्जी के नाम से खोजें",
+    "srNo": "क्रम संख्या",
+    "itemName": "आइटम नाम",
+    "groupName": "समूह नाम",
+    "quantity": "मात्रा",
+    "unit": "इकाई",
+    "orderNo": "ऑर्डर नंबर",
+    "orderCount": "ऑर्डर गिनती",
+    "orderAdded": "ऑर्डर सफलतापूर्वक जोड़ा गया",
+    "orderUpdated": "ऑर्डर सफलतापूर्वक अपडेट किया गया",
+    "orderAddFailed": "ऑर्डर जोड़ने में विफल",
+    "orderUpdateFailed": "ऑर्डर अपडेट करने में विफल"
+  },
+  "viewOrders": {
+    "account_code": "खाता कोड",
+    "account_name": "खाता नाम",
+    "order_number": "ऑर्डर नंबर",
+    "order_date": "ऑर्डर तिथि",
+    "action": "क्रिया",
+    "invalidBillNo": "अमान्य बिल नंबर",
+    "select_year": "वर्ष चुनें",
+    "select_financial_year": "वित्तीय वर्ष चुनें",
+    "select_date": "तिथि चुनें",
+    "add_order": "ऑर्डर जोड़ें",
+    "item_details": "आइटम विवरण",
+    "sr_no": "क्रम संख्या",
+    "itemName": "आइटम नाम",
+    "groupName": "समूह नाम",
+    "quantity": "मात्रा",
+    "unit": "इकाई",
+    "delete_title": "क्या आप वाकई इस ऑर्डर को हटाना चाहते हैं?",
+    "order_no": "ऑर्डर नंबर",
+    "ok": "हाँ",
+    "danger": "खतरा",
+    "cancel": "रद्द करें",
+    "orderDelete": "ऑर्डर सफलतापूर्वक हटा दिया गया",
+    "failDelete": "ऑर्डर हटाने में विफल"
   }
 }

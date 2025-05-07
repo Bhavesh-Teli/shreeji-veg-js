@@ -16,11 +16,11 @@ const Layout = () => {
         if (user && user.isAdmin) {
             console.log("hellp")
             socket.on('OrderNotification', (payload) => {
-                console.log("payload", payload);
-                notification.open({
-                    message: 'New Order Notification',
-                    description: payload.noti,
-                });
+                // notification.open({
+                //     message: 'New Order Notification',
+                //     description: payload.noti,
+                // });
+                alert(payload.noti);
             });
 
             return () => {

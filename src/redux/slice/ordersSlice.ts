@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchOrders } from "../actions/ordersAction";
+import { message } from "antd";
 
 const ordersSlice = createSlice({
     name: "order",
@@ -19,8 +20,11 @@ const ordersSlice = createSlice({
             state.loading = false;
             state.orders = action.payload;
         })
-        builder.addCase(fetchOrders.rejected, (state) => {
+        builder.addCase(fetchOrders.rejected, (state, action) => {
+            state.loading = false;
             state.isError = true;
+            const errorMessage = action.error.message || "Something went wrong";
+            message.error(errorMessage);
         })
     }
 

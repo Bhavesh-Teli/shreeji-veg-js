@@ -67,7 +67,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/orderpdf",
-    element: <OrderPDF />
+    element: <OrderPDF orderData={{ /* Add appropriate data here */ }} />
   },
 
 

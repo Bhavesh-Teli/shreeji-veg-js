@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Input, Space, DatePicker, Row, Col, Form, Button, message, Modal, Select } from "antd";
 import { AppDispatch, RootState } from "../../redux/store";
 import dayjs, { Dayjs } from "dayjs";
 import { fetchOrders } from "../../redux/actions/ordersAction";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, DownloadOutlined, EditOutlined } from "@ant-design/icons";
 import { Deleteorder, GetAllYear } from "../../services/orderAPI";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import OrderPDF from "./OrderPDF";
 
 interface OrderRecord {
     Bill_No: string;
@@ -27,6 +29,8 @@ const ViewOrders = () => {
     const [selectedOrderItems, setSelectedOrderItems] = useState<any[]>([]);
     const [allYear, setAllYear] = useState<{ db_name: string; year1: string; year2: string; year_type: string }[] | null>(null);
     const [selectedYear, setSelectedYear] = useState<string | undefined>();
+    const pdfRef = useRef<HTMLDivElement>(null);
+    const selectedOrderRef = useRef<any>(null);
 
     useEffect(() => {
         const fetchAllYear = async () => {
@@ -35,7 +39,6 @@ const ViewOrders = () => {
                 const data = res?.data || [];
                 setAllYear(data);
 
-                
                 const currentYear = data.find((item: { db_name: string; year1: string; year2: string; year_type: string }) => item.year_type === "C");
                 if (currentYear) {
                     setSelectedYear(currentYear.db_name);
@@ -52,7 +55,7 @@ const ViewOrders = () => {
                 console.error("Error fetching year data:", error);
             }
         }
-       
+
         fetchAllYear();
     }, []);
 
@@ -72,7 +75,7 @@ const ViewOrders = () => {
     const columns = [
         ...(user && user.isAdmin
             ? [{
-                title: t('viewOrders.account_code') ,
+                title: t('viewOrders.account_code'),
                 dataIndex: "Ac_Code",
                 key: "Ac_Code",
             }]
@@ -85,7 +88,7 @@ const ViewOrders = () => {
             }]
             : []),
         {
-            title:t('viewOrders.order_number'),
+            title: t('viewOrders.order_number'),
             dataIndex: "Bill_No",
             key: "Bill_No",
             sorter: (a: any, b: any) => {
@@ -95,7 +98,7 @@ const ViewOrders = () => {
             },
         },
         {
-            title:t('viewOrders.order_date'),
+            title: t('viewOrders.order_date'),
             dataIndex: "Bill_Date",
             key: "Bill_Date",
             render: (date: string) => dayjs(date).format("DD-MM-YYYY"),
@@ -112,6 +115,12 @@ const ViewOrders = () => {
                                 onClick={() => handleEdit(record)}
                             >
                                 <EditOutlined style={{ fontSize: "14px" }} />
+                            </Button>
+                            <Button
+                                size="small"
+                                onClick={() => handleDownload(record)}
+                            >
+                                <DownloadOutlined style={{ fontSize: "14px" }} />
                             </Button>
                             <Button
                                 size="small"
@@ -136,6 +145,86 @@ const ViewOrders = () => {
             message.error(t('viewOrders.invalidBillNo'));
         }
     };
+
+    const handleDownload = async (record: any) => {
+        const hide = message.loading('Preparing download...', 0);
+        try {
+            const orderToDownload = orders && orders.find((order: any) => order.Bill_No === record.Bill_No);
+            selectedOrderRef.current = orderToDownload;
+
+            setTimeout(async () => {
+                if (!pdfRef.current) {
+                    hide();
+                    return;
+                }
+
+
+                const canvas = await html2canvas(pdfRef.current, {
+                    scale: 3, // High resolution for better quality
+                    useCORS: true, // Allow loading remote resources like images
+                });
+
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jsPDF("p", "pt", "a4");
+
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+
+                // Calculate the number of pages needed
+                const canvasHeight = canvas.height;
+                let yPosition = 0;
+
+                while (yPosition < canvasHeight) {
+                    // Add image of the current portion of the canvas
+                    pdf.addImage(
+                        imgData,
+                        "PNG",
+                        0,
+                        -yPosition,
+                        pdfWidth,
+                        pdfHeight
+                    );
+
+                    yPosition += pdfHeight; // Move to the next page's height
+
+                    // Add a new page if there is still more content to print
+                    if (yPosition < canvasHeight) {
+                        pdf.addPage();
+                    }
+                }
+
+                pdf.save(`${orderToDownload.Bill_No || "invoice"}.pdf`);
+                hide(); // Stop loading
+                message.success('Download successful!', 2);
+            }, 0);
+        } catch (error) {
+            hide(); // Stop loading if there's an error
+            message.error('Download failed. Please try again.', 2);
+            console.error(error);
+        }
+
+        // Wait for component to render (you can use a timeout or next tick)
+        // setTimeout(async () => {
+        //     if (!pdfRef.current) return;
+        //     const canvas = await html2canvas(pdfRef.current, {
+        //         scale: 3, // Higher DPI for better clarity
+        //         useCORS: true,
+        //     });
+        //     const imgData = canvas.toDataURL("image/png");
+        //     const pdf = new jsPDF("p", "pt", "a4");
+        //     const imgProps = pdf.getImageProperties(imgData);
+        //     const pdfWidth = pdf.internal.pageSize.getWidth();
+        //     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        //     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        //     pdf.save(`${orderToDownload.Bill_No || "invoice"}.pdf`);
+        // }, 0);
+    };
+    // console.log("record", record);
+    // if (record.Bill_No) {
+    //     navigate("/orderpdf", { state: { orderData: record } });
+    // } else {
+    //     message.error(t('viewOrders.invalidBillNo'));
+    // }
 
 
     const handleDelete = async (record: OrderRecord) => {
@@ -171,21 +260,33 @@ const ViewOrders = () => {
 
     const handleYearChange = (value: string) => {
         setSelectedYear(value);
-        const selected = allYear?.find((item) => item.db_name === value);
-        if (selected) {
-            const start = dayjs(`${selected.year1}-04-01`).startOf("day");
-            const end = dayjs(`${selected.year2}-03-31`).endOf("day");
-            setSelectedDates([start, end]);
+        try {
+
+            const selected = allYear?.find((item) => item.db_name === value);
+            if (selected) {
+                setSelectedYear(selected.db_name);
+                if (selected.year_type === "C") {
+                    const today = dayjs().startOf('day');
+                    setSelectedDates([today, today]);
+                } else {
+                    const startDate = dayjs(`${selected.year1}-04-01`).startOf("day");
+                    const endDate = dayjs(`${selected.year2}-03-31`).endOf("day");
+                    setSelectedDates([startDate, endDate]);
+                }
+            }
+        } catch {
+            message.error("Failed to fetch orders");
         }
+
     };
 
     const disableOutsideRange = (current: Dayjs) => {
         const selected = allYear?.find((item) => item.db_name === selectedYear);
         if (!selected) return true; // Disable all if no year is selected
-    
+
         const start = dayjs(`${selected.year1}-04-01`).startOf("day");
         const end = dayjs(`${selected.year2}-03-31`).endOf("day");
-    
+
         return current.isBefore(start) || current.isAfter(end);
     };
 
@@ -227,7 +328,7 @@ const ViewOrders = () => {
                     </Col>
 
                     <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item label={t('viewOrders.select_date')} colon={false} className={user && user.isAdmin ? t( 'viewOrders.select_date') : ""}>
+                        <Form.Item label={t('viewOrders.select_date')} colon={false} className={user && user.isAdmin ? t('viewOrders.select_date') : ""}>
                             <RangePicker size="small" style={{ width: '100%' }}
                                 format="DD-MM-YYYY"
                                 value={selectedDates}
@@ -245,7 +346,7 @@ const ViewOrders = () => {
                     {user && !user.isAdmin && (
                         <Col xs={24} sm={12} md={8} lg={6}>
                             <Button className="ml-0 md:ml-3" type="primary" onClick={() => navigate("/add-orders")}>
-                            {t('viewOrders.add_order')} 
+                                {t('viewOrders.add_order')}
                             </Button>
                         </Col>
                     )}
@@ -282,7 +383,7 @@ const ViewOrders = () => {
                                 size="small"
                                 columns={[
                                     {
-                                        title: t('viewOrders.sr_no') ,
+                                        title: t('viewOrders.sr_no'),
                                         dataIndex: "SrNo",
                                         key: "SrNo",
                                     },
@@ -313,7 +414,13 @@ const ViewOrders = () => {
 
                 </Space>
             </>
+            <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
+                <div ref={pdfRef}>
+                    {selectedOrderRef.current && <OrderPDF orderData={selectedOrderRef.current} />}
+                </div>
+            </div>
         </div>
+
     );
 
 };

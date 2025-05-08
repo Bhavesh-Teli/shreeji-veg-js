@@ -146,7 +146,7 @@ const ViewOrders = () => {
 
         Modal.confirm({
             title: t('viewOrders.delete_title'),
-            content: `t('viewOrders.order_no'): ${record.Bill_No}`,
+            content: `${t('viewOrders.order_no')}: ${record.Bill_No}`,
             okText: t('viewOrders.order_no'),
             okType: "danger",
             cancelText: t('viewOrders.cancel'),

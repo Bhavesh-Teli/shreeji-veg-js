@@ -98,9 +98,30 @@
     "delete_title": "Are you sure you want to delete this order?",
     "order_no": "Order No",
     "ok": "Yes",
+    "delete": "Delete",
     "danger": "Danger",
     "cancel": "Cancel",
     "orderDelete": "Order deleted successfully",
     "failDelete": "Failed to delete order"
+  },
+  "AproveUser":{
+    "title": "Users Pending Approval",
+    "name": "Name",
+    "mobile": "Mobile No",
+    "code": "Code",
+    "action": "Action",
+    "approve": "Approve",
+    "statusSuccess": "Status updated successfully",
+    "statusError": "Error updating status"
+  },
+  "nav": {
+    "orders": "Orders",
+    "favourites": "Favourites",
+    "contact": "Contact",
+    "users": "User List",
+    "notification": "Notifications",
+    "language": "Language",
+    "logout": "Logout"
   }
+
 }

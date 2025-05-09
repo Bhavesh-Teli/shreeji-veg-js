@@ -9,6 +9,7 @@ import Cookies from 'js-cookie';
 import { LogoutApi } from '../../services/authAPI';
 import dayjs from 'dayjs';
 import { GetNotifaction, MarkNotificationAsSeen } from '../../services/notificationAPI';
+import { useTranslation } from 'react-i18next';
 
 const { Header } = Layout;
 const { useBreakpoint } = Grid;
@@ -19,6 +20,7 @@ interface NavbarProps {
 }
 
 const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const screens = useBreakpoint();
   const { token } = theme.useToken();
@@ -101,10 +103,10 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
     <div>
       <Space direction="vertical">
         <Button onClick={() => navigate('/select-language')} type="text" icon={<GlobalOutlined />}>
-          Language
+          {t('nav.language')}
         </Button>
         <Button onClick={handleLogout} type="text" icon={<LogoutOutlined />}>
-          Logout
+          {t('nav.logout')}
         </Button>
       </Space>
     </div>
@@ -145,8 +147,8 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
       : []),
     ...(user && !user.isAdmin
       ? [
-        { key: 'orders', label: 'Orders' },
-        { key: 'favourites', label: 'Favourites' },
+        { key: 'orders', label: t('nav.orders') },
+        { key: 'favourites', label: t('nav.favourites') },
       ]
       : []),
     {
@@ -291,7 +293,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
                 type="text"
                 style={{ marginLeft: '7px' }}
               >
-                Language
+                {t('nav.language')}
               </Button>
             )}
             {/* Logout button for mobile only */}
@@ -304,7 +306,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
                   block
                   danger
                 >
-                  Logout
+                  {t('nav.logout')}
                 </Button>
               </div>
             )}

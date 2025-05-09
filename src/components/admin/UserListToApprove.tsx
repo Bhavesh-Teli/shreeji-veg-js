@@ -2,26 +2,28 @@ import { useEffect, useState } from 'react';
 import { Button, Input, message, Table, TableProps, theme } from 'antd';
 import { IColumns } from '../../types/IUserList';
 import { ApproveUser, getUsersToApprove } from '../../services/adminAPI';
+import { useTranslation } from 'react-i18next';
 
 
 const UserListToApprove = () => {
+    const { t } = useTranslation();
     const [users, setUsers] = useState<IColumns[]>([]);
     const [loading, setLoading] = useState(false);
     const { token } = theme.useToken();
 
     const columns: TableProps<IColumns>['columns'] = [
         {
-            title: 'Name',
+            title: t('AproveUser.name'),
             dataIndex: 'Ac_Name',
             key: 'Ac_Name',
         },
         {
-            title: 'Mobile No',
+            title: t('AproveUser.mobile'),
             dataIndex: 'Mobile_No',
             key: 'Mobile_No',
         },
         {
-            title: 'Code',
+            title: t('AproveUser.code'),
             dataIndex: 'approvalCode',
             key: 'approvalCode',
             render: (_, record) => (
@@ -33,14 +35,14 @@ const UserListToApprove = () => {
             ),
         },
         {
-            title: 'Action',
+            title: t('AproveUser.action'),
             key: 'action',
             render: (_, record) => (
                 <Button
                     type="primary"
                     onClick={() => record.Id && handleStatusChange(record.Id, record.approvalCode || '')}
                 >
-                    Approve
+                    {t('AproveUser.approve')}
                 </Button>
             ),
         },
@@ -54,11 +56,11 @@ const UserListToApprove = () => {
                 approvalCode: status,
             };
             await ApproveUser(payload);
-            message.success('Status updated successfully');
+            message.success(t('AproveUser.statusSuccess'));
             fetchUsers();
         } catch (error) {
-            console.error('Error updating status:', error);
-            message.error('Error updating status');
+            console.error(t('AproveUser.statusError'), error);
+            message.error(t('AproveUser.statusError'));
         }
     };
 
@@ -81,7 +83,7 @@ const UserListToApprove = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <h2 style={{ marginBottom: "10px" }} className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>Users Pending Approval</h2>
+            <h2 style={{ marginBottom: "10px" }} className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>{t('AproveUser.title')}</h2>
             <Table
                 columns={columns}
                 dataSource={users}

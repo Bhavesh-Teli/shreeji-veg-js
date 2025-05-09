@@ -8,6 +8,12 @@ import { DeleteOutlined, DownloadOutlined, EditOutlined } from "@ant-design/icon
 import { Deleteorder, GetAllYear } from "../../services/orderAPI";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import 'dayjs/locale/en';
+import 'dayjs/locale/hi';
+import '../../locales/dayJs-gu.ts';
+import localeEn from 'antd/es/date-picker/locale/en_US';
+import localeHi from 'antd/es/date-picker/locale/hi_IN';
+
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import OrderPDF from "./OrderPDF";
@@ -17,7 +23,31 @@ interface OrderRecord {
 }
 
 const ViewOrders = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const getAntdLocale = () => {
+        switch (i18n.language) {
+            case 'hi':
+                dayjs.locale('hi');
+                return localeHi;
+                case 'gu':
+                    return {
+                      ...localeEn,
+                      lang: {
+                        ...localeEn.lang,
+                        locale: 'gu',
+                        placeholder: 'તારીખ પસંદ કરો',
+                        yearPlaceholder: 'વર્ષ પસંદ કરો',
+                        monthPlaceholder: 'મહિનો પસંદ કરો',
+                        today: 'આજ',
+                      },
+                    };
+            default:
+                dayjs.locale('en');
+                return localeEn;
+        }
+    };
+
+    const currentAntdLocale = getAntdLocale();
     const dispatch = useDispatch<AppDispatch>();
     const { orders, loading } = useSelector((state: RootState) => state.orders) as { orders: any[] | null; loading: boolean };
     const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean } | null };
@@ -235,8 +265,8 @@ const ViewOrders = () => {
 
         Modal.confirm({
             title: t('viewOrders.delete_title'),
-            content: `${t('viewOrders.order_no')}: ${record.Bill_No}`,
-            okText: t('viewOrders.order_no'),
+            content: `${t('viewOrders.order_no')} : ${record.Bill_No}`,
+            okText: t('viewOrders.delete'),
             okType: "danger",
             cancelText: t('viewOrders.cancel'),
             onOk: async () => {
@@ -328,8 +358,14 @@ const ViewOrders = () => {
                     </Col>
 
                     <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item label={t('viewOrders.select_date')} colon={false} className={user && user.isAdmin ? t('viewOrders.select_date') : ""}>
-                            <RangePicker size="small" style={{ width: '100%' }}
+                        <Form.Item
+                            label={t('viewOrders.select_date')}
+                            colon={false}
+                            className={user && user.isAdmin ? t('viewOrders.select_date') : ''}
+                        >
+                            <RangePicker
+                                size="small"
+                                style={{ width: '100%' }}
                                 format="DD-MM-YYYY"
                                 value={selectedDates}
                                 onChange={(dates) => {
@@ -339,10 +375,12 @@ const ViewOrders = () => {
                                         setSelectedDates(null);
                                     }
                                 }}
+                                locale={currentAntdLocale}
                                 disabledDate={disableOutsideRange}
                             />
                         </Form.Item>
                     </Col>
+
                     {user && !user.isAdmin && (
                         <Col xs={24} sm={12} md={8} lg={6}>
                             <Button className="ml-0 md:ml-3" type="primary" onClick={() => navigate("/add-orders")}>

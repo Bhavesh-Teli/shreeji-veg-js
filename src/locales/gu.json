@@ -104,7 +104,7 @@
     "orderDelete": "ઓર્ડર સફળતાપૂર્વક કાઢી નાખવામાં આવ્યો",
     "failDelete": "ઓર્ડર કાઢવામાં નિષ્ફળ"
   },
-  "AproveUser":{
+  "AproveUser": {
     "title": "મંજૂરી માટે રાહ જોઈ રહ્યા વપરાશકર્તાઓ",
     "name": "નામ",
     "mobile": "મોબાઈલ નંબર",
@@ -119,8 +119,15 @@
     "favourites": "ગમતા",
     "contact": "સંપર્ક કરો",
     "users": "વપરાશકર્તા સૂચિ",
-    "notification": "જાણકારી",
+    "logoutSuccess": "સફળતાપૂર્વક લોગ આઉટ થયો!",
     "language": "ભાષા",
-    "logout": "લૉગ આઉટ"
+    "logout": "લૉગ આઉટ",
+    "ShreejiVeg": "શ્રીજી વેજ"
+  },
+  "footer": {
+    "copyright": "શ્રીજી વેજ. સર્વ હકો રાખેલા છે."
+  },
+  "languageChange": {
+    "message": "ભાષા સફળતાપૂર્વક બદલાઈ ગઈ!"
   }
 }

@@ -1,6 +1,6 @@
 {
   "login": {
-    "userName": "Username",
+    "userName": "User Name",
     "enterUsername": "Please enter your username!",
     "usernamePlaceholder": "Enter your username",
     "password": "Password",
@@ -14,7 +14,7 @@
     "unexpectedError": "An unexpected error occurred"
   },
   "Regester": {
-    "userName": "Username",
+    "userName": "User Name",
     "mobileNumber": "Mobile Number",
     "password": "Password",
     "confirmPassword": "Confirm Password",
@@ -79,7 +79,7 @@
     "orderUpdateFailed": "Failed to update order"
   },
   "viewOrders": {
-   "account_code": "Account Code",
+    "account_code": "Account Code",
     "account_name": "Account Name",
     "order_number": "Order Number",
     "order_date": "Order Date",
@@ -104,7 +104,7 @@
     "orderDelete": "Order deleted successfully",
     "failDelete": "Failed to delete order"
   },
-  "AproveUser":{
+  "AproveUser": {
     "title": "Users Pending Approval",
     "name": "Name",
     "mobile": "Mobile No",
@@ -119,9 +119,15 @@
     "favourites": "Favourites",
     "contact": "Contact",
     "users": "User List",
-    "notification": "Notifications",
+    "logoutSuccess": "Logged out successfully!",
     "language": "Language",
-    "logout": "Logout"
+    "logout": "Logout",
+    "ShreejiVeg": "Shreeji Veg"
+  },
+  "footer": {
+    "copyright": "Shreeji Veg. All rights reserved."
+  },
+  "languageChange": {
+    "message": "Language changed successfully!"
   }
-
 }

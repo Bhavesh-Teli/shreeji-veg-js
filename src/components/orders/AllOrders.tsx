@@ -290,6 +290,10 @@ const AllOrders = () => {
   ];
 
   const handleUpdateOrder = async () => {
+    if(!billNo || !lrNo) {
+      message.error(t('allOrders.orderUpdateFailed'));
+      return;
+    }
     const details = [
       ...favorites
         .filter(item => item.Itm_Id !== undefined)
@@ -333,7 +337,7 @@ const AllOrders = () => {
   };
 
   const disablePastDates = (current: Dayjs) => {
-    return current && current < dayjs().startOf('day');
+    return current && current < dayjs().endOf('day');
   };
 
   return (
@@ -360,6 +364,7 @@ const AllOrders = () => {
                 value={billNo || ""}
                 size="small"
                 disabled
+                style={{ fontWeight: "bold", color: "rgba(0, 0, 0, 0.85)" }}
               />
             </Form.Item>
 
@@ -369,6 +374,7 @@ const AllOrders = () => {
                 value={lrNo || ""}
                 size="small"
                 disabled
+                style={{ fontWeight: "bold", color: "rgba(0, 0, 0, 0.85)" }}
               />
             </Form.Item>
           </div>
@@ -404,6 +410,9 @@ const AllOrders = () => {
           </Space>
         </>
       )}
+      <Button type="primary" onClick={() => navigate("/")}>
+        Back
+      </Button>
     </div>
   );
 

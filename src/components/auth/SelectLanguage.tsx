@@ -1,12 +1,15 @@
 import { Button, Card, Row, Col, message, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SelectLanguage = () => {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { token } = theme.useToken();
     const setLang = (lang: string) => {
+        i18n.changeLanguage(lang);
         localStorage.setItem("appLanguage", lang);
-        message.success("Language changed successfully!");
+        message.success(t('languageChange.message'));
         navigate("/");
     };
 

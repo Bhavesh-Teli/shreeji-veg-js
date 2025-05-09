@@ -10,12 +10,13 @@ import { Provider } from 'react-redux'
 import { store } from './redux/store'
 import AllVeges from './components/vegetable/AllVeges'
 import AllFavorites from './components/vegetable/AllFavorites'
-import './i18n';
+import i18n from './i18n';
 import SelectLanguage from './components/auth/SelectLanguage'
 import AllOrders from './components/orders/AllOrders'
 import ViewOrders from './components/orders/ViewOrders'
 import OrderPDF from './components/orders/OrderPDF'
 import Notifications from './components/notification/Notifications'
+import { I18nextProvider } from 'react-i18next';
 
 const router = createBrowserRouter([
   {
@@ -75,7 +76,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   // <StrictMode>
-    <Provider store={store}>
+  <Provider store={store}>
+    <I18nextProvider i18n={i18n}>
       <ConfigProvider
         theme={{
           token: {
@@ -89,6 +91,7 @@ createRoot(document.getElementById('root')!).render(
       >
         <RouterProvider router={router} />
       </ConfigProvider>
-    </Provider >
+    </I18nextProvider>
+  </Provider >
   // </StrictMode>,
 )

@@ -15,16 +15,16 @@ const Layout = () => {
     useEffect(() => {
         if (user && user.isAdmin) {
             console.log("hellp")
-            socket.on('OrderNotification', (payload) => {
+            socket.on('Notification', (payload) => {
                 console.log("payload", payload);
                 notification.open({
-                    message: 'New Order Notification',
+                    message: 'New Notification',
                     description: payload.noti,
                 });
             });
 
             return () => {
-                socket.off('OrderNotification');
+                socket.off('Notification');
             };
         }
     }, [user]);
@@ -53,7 +53,9 @@ const Layout = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [loading, setLoading] = useState(false);
-    const [currentTheme, setCurrentTheme] = useState<"light" | "dark">("light")
+    const [currentTheme, setCurrentTheme] = useState<"light" | "dark">(() => {
+        return (localStorage.getItem("appTheme") as "light" | "dark") || "light";
+      });
     const token = Cookies.get("Shreeji_Veg");
 
     useEffect(() => {
@@ -80,8 +82,10 @@ const Layout = () => {
     }
 
     const toggleTheme = () => {
-        setCurrentTheme(prevTheme => (prevTheme === "light" ? "dark" : "light"));
-    };
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+        setCurrentTheme(newTheme);
+        localStorage.setItem("appTheme", newTheme);
+      };
 
 
     return (
@@ -90,7 +94,7 @@ const Layout = () => {
                 theme={currentTheme === "light" ? lightTheme : darkTheme}
             >
                 <Layouts >
-                    <div className="min-h-screen flex flex-col">
+                    <div className="min-h-screen flex flex-col pt-[56px]">
                         <Navbar onToggleTheme={toggleTheme} currentTheme={currentTheme} />
                         <div className="flex-grow">
                             <Outlet />

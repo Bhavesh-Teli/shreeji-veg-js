@@ -24,13 +24,13 @@
 
 .custom-menu-light .ant-menu-item-selected {
     background-color: transparent !important;
-    border-bottom: 2px solid #46cb4c;
+    border-bottom: 2px solid #000;
     /* or whatever highlight you want */
     color: black !important;
 }
 
 .custom-menu-light .ant-menu-item:hover {
-    color: white !important;
+    color: #1bab27 !important;
 }
 
 .custom-drawer-menu .ant-menu-item {

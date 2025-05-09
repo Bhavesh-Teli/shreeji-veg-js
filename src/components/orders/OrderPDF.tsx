@@ -1,22 +1,12 @@
 import dayjs from "dayjs";
 import React from "react";
-// import { useLocation } from "react-router-dom";
-
-
-// type InvoiceItem = {
-//     description: string;
-//     qty: number;
-//     rate: number;
-//     amount: number;
-// };
 
 interface OrderPDFProps {
-    orderData: any; // Replace 'any' with the appropriate type for orderData
+    orderData: any;
 }
 
-// const OrderPDF: React.FC<{ orderData: OrderPDFProps }> = ({ orderData }) => {
-    // const location = useLocation();
 const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
+    const validItems = orderData?.Details.filter((item: any) => item.Qty > 0) || [];
 
     return (
         <div
@@ -35,7 +25,7 @@ const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
         >
             <div>
                 <p style={{ fontSize: "14pt", fontWeight: "bold", marginBottom: "5px" }}>
-                    INVOICE <span style={{ float: "right", marginBottom: "5px" }}>Credit Memo</span>
+                    ORDERS <span style={{ float: "right", marginBottom: "5px" }}></span>
                 </p>
 
                 <div style={{ border: "1px solid black", padding: "10px", display: "flex", alignItems: "center" }}>
@@ -61,9 +51,6 @@ const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
                                 <h1 style={{ fontSize: '18px', margin: 0 }}>
                                     <strong>Nanalal sweet & caterers</strong>
                                 </h1>
-                                <p>
-                                    <strong>GST No.:</strong> 24ADUPB6867D1ZD
-                                </p>
                                 <p style={{ margin: 0 }}>Mob. No.: 9825430600</p>
                                 <p style={{ margin: 0 }}>Ph. No.: 0261 2894442</p>
                             </div>
@@ -76,9 +63,9 @@ const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
                     {/* Invoice Details + Delivery Address */}
                     <div style={{ border: "1px solid black", padding: "10px", width: "40%" }}>
                         <div style={{ display: "flex", gap: '40px', marginBottom: "10px", textAlign: "left" }}>
-                            <p><strong>Invoice No.:</strong> {orderData && orderData?.Bill_No}</p>
+                            <p><strong>Order No:</strong> {orderData && orderData?.Bill_No}</p>
                             {/* <p><strong>Dated:</strong>{orderData && orderData?.Bill_Date.split('T')[0]}</p> */}
-                            <p><strong>Dated:</strong> {orderData && dayjs(orderData?.Bill_Date).format('DD-MM-YYYY')}</p>
+                            <p><strong>Date:</strong> {orderData && dayjs(orderData?.Bill_Date).format('DD-MM-YYYY')}</p>
                         </div>
                         <div style={{ textAlign: "left" }}>
                             <p><strong>Delivery Address:</strong></p>
@@ -106,27 +93,21 @@ const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orderData && orderData?.Details.map((item: any, index: any) => (
+                        {orderData && orderData?.Details.filter((item: any) => item.Qty > 0).map((item: any, index: number) => (
                             <tr key={index}>
-                                <td style={verticalLineCell}>{item?.SrNo}</td>
+                                <td style={verticalLineCell}>{index + 1}</td>
                                 <td style={verticalLineCell}>{item.Itm_Name}</td>
                                 <td style={verticalLineCell}>{item.Qty}</td>
                             </tr>
                         ))}
                         {/* Add empty rows to fill page */}
-                        {Array.from({ length: 25 - (orderData?.Details?.length || 0) }).map((_, i, arr) => {
+                        {Array.from({ length: 25 - validItems.length }).map((_, i, arr) => {
                             const isLastRow = i === arr.length - 1;
                             return (
                                 <tr key={`empty-${i}`}>
-                                    <td style={{ ...verticalLineCell, borderBottom: isLastRow ? "1px solid black" : "none" }}>
-                                        &nbsp;
-                                    </td>
-                                    <td style={{ ...verticalLineCell, borderBottom: isLastRow ? "1px solid black" : "none" }}>
-                                        &nbsp;
-                                    </td>
-                                    <td style={{ ...verticalLineCell, borderBottom: isLastRow ? "1px solid black" : "none" }}>
-                                        &nbsp;
-                                    </td>
+                                    <td style={{ ...verticalLineCell, borderBottom: isLastRow ? "1px solid black" : "none" }}>&nbsp;</td>
+                                    <td style={{ ...verticalLineCell, borderBottom: isLastRow ? "1px solid black" : "none" }}>&nbsp;</td>
+                                    <td style={{ ...verticalLineCell, borderBottom: isLastRow ? "1px solid black" : "none" }}>&nbsp;</td>
                                 </tr>
                             );
                         })}
@@ -150,6 +131,7 @@ const verticalLineCell: React.CSSProperties = {
     padding: "6px",
     borderLeft: "1px solid black",
     borderRight: "1px solid black",
+    textAlign: "center",
 };
 
 export default OrderPDF;

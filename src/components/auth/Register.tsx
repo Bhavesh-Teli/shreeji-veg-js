@@ -69,7 +69,7 @@ const Register = () => {
     };
 
     const handleOTPSubmit = async () => {
-        const values = await form.validateFields(["Mobile_No"]);
+        const values = await form.validateFields(["Mobile_No", "Ac_Name"]);
         if (!values.Mobile_No) {
             message.warning(t("Regester.enterMobileWarning"));
             return;
@@ -93,7 +93,7 @@ const Register = () => {
         setIntervalId(id);
 
         try {
-            await RequestOTP(values.Mobile_No);
+            await RequestOTP({mobileNo: values.Mobile_No, Ac_Name: values.Ac_Name});
             message.success(t("Regester.otpSentSuccess"));
             setOtpSent(true);
         } catch {

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Input, Space, DatePicker, Row, Col, Form, Button, message, Modal, Select } from "antd";
+import { Table, Input, Space, DatePicker, Row, Col, Form, Button, message, Modal, Select, Tooltip } from "antd";
 import { AppDispatch, RootState } from "../../redux/store";
 import dayjs, { Dayjs } from "dayjs";
 import { fetchOrders } from "../../redux/actions/ordersAction";
 import { DeleteOutlined, DownloadOutlined, EditOutlined } from "@ant-design/icons";
 import { Deleteorder, GetAllYear } from "../../services/orderAPI";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import 'dayjs/locale/en';
 import 'dayjs/locale/hi';
@@ -20,6 +20,7 @@ import OrderPDF from "./OrderPDF";
 
 interface OrderRecord {
     Bill_No: string;
+    Bill_Date: string;
 }
 
 const ViewOrders = () => {
@@ -29,18 +30,18 @@ const ViewOrders = () => {
             case 'hi':
                 dayjs.locale('hi');
                 return localeHi;
-                case 'gu':
-                    return {
-                      ...localeEn,
-                      lang: {
+            case 'gu':
+                return {
+                    ...localeEn,
+                    lang: {
                         ...localeEn.lang,
                         locale: 'gu',
                         placeholder: 'તારીખ પસંદ કરો',
                         yearPlaceholder: 'વર્ષ પસંદ કરો',
                         monthPlaceholder: 'મહિનો પસંદ કરો',
                         today: 'આજ',
-                      },
-                    };
+                    },
+                };
             default:
                 dayjs.locale('en');
                 return localeEn;
@@ -61,6 +62,32 @@ const ViewOrders = () => {
     const [selectedYear, setSelectedYear] = useState<string | undefined>();
     const pdfRef = useRef<HTMLDivElement>(null);
     const selectedOrderRef = useRef<any>(null);
+    const location = useLocation();
+    const orderId = location?.state?.billNo || null;
+    const orderDate = location?.state?.orderDate || null;
+
+    console.log("orderDate3", orderDate);
+    console.log("orderId", orderId);
+    console.log("selectedYear", selectedYear);
+
+    useEffect(() => {
+        if (orderId && orders && orders.length > 0) {
+            console.log("orderId", orderId);
+            console.log("orders", orders);
+            const matchedOrder = orders?.find((order) => order.Bill_No === Number(orderId));
+            if (matchedOrder) {
+                setSelectedOrderItems(matchedOrder.Details || []);
+            }
+            // setSelectedDates([dayjs(orderDate), dayjs(orderDate)]); // Set the selected date to the order date
+        }
+    }, [orderId, orders]);
+    useEffect(() => {
+        if (orderDate) {
+            setSelectedDates([dayjs(orderDate), dayjs(orderDate)]);
+        }
+    }, [orderDate,]);
+
+
 
     useEffect(() => {
         const fetchAllYear = async () => {
@@ -96,7 +123,7 @@ const ViewOrders = () => {
                 toDate: selectedDates[1].format("YYYY-MM-DD"),
                 db_name: selectedYear,
             };
-
+            console.log("payload", payload);
             dispatch(fetchOrders(payload));
         }
     }, [selectedDates, dispatch, selectedYear]);
@@ -140,25 +167,31 @@ const ViewOrders = () => {
                     key: "action",
                     render: (_: unknown, record: OrderRecord) => (
                         <div className="flex items-center gap-3">
-                            <Button
-                                size="small"
-                                onClick={() => handleEdit(record)}
-                            >
-                                <EditOutlined style={{ fontSize: "14px" }} />
-                            </Button>
+                            <Tooltip title={disablePastDates(dayjs(record.Bill_Date)) ? "You can't update past orders" : ""}>
+                                <Button
+                                    size="small"
+                                    onClick={() => handleEdit(record)}
+                                    disabled={disablePastDates(dayjs(record.Bill_Date))}
+                                >
+                                    <EditOutlined style={{ fontSize: "14px" }} />
+                                </Button>
+                            </Tooltip>
                             <Button
                                 size="small"
                                 onClick={() => handleDownload(record)}
                             >
                                 <DownloadOutlined style={{ fontSize: "14px" }} />
                             </Button>
-                            <Button
-                                size="small"
-                                danger
-                                onClick={() => handleDelete(record)}
-                            >
-                                <DeleteOutlined style={{ fontSize: "14px" }} />
-                            </Button>
+                            <Tooltip title={disablePastDates(dayjs(record.Bill_Date)) ? "You can't delete past orders" : ""}>
+                                <Button
+                                    size="small"
+                                    danger
+                                    onClick={() => handleDelete(record)}
+                                    disabled={disablePastDates(dayjs(record.Bill_Date))}
+                                >
+                                    <DeleteOutlined style={{ fontSize: "14px" }} />
+                                </Button>
+                            </Tooltip>
                         </div>
                     ),
                 },
@@ -166,6 +199,9 @@ const ViewOrders = () => {
             : []),
     ];
 
+    const disablePastDates = (current: Dayjs) => {
+        return current && current < dayjs().endOf('day');
+    };
 
     const handleEdit = (record: any) => {
         if (record.Bill_No) {
@@ -187,8 +223,6 @@ const ViewOrders = () => {
                     hide();
                     return;
                 }
-
-
                 const canvas = await html2canvas(pdfRef.current, {
                     scale: 3, // High resolution for better quality
                     useCORS: true, // Allow loading remote resources like images
@@ -232,30 +266,7 @@ const ViewOrders = () => {
             message.error('Download failed. Please try again.', 2);
             console.error(error);
         }
-
-        // Wait for component to render (you can use a timeout or next tick)
-        // setTimeout(async () => {
-        //     if (!pdfRef.current) return;
-        //     const canvas = await html2canvas(pdfRef.current, {
-        //         scale: 3, // Higher DPI for better clarity
-        //         useCORS: true,
-        //     });
-        //     const imgData = canvas.toDataURL("image/png");
-        //     const pdf = new jsPDF("p", "pt", "a4");
-        //     const imgProps = pdf.getImageProperties(imgData);
-        //     const pdfWidth = pdf.internal.pageSize.getWidth();
-        //     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        //     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        //     pdf.save(`${orderToDownload.Bill_No || "invoice"}.pdf`);
-        // }, 0);
     };
-    // console.log("record", record);
-    // if (record.Bill_No) {
-    //     navigate("/orderpdf", { state: { orderData: record } });
-    // } else {
-    //     message.error(t('viewOrders.invalidBillNo'));
-    // }
-
 
     const handleDelete = async (record: OrderRecord) => {
         if (!record?.Bill_No) {
@@ -404,8 +415,8 @@ const ViewOrders = () => {
                             onClick: () => setSelectedOrderItems((record as any).Details || []), // Add row click functionality
                         })}
                         loading={loading}
-                        scroll={{ x: true }}
-                        pagination={false}
+                        scroll={{ x: true, }}
+                        pagination={{ pageSize: 5 }}
                         bordered
                         size="small"
                     />

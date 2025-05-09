@@ -17,7 +17,8 @@ const FavoriteVeges = () => {
     const { favorites, loading } = useSelector((state: RootState) => state.vegetables);
     const [searchText, setSearchText] = useState("");
     const [filteredVeges, setFilteredVeges] = useState<Vegetable[]>([]);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 20;
 
     const favoriteVeges = favorites || [];
 
@@ -40,7 +41,8 @@ const FavoriteVeges = () => {
         {
             title: t('favorite.srNo'),
             key: "serial",
-            render: (_: unknown, __: unknown, index: number) => index + 1,
+            render: (_: unknown, __: unknown, index: number) =>
+                (currentPage - 1) * pageSize + index + 1,
         },
         {
             title: t('favorite.name'),
@@ -77,7 +79,9 @@ const FavoriteVeges = () => {
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-4">
-                <h2 className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>{t('favorite.title')}</h2>
+                <div className="flex justify-center items-center gap-2">
+                    <h2 className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>{t('favorite.title')}: {favoriteVeges.length}</h2>
+                </div>
                 <Button onClick={() => navigate("/all/veges")} type="primary">{t('favorite.addOrView')}</Button>
             </div>
 
@@ -95,7 +99,11 @@ const FavoriteVeges = () => {
                     dataSource={filteredVeges}
                     rowKey={(record) => record.Itm_Id ?? ``}
                     loading={loading}
-                    pagination={{ pageSize: 20 }}
+                    pagination={{
+                        pageSize,
+                        current: currentPage,
+                        onChange: (page) => setCurrentPage(page),
+                    }}
                     scroll={{ x: true }}
                     bordered
                     size="small"

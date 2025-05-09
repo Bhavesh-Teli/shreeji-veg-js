@@ -34,18 +34,19 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
   useEffect(() => {
     const checkNotifications = async () => {
       try {
-        const response = await GetNotifaction();
-        const unseen: boolean = response.data.some((noti: { IsSeen: boolean }) => !noti.IsSeen);
-        console.log("response", response.data);
-        console.log("unseen", unseen);
-        setHasNewNotification(unseen);
+        if (user && user.isAdmin) {
+          const response = await GetNotifaction();
+          const unseen = response.data.some((noti: { Seen: boolean }) => !noti.Seen); // Check if there's any unseen notification
+          setHasNewNotification(unseen); // Set the badge visibility based on unseen notifications
+        }
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
     };
 
     checkNotifications();
-  }, []);
+  }, [user]);
+
 
   useEffect(() => {
     const formattedDate = dayjs().format('DD-MM-YYYY'); // Format as DD-MM-YYYY
@@ -62,7 +63,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
       console.error("Failed to mark notifications as seen", err);
     }
   };
-  
+
 
   // Map path to key
   const pathToKey: { [key: string]: string } = {
@@ -96,7 +97,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
     dispatch(setUser(null));
     Cookies.remove("Shreeji_Veg");
     navigate("/login");
-    message.success("Logged out successfully!");
+    message.success(t('nav.logoutSuccess'));
   }
 
   const popoverContent = (
@@ -131,8 +132,8 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
   const menuItems = [
     ...(user && user.isAdmin
       ? [
-        { key: 'admin-users', label: 'User List' },
-        { key: 'orders', label: 'Orders' },
+        { key: 'admin-users', label: t('nav.users') },
+        { key: 'orders', label: t('nav.orders') },
         {
           key: 'notification', label:
             (
@@ -175,6 +176,10 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
   return (
     <Header
       style={{
+        position: 'fixed',
+        top: 0,
+        width: '100%',
+        zIndex: 1000,
         background: token.colorPrimaryBg,
         borderBottom: "1px solid #fafafa",
         padding: '0 16px',
@@ -208,7 +213,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
       >
         <img className='logo-img' src="/01.png" alt="logo" style={{ height: '44px' }} />
         <span className="hidden md:inline text-[20px] logo-text">
-          ShreejiVeg
+          {t('nav.ShreejiVeg')}
         </span>
         <span>
           <Input

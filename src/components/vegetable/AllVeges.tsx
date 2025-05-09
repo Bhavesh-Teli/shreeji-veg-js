@@ -29,7 +29,8 @@ const AllVeges = () => {
     const [searchText, setSearchText] = useState<string>("");
     const [filteredVeges, setFilteredVeges] = useState<Vegetable[]>([]);
     const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean } | null };
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 50;
     const allVeges: Vegetable[] = all || [];
 
     useEffect(() => {
@@ -72,7 +73,8 @@ const AllVeges = () => {
         {
             title: t('vegetable.srNo'),
             key: "serial",
-            render: (_: unknown, __: unknown, index: number) => index + 1,
+            render: (_: unknown, __: unknown, index: number) =>
+                (currentPage - 1) * pageSize + index + 1,
         },
         {
             title: t('vegetable.name'),
@@ -142,7 +144,10 @@ const AllVeges = () => {
                     columns={columns}
                     dataSource={filteredVeges}
                     loading={loading}
-                    pagination={{ pageSize: 50 }}
+                    pagination={{ 
+                        pageSize,
+                        current: currentPage,
+                        onChange: (page) => setCurrentPage(page), }}
                     scroll={{ x: true }}
                     bordered
                     size="small"

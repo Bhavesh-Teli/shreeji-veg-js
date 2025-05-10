@@ -62,7 +62,7 @@
     "removeError": "Error removing from favorites"
   },
   "allOrders": {
-    "addOrder": "Add Order",
+    "addOrder": "Update",
     "updateOrder": "Update Order",
     "cancel": "Cancel",
     "searchPlaceholder": "Search by vegetable name",

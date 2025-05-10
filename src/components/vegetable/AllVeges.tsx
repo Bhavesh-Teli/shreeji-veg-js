@@ -28,7 +28,7 @@ const AllVeges = () => {
     const { favorites, all, loading } = useSelector((state: RootState) => state.vegetables);
     const [searchText, setSearchText] = useState<string>("");
     const [filteredVeges, setFilteredVeges] = useState<Vegetable[]>([]);
-    const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean } | null };
+    const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean, Id: string, Our_Shop_Ac: boolean, Ac_Code: string } | null };
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 50;
     const allVeges: Vegetable[] = all || [];
@@ -37,7 +37,7 @@ const AllVeges = () => {
         dispatch(fetchAllVegetables());
 
         if (user && !user.isAdmin) {
-            dispatch(fetchFavoriteVegetables());
+            dispatch(fetchFavoriteVegetables(user?.Id || ""));
         }
     }, [dispatch, user]);
 
@@ -57,7 +57,7 @@ const AllVeges = () => {
             } else {
                 message.error(t('vegetable.addError'));
             }
-            dispatch(fetchFavoriteVegetables());
+            dispatch(fetchFavoriteVegetables(user?.Id || ""));
             message.success(t('vegetable.addSuccess'));
         } catch (error) {
             const apiError = error as APIError;
@@ -115,7 +115,7 @@ const AllVeges = () => {
             } else {
                 message.error(t('vegetable.addError'));
             }
-            dispatch(fetchFavoriteVegetables());
+            dispatch(fetchFavoriteVegetables(user?.Id || ""));
             message.success(t('vegetable.removeSuccess'));
         } catch {
             message.error(t('vegetable.removeError'));
@@ -144,10 +144,11 @@ const AllVeges = () => {
                     columns={columns}
                     dataSource={filteredVeges}
                     loading={loading}
-                    pagination={{ 
+                    pagination={{
                         pageSize,
                         current: currentPage,
-                        onChange: (page) => setCurrentPage(page), }}
+                        onChange: (page) => setCurrentPage(page),
+                    }}
                     scroll={{ x: true }}
                     bordered
                     size="small"

@@ -14,10 +14,10 @@ export const fetchAllVegetables = createAsyncThunk(
 // Async thunk for fetching favorite vegetables
 export const fetchFavoriteVegetables = createAsyncThunk(
     'vegetables/fetchFavorites',
-    async () => {
+    async (id: string) => {
         const lang = localStorage.getItem('appLanguage') as 'en' | 'hi' | 'gu'
         console.log("fetch lang", lang)
-        const response = await GetFavorites(lang);
+        const response = await GetFavorites(lang, id);
         return response.data;
     }
 );

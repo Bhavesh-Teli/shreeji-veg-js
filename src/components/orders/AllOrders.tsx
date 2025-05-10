@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Input, Space, DatePicker, Form, Button, message, Spin } from "antd";
+import { Table, Input, Space, DatePicker, Form, Button, message, Spin, theme } from "antd";
 import { fetchAllVegetables, fetchFavoriteVegetables } from "../../redux/actions/vegesAction";
 import { AppDispatch, RootState } from "../../redux/store";
 import dayjs, { Dayjs } from "dayjs";
-import { AddOrder, GetBillNo, GetLrNo, UpdateOrder } from "../../services/orderAPI";
+import { AddOrder, GetLrNo, UpdateOrder } from "../../services/orderAPI";
 import { Vegetable } from "../../redux/slice/vegesSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -63,6 +63,9 @@ const AllOrders = () => {
   const location = useLocation();
   const { orderData } = location.state || {};
   const navigate = useNavigate();
+  const userDetails = location?.state || null;
+  const { token } = theme.useToken();
+  console.log("orderData admin", userDetails);
 
   useEffect(() => {
     if (orderData && Array.isArray(orderData.Details)) {
@@ -157,9 +160,10 @@ const AllOrders = () => {
   }, [searchText, mergedData, favorites, quantities]);
 
   useEffect(() => {
-    dispatch(fetchFavoriteVegetables());
+    // if(user)
+    dispatch(fetchFavoriteVegetables(userDetails ? userDetails?.Id : user?.Id));
     dispatch(fetchAllVegetables());
-  }, [dispatch]);
+  }, [dispatch, userDetails, user]);
 
 
   const handleManualInput = (itemId: number, value: string) => {
@@ -174,28 +178,25 @@ const AllOrders = () => {
       setBillDate(dayjs(dateFormatted));
       try {
         const formattedDate = date.format("YYYY-MM-DD");
-        const res = await GetLrNo(formattedDate);
-        setLrNo(res?.data?.Order_Count);
+        if (userDetails) {
+          const res = await GetLrNo(formattedDate, userDetails.Id);
+          setLrNo(res?.data?.Order_Count);
+          console.log("res userDetails", res);
+        }
+        else {
+          const res = await GetLrNo(formattedDate, user?.Id ?? "");
+          setLrNo(res?.data?.Order_Count);
+          console.log("res user", res);
+        }
       } catch {
         setLrNo(null);
       }
     }
   };
 
-  const handleGetBillNo = async () => {
-    try {
-      const res = await GetBillNo();
-      SetBillNo(res?.data?.Bill_No);
-    } catch {
-      SetBillNo(null);
-    }
-
-  };
-
   useEffect(() => {
     if (!orderData) {
       handleDateChange(billDate);
-      handleGetBillNo();
     }
   }, [orderData]);
 
@@ -239,7 +240,7 @@ const AllOrders = () => {
 
     const payload = {
       mode: "add",
-      Ac_Id: user?.Id,
+      Ac_Id: userDetails ? userDetails?.Id : user?.Id,
       details,
       Ac_Code: user?.Ac_Code,
       Our_Shop_Ac: user?.Our_Shop_Ac,
@@ -253,7 +254,6 @@ const AllOrders = () => {
       await AddOrder(payload);
       setQuantities({});
       await handleDateChange(billDate);
-      await handleGetBillNo();
       message.success(t('allOrders.orderAdded'));
       navigate("/");
     } catch (error) {
@@ -378,7 +378,7 @@ const AllOrders = () => {
                 value={orderData ? billNo || "" : "New"}
                 size="small"
                 disabled
-                style={{ fontWeight: "bold", color: "rgba(0, 0, 0, 0.85)" }}
+                style={{ fontWeight: "bold", color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}
               />
             </Form.Item>
 
@@ -388,7 +388,7 @@ const AllOrders = () => {
                 value={lrNo || ""}
                 size="small"
                 disabled
-                style={{ fontWeight: "bold", color: "rgba(0, 0, 0, 0.85)" }}
+                style={{ fontWeight: "bold", color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}
               />
             </Form.Item>
           </div>
@@ -424,9 +424,9 @@ const AllOrders = () => {
           </Space>
         </>
       )}
-      <Button type="primary" onClick={() => navigate("/")}>
+      {/* <Button type="primary" onClick={() => navigate("/")}>
         Back
-      </Button>
+      </Button> */}
     </div>
   );
 

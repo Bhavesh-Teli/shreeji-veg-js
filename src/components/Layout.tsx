@@ -9,54 +9,56 @@ import { setUser } from "../redux/slice/authSlice";
 import { ConfigProvider, Spin, Layout as Layouts, theme, notification } from "antd";
 import { GetCurrentUser } from "../services/authAPI";
 import socket from "../utils/socket";
+
+const lightTheme = {
+    algorithm: theme.defaultAlgorithm,
+    token: {
+        borderRadius: 16,
+        fontFamily: "Rubik, sans-serif",
+        colorPrimary: '#46cb4c',
+        colorPrimaryBg: "#46cb4c",
+        colorBgLayout: "White",
+    },
+};
+const darkTheme = {
+    algorithm: theme.darkAlgorithm,
+    token: {
+        borderRadius: 16,
+        fontFamily: "Rubik, sans-serif",
+        colorBgLayout: "black",
+        colorPrimaryBg: "black",
+    },
+}
+
 const Layout = () => {
     const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean } | null };
-
-    useEffect(() => {
-        if (user && user.isAdmin) {
-            console.log("hellp")
-            socket.on('Notification', (payload) => {
-                console.log("payload", payload);
-                notification.open({
-                    message: 'New Notification',
-                    description: payload.noti,
-                });
-            });
-
-            return () => {
-                socket.off('Notification');
-            };
-        }
-    }, [user]);
-
-    const lightTheme = {
-        algorithm: theme.defaultAlgorithm,
-        token: {
-            borderRadius: 16,
-            fontFamily: "Rubik, sans-serif",
-            colorPrimary: '#46cb4c',
-            colorPrimaryBg: "#46cb4c",
-            colorBgLayout: "White",
-        },
-    };
-    const darkTheme = {
-        algorithm: theme.darkAlgorithm,
-        token: {
-            borderRadius: 16,
-            fontFamily: "Rubik, sans-serif",
-            colorBgLayout: "black",
-            colorPrimaryBg: "black",
-        },
-    }
-
-
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const [loading, setLoading] = useState(false);
     const [currentTheme, setCurrentTheme] = useState<"light" | "dark">(() => {
         return (localStorage.getItem("appTheme") as "light" | "dark") || "light";
-      });
+    });
     const token = Cookies.get("Shreeji_Veg");
+
+    useEffect(() => {
+        if (user && user.isAdmin) {
+            console.log("hellp")
+            const handleNotification = (payload: { noti: string }) => {
+                console.log("payload", payload);
+                notification.open({
+                    message: 'New Notification',
+                    description: payload.noti,
+                    onClick: () => {
+                        navigate("/notification");
+                    },
+                });
+            };
+            socket.on('Notification', handleNotification);
+            return () => {
+                socket.off('Notification', handleNotification);
+            };
+        }
+    }, [navigate, user]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -85,7 +87,7 @@ const Layout = () => {
         const newTheme = currentTheme === "light" ? "dark" : "light";
         setCurrentTheme(newTheme);
         localStorage.setItem("appTheme", newTheme);
-      };
+    };
 
 
     return (

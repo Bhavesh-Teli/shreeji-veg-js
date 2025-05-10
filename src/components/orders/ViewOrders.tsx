@@ -65,10 +65,18 @@ const ViewOrders = () => {
     const location = useLocation();
     const orderId = location?.state?.billNo || null;
     const orderDate = location?.state?.orderDate || null;
+    const [orderNumberSearch, setOrderNumberSearch] = useState("");
 
     console.log("orderDate3", orderDate);
     console.log("orderId", orderId);
     console.log("selectedYear", selectedYear);
+
+
+    useEffect(() => {
+        if (orderId) {
+            setOrderNumberSearch(orderId.toString());
+        }
+    }, [orderId]);
 
     useEffect(() => {
         if (orderId && orders && orders.length > 0) {
@@ -86,7 +94,7 @@ const ViewOrders = () => {
             setSelectedDates([dayjs(orderDate), dayjs(orderDate)]);
             setSelectedYear(selectedYear)
         }
-    }, [orderDate,selectedYear]);
+    }, [orderDate, selectedYear]);
 
     useEffect(() => {
         const fetchAllYear = async () => {
@@ -401,14 +409,25 @@ const ViewOrders = () => {
                 </Row>
 
                 <Space direction="vertical" style={{ width: "100%" }}>
-
+                    {user && user.isAdmin &&
+                        <Input.Search
+                            placeholder={"Order Number"}
+                            value={orderNumberSearch}
+                            onChange={(e) => setOrderNumberSearch(e.target.value)}
+                            size="small"
+                            enterButton
+                            style={{ width: '100%' }}
+                        />
+                    }
                     <Table
                         columns={columns}
                         rowKey={(record) => record.Bill_No}
                         dataSource={
-                            orders?.filter((order) =>
-                                order.Ac_Name?.toLowerCase().includes(searchTerm?.toLowerCase())
-                            ) || []
+                            orders?.filter((order) => {
+                                const accountMatch = order.Ac_Name?.toLowerCase().includes(searchTerm?.toLowerCase());
+                                const orderMatch = order.Bill_No?.toString().includes(orderNumberSearch);
+                                return accountMatch && orderMatch;
+                            }) || []
                         }
                         onRow={(record) => ({
                             onClick: () => setSelectedOrderItems((record as any).Details || []), // Add row click functionality

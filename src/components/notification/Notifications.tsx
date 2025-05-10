@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Card, Row, Col, Spin, message, Button } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Card, Row, Col, Spin, message, Button, Checkbox, Modal } from 'antd';
+import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import { GetNotifaction } from '../../services/notificationAPI';
 import { useNavigate } from 'react-router-dom';
 
 const Notifications = () => {
   interface Notification {
+    Id?: string;
     Ac_Id: string;
     Cat: string;
     Noti_Date_Time: string;
@@ -18,6 +19,7 @@ const Notifications = () => {
   const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([]);
   const [category, setCategory] = useState<string>('All');
   const navigate = useNavigate();
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   console.log("notifications", notifications);
 
@@ -78,7 +80,13 @@ const Notifications = () => {
   const handleCardClick = (category: string, noti: string) => {
     console.log("notification", noti);
     if (category === 'New User') {
-      navigate('/user/list');
+      const str = noti;
+      const mobile = str.match(/\b\d{10}\b/)
+      navigate('/user/list', {
+        state: {
+          mobile: mobile ? mobile[0] : null,
+        },
+      });
     } else if (category === 'Order') {
       console.log("category", category);
       const str = noti;
@@ -103,28 +111,78 @@ const Notifications = () => {
     }
   };
 
+  const handleCheckboxChange = (id: string, checked: boolean) => {
+    setSelectedIds(prev => {
+      const updated = checked ? [...prev, id] : prev.filter(item => item !== id);
+      return updated;
+    });
+  };
+
+  const handleDelete = async () => {
+    if (selectedIds.length === 0) {
+      message.warning("Please select at least one notification.");
+      return;
+    }
+
+    Modal.confirm({
+      title: 'Are you sure you want to delete these notifications?',
+      content: `This will permanently delete ${selectedIds.length} notification(s).`,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        try {
+          // await DeleteNotifications(selectedIds);
+          message.success("Notifications deleted successfully");
+          console.log("checkedIds", selectedIds);
+          const updated = notifications.filter(n => !selectedIds.includes(n.Id ?? ''));
+          setNotifications(updated);
+          setFilteredNotifications(
+            category === "All"
+              ? updated
+              : updated.filter(n => n.Cat === category)
+          );
+          setSelectedIds([]);
+        } catch {
+          message.error("Failed to delete notifications");
+        }
+      },
+    });
+  };
+
   return (
     <div style={{ padding: '24px' }}>
-      <div style={{ marginBottom: '16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+        {/* Left side buttons */}
+        <div>
+          <Button
+            type={category === 'All' ? 'primary' : 'default'}
+            onClick={() => setCategory('All')}
+          >
+            All
+          </Button>
+          <Button
+            type={category === 'New User' ? 'primary' : 'default'}
+            onClick={() => setCategory('New User')}
+            style={{ marginLeft: '8px' }}
+          >
+            User
+          </Button>
+          <Button
+            type={category === 'Order' ? 'primary' : 'default'}
+            onClick={() => setCategory('Order')}
+            style={{ marginLeft: '8px' }}
+          >
+            Order
+          </Button>
+        </div>
+
+        {/* Right side delete button */}
         <Button
-          type={category === 'All' ? 'primary' : 'default'}
-          onClick={() => setCategory('All')}
+          danger
+          onClick={handleDelete}
         >
-          All
-        </Button>
-        <Button
-          type={category === 'New User' ? 'primary' : 'default'}
-          onClick={() => setCategory('New User')}
-          style={{ marginLeft: '8px' }}
-        >
-          User
-        </Button>
-        <Button
-          type={category === 'Order' ? 'primary' : 'default'}
-          onClick={() => setCategory('Order')}
-          style={{ marginLeft: '8px' }}
-        >
-          Order
+          <DeleteOutlined />
         </Button>
       </div>
 
@@ -136,7 +194,14 @@ const Notifications = () => {
             <Col xs={24} sm={12} md={8} lg={6} key={index}>
               <Card
                 // title={category === "Order" ? `Order` : `New User`}
-                title={`${getCardTitle(notification.Cat)}`}
+                title={<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>{getCardTitle(notification.Cat)}</span>
+                  <Checkbox
+                    checked={notification.Id ? selectedIds.includes(notification.Id) : false}
+                    onClick={(e) => e.stopPropagation()} // Prevent card click
+                    onChange={(e) => handleCheckboxChange(notification.Id ?? '', e.target.checked)}
+                  />
+                </div>}
                 bordered={false}
                 hoverable
                 onClick={() => handleCardClick(notification.Cat, notification.Noti)}

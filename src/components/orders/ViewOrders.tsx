@@ -78,16 +78,15 @@ const ViewOrders = () => {
             if (matchedOrder) {
                 setSelectedOrderItems(matchedOrder.Details || []);
             }
-            // setSelectedDates([dayjs(orderDate), dayjs(orderDate)]); // Set the selected date to the order date
         }
     }, [orderId, orders]);
+
     useEffect(() => {
         if (orderDate) {
             setSelectedDates([dayjs(orderDate), dayjs(orderDate)]);
+            setSelectedYear(selectedYear)
         }
-    }, [orderDate,]);
-
-
+    }, [orderDate,selectedYear]);
 
     useEffect(() => {
         const fetchAllYear = async () => {

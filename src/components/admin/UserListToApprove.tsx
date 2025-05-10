@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Input, message, Table, TableProps, theme } from 'antd';
 import { IColumns } from '../../types/IUserList';
 import { ApproveUser, getUsersToApprove } from '../../services/adminAPI';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
+import type { InputRef } from 'antd';
 
 
 const UserListToApprove = () => {
@@ -10,6 +12,23 @@ const UserListToApprove = () => {
     const [users, setUsers] = useState<IColumns[]>([]);
     const [loading, setLoading] = useState(false);
     const { token } = theme.useToken();
+    
+    const inputRefs = useRef<Record<string, InputRef | null>>({});
+    const location = useLocation();
+    const number = location?.state?.mobile || null;
+    console.log("number", number);
+
+    useEffect(() => {
+        if (users.length > 0 && number) {
+            const matchedUser = users.find(u => u.Mobile_No === number);
+            if (matchedUser && matchedUser.Id) {
+                const ref = inputRefs.current[matchedUser.Id];
+                if (ref) {
+                    ref.focus();
+                }
+            }
+        }
+    }, [users, number]);
 
     const columns: TableProps<IColumns>['columns'] = [
         {
@@ -22,6 +41,18 @@ const UserListToApprove = () => {
             dataIndex: 'Mobile_No',
             key: 'Mobile_No',
         },
+        // {
+        //     title: t('AproveUser.code'),
+        //     dataIndex: 'approvalCode',
+        //     key: 'approvalCode',
+        //     render: (_, record) => (
+        //         <Input
+        //             defaultValue={record.approvalCode || ''}
+        //             style={{ width: 120 }}
+        //             onChange={(e) => record.approvalCode = e.target.value}
+        //         />
+        //     ),
+        // },
         {
             title: t('AproveUser.code'),
             dataIndex: 'approvalCode',
@@ -31,9 +62,15 @@ const UserListToApprove = () => {
                     defaultValue={record.approvalCode || ''}
                     style={{ width: 120 }}
                     onChange={(e) => record.approvalCode = e.target.value}
+                    ref={(el) => {
+                        if (record.Mobile_No === number && record.Id) {
+                            inputRefs.current[record.Id] = el;
+                        }
+                    }}
                 />
             ),
         },
+
         {
             title: t('AproveUser.action'),
             key: 'action',
@@ -49,7 +86,10 @@ const UserListToApprove = () => {
     ];
 
     const handleStatusChange = async (id: string, status: string) => {
-
+        if(!status){
+            message.warning('Please fill the approval code');
+            return;
+        }
         try {
             const payload = {
                 Ac_Id: id,

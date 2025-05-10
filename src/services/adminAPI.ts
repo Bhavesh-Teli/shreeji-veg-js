@@ -26,3 +26,15 @@ export const getUsersToApprove = async () => {
         throw error;
     }
 }
+
+export const GetUsersList = async () => {
+    try {
+        const res = await axios.get(`${API_END_POINT}/getUserList`, {
+            headers: getAuthHeaders(),
+        })
+        return res.data
+    } catch (error) {
+        console.error('Error While Fetching UserList user:', error)
+        throw error;
+    }
+}

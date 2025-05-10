@@ -43,7 +43,7 @@ const AllVeges = () => {
 
     useEffect(() => {
         const filtered = allVeges.filter((veg) =>
-            veg.Itm_Name.toLowerCase().includes(searchText.toLowerCase())
+            veg.Itm_Name?.toLowerCase().includes(searchText?.toLowerCase())
         );
         setFilteredVeges(filtered);
     }, [searchText, allVeges]);

@@ -407,7 +407,7 @@ const ViewOrders = () => {
                         rowKey={(record) => record.Bill_No}
                         dataSource={
                             orders?.filter((order) =>
-                                order.Ac_Name?.toLowerCase().includes(searchTerm.toLowerCase())
+                                order.Ac_Name?.toLowerCase().includes(searchTerm?.toLowerCase())
                             ) || []
                         }
                         onRow={(record) => ({

@@ -9,4 +9,7 @@ export interface IColumns {
     _id?: string;
     Id?: string;
     approvalCode?: string;
+    Ac_Code?: string;
+    Our_Shop_Ac?: boolean;
+    Book_Pass?: string;
   }

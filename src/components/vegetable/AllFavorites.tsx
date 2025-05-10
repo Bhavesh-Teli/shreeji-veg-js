@@ -28,7 +28,7 @@ const FavoriteVeges = () => {
 
     useEffect(() => {
         const filtered = favoriteVeges.filter((veg: Vegetable) =>
-            veg.Itm_Name.toLowerCase().includes(searchText.toLowerCase())
+            veg.Itm_Name?.toLowerCase().includes(searchText?.toLowerCase())
         );
 
         if (JSON.stringify(filtered) !== JSON.stringify(filteredVeges)) {

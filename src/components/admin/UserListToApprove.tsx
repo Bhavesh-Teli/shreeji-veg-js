@@ -1,22 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Input, message, Table, TableProps, theme } from 'antd';
+import { Button, Input, message, Table, TableProps } from 'antd';
 import { IColumns } from '../../types/IUserList';
-import { ApproveUser, getUsersToApprove } from '../../services/adminAPI';
+import { ApproveUser, GetUsersList, getUsersToApprove } from '../../services/adminAPI';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { InputRef } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
 
 const UserListToApprove = () => {
     const { t } = useTranslation();
     const [users, setUsers] = useState<IColumns[]>([]);
     const [loading, setLoading] = useState(false);
-    const { token } = theme.useToken();
-    
+    // const { token } = theme.useToken();
+    const [activeTab, setActiveTab] = useState<'approved' | 'toApprove'>('approved');
     const inputRefs = useRef<Record<string, InputRef | null>>({});
     const location = useLocation();
     const number = location?.state?.mobile || null;
-    console.log("number", number);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (users.length > 0 && number) {
@@ -41,52 +42,91 @@ const UserListToApprove = () => {
             dataIndex: 'Mobile_No',
             key: 'Mobile_No',
         },
+        ...(activeTab === 'toApprove' ? [
+            {
+                title: "Password",
+                dataIndex: 'Book_Pass',
+                key: 'Book_Pass',
+            },
+        ] : []),
+
         // {
         //     title: t('AproveUser.code'),
         //     dataIndex: 'approvalCode',
         //     key: 'approvalCode',
         //     render: (_, record) => (
+
         //         <Input
         //             defaultValue={record.approvalCode || ''}
         //             style={{ width: 120 }}
         //             onChange={(e) => record.approvalCode = e.target.value}
+        //             ref={(el) => {
+        //                 if (record.Mobile_No === number && record.Id) {
+        //                     inputRefs.current[record.Id] = el;
+        //                 }
+        //             }}
         //         />
         //     ),
         // },
+
         {
             title: t('AproveUser.code'),
             dataIndex: 'approvalCode',
             key: 'approvalCode',
-            render: (_, record) => (
-                <Input
-                    defaultValue={record.approvalCode || ''}
-                    style={{ width: 120 }}
-                    onChange={(e) => record.approvalCode = e.target.value}
-                    ref={(el) => {
-                        if (record.Mobile_No === number && record.Id) {
-                            inputRefs.current[record.Id] = el;
-                        }
-                    }}
-                />
-            ),
-        },
+            render: (_, record) => {
+                if (activeTab === 'toApprove') {
+                    return <span>{record.Ac_Code || '-'}</span>;
+                }
 
+                return (
+                    <Input
+                        defaultValue={record.approvalCode || ''}
+                        style={{ width: 120 }}
+                        onChange={(e) => (record.approvalCode = e.target.value)}
+                        ref={(el) => {
+                            if (record.Mobile_No === number && record.Id) {
+                                inputRefs.current[record.Id] = el;
+                            }
+                        }}
+                    />
+                );
+            },
+        },
         {
             title: t('AproveUser.action'),
             key: 'action',
-            render: (_, record) => (
+            render: (_, record) => {
+                if (activeTab === 'toApprove') {
+                    return <Button
+                        size='small'
+                        onClick={() =>
+                            navigate('/add-orders', {
+                                state: {
+                                    Ac_Name: record.Ac_Name,
+                                    Mobile_No: record.Mobile_No,
+                                    Book_Pass: record.Book_Pass,
+                                    Ac_Code: record.Ac_Code,
+                                    Id: record.Id,
+                                    Our_Shop_Ac: record.Our_Shop_Ac,
+                                },
+                            })
+                        }
+                    >
+                        <PlusOutlined />
+                    </Button >
+                }
                 <Button
                     type="primary"
                     onClick={() => record.Id && handleStatusChange(record.Id, record.approvalCode || '')}
                 >
                     {t('AproveUser.approve')}
                 </Button>
-            ),
+            },
         },
     ];
 
     const handleStatusChange = async (id: string, status: string) => {
-        if(!status){
+        if (!status) {
             message.warning('Please fill the approval code');
             return;
         }
@@ -97,7 +137,7 @@ const UserListToApprove = () => {
             };
             await ApproveUser(payload);
             message.success(t('AproveUser.statusSuccess'));
-            fetchUsers();
+            fetchUsers('toApprove');
         } catch (error) {
             console.error(t('AproveUser.statusError'), error);
             message.error(t('AproveUser.statusError'));
@@ -105,10 +145,15 @@ const UserListToApprove = () => {
     };
 
 
-    const fetchUsers = async () => {
+    const fetchUsers = async (type: 'approved' | 'toApprove') => {
         setLoading(true);
         try {
-            const response = await getUsersToApprove();
+            let response;
+            if (type === 'approved') {
+                response = await getUsersToApprove(); // You need to define this API
+            } else {
+                response = await GetUsersList();
+            }
             setUsers(response.data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -118,12 +163,27 @@ const UserListToApprove = () => {
     };
 
     useEffect(() => {
-        fetchUsers();
-    }, []);
+        fetchUsers(activeTab);
+    }, [activeTab]);
 
     return (
         <div style={{ padding: '20px' }}>
-            <h2 style={{ marginBottom: "10px" }} className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>{t('AproveUser.title')}</h2>
+            <div style={{ display: 'flex', marginBottom: '16px' }}>
+                <Button
+                    type={activeTab === 'approved' ? 'primary' : 'default'}
+                    onClick={() => setActiveTab('approved')}
+                    style={{}}
+                >
+                    Approved List
+                </Button>
+                <Button
+                    type={activeTab === 'toApprove' ? 'primary' : 'default'}
+                    style={{ marginLeft: '8px' }}
+                    onClick={() => setActiveTab('toApprove')}
+                >
+                    User List
+                </Button>
+            </div>
             <Table
                 columns={columns}
                 dataSource={users}

@@ -28,12 +28,24 @@ export const GetBillNo = async () => {
 
 export const AddOrder = async (payload: any) => {
     try {
-        const res = await axios.post(`${API_END_POINT}/insertSalePurMain`, payload, {
+        const res = await axios.post(`${API_END_POINT}/addSalePurMain`, payload, {
             headers: getAuthHeaders(),
         });
         return res.data;
     } catch (error) {
         console.error("Error while adding order:", error);
+        throw error;
+    }
+};
+
+export const UpdateOrder = async (payload: any) => {
+    try {
+        const res = await axios.post(`${API_END_POINT}/editSalePurMain`, payload, {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (error) {
+        console.error("Error while Edting order:", error);
         throw error;
     }
 };

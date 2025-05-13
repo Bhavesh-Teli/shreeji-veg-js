@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Input, Space, DatePicker, Row, Col, Form, Button, message, Modal, Select, Tooltip, TimePicker } from "antd";
+import { Table, Input, Space, DatePicker, Row, Col, Form, Button, message, Modal, Select, Tooltip, TimePicker, } from "antd";
 import { AppDispatch, RootState } from "../../redux/store";
 import dayjs, { Dayjs } from "dayjs";
 import { fetchOrders } from "../../redux/actions/ordersAction";
@@ -16,7 +16,6 @@ import localeHi from 'antd/es/date-picker/locale/hi_IN';
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import OrderPDF from "./OrderPDF";
-
 
 interface OrderRecord {
     Bill_No: string;
@@ -65,8 +64,8 @@ const ViewOrders = () => {
     const location = useLocation();
     const orderId = location?.state?.billNo || null;
     const orderDate = location?.state?.orderDate || null;
-    const [orderNumberSearch, setOrderNumberSearch] = useState("");
     const [freezeTime, setFreezeTime] = useState(""); // State to track loading status
+    console.log("orderDate: ", orderDate);
 
     const fetchFreezeTime = async () => {
         try {
@@ -83,7 +82,7 @@ const ViewOrders = () => {
 
     useEffect(() => {
         if (orderId) {
-            setOrderNumberSearch(orderId.toString());
+            setSearchTerm(orderId.toString());
         }
     }, [orderId]);
 
@@ -168,8 +167,6 @@ const ViewOrders = () => {
             key: "Bill_Date",
             render: (date: string) => dayjs(date).format("DD-MM-YYYY"),
         },
-        // ...(user && !user.isAdmin
-        //     ? [
         {
             title: t('viewOrders.action'),
             key: "action",
@@ -441,33 +438,21 @@ const ViewOrders = () => {
         <div className="p-4">
             <>
                 <Row>
-                    {
-                        user && user.isAdmin && (
+                    {user && user.isAdmin && (
+                        <>
                             <Col xs={24} sm={12} md={8} lg={6}>
-
-                                <Form.Item label={t('viewOrders.account_name')} colon={false}>
-                                    <Input.Search
-                                        placeholder={t('viewOrders.account_name')}
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        size="small"
-                                        enterButton
-                                        style={{ width: '100%' }}
-                                    />
-                                </Form.Item>
-                            </Col>
-                        )}
-                    {
-                        user && user.isAdmin && (
-                            <Col xs={24} sm={12} md={8} lg={6}>
-
                                 <Form.Item label="Freeze Time" colon={false} className="time-freeze">
-                                    <TimePicker style={{ width: "100%" }}
+                                    <TimePicker
+                                        style={{ width: "100%" }}
                                         size="small"
-                                        format="HH:mm:ss"
-                                        onChange={(_, timeString) => {
-                                            if (typeof timeString === 'string') {
-                                                handleSendFreezeTime(timeString);
+                                        format="hh:mm:ss A"
+                                        value={freezeTime ? dayjs(freezeTime, "HH:mm:ss") : null}
+                                        use12Hours
+                                        onChange={(time) => {
+                                            if (time) {
+                                                const timeIn24HourFormat = dayjs(time).format("HH:mm:ss");
+                                                setFreezeTime(timeIn24HourFormat);
+                                                handleSendFreezeTime(timeIn24HourFormat);
                                             }
                                         }}
                                         placeholder={"Select Freeze Time"}
@@ -475,45 +460,69 @@ const ViewOrders = () => {
                                     />
                                 </Form.Item>
                             </Col>
-                        )}
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                        <Form.Item label={t('viewOrders.select_year')} colon={false} className={user && user.isAdmin ? "date-select" : "select-year"}>
-                            <Select
-                                value={selectedYear}
-                                onChange={handleYearChange}
-                                placeholder={t('viewOrders.select_financial_year')}
-                                style={{ width: "300px" }}
-                            >
-                                {allYear?.map((year) => (
-                                    <Option key={year.db_name} value={year.db_name}>
-                                        {`${year.year1}-${year.year2}`}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
 
-                    <Col xs={24} sm={12} md={8} lg={6}>
+                            <Col xs={24} sm={12} md={8} lg={6}>
+                                <Form.Item label={t('viewOrders.select_year')} colon={false} className="date-select">
+                                    <Select
+                                        value={selectedYear}
+                                        onChange={handleYearChange}
+                                        placeholder={t('viewOrders.select_financial_year')}
+                                        style={{ width: "100%" }}
+                                    >
+                                        {allYear?.map((year) => (
+                                            <Option key={year.db_name} value={year.db_name}>
+                                                {`${year.year1}-${year.year2}`}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                        </>
+                    )}
+
+                    {/* User: Only show Select Year */}
+                    {!user || !user.isAdmin && (
+                        <Col xs={24} sm={12} md={8} lg={6}>
+                            <Form.Item label={t('viewOrders.select_year')} colon={false} className="select-year">
+                                <Select
+                                    value={selectedYear}
+                                    onChange={handleYearChange}
+                                    placeholder={t('viewOrders.select_financial_year')}
+                                    style={{ width: "300px" }}
+                                >
+                                    {allYear?.map((year) => (
+                                        <Option key={year.db_name} value={year.db_name}>
+                                            {`${year.year1}-${year.year2}`}
+                                        </Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    )}
+
+                    <Col xs={24} sm={12} md={8} lg={8}>
                         <Form.Item
                             label={t('viewOrders.select_date')}
                             colon={false}
                             className={user && user.isAdmin ? 'date-select' : ''}
                         >
-                            <RangePicker
-                                size="small"
-                                style={{ width: '100%' }}
-                                format="DD-MM-YYYY"
-                                value={selectedDates}
-                                onChange={(dates) => {
-                                    if (dates && dates[0] && dates[1]) {
-                                        setSelectedDates([dates[0], dates[1]]);
-                                    } else {
-                                        setSelectedDates(null);
-                                    }
-                                }}
-                                locale={currentAntdLocale}
-                                disabledDate={disableOutsideRange}
-                            />
+                            <div style={{ flex: 1 }}>
+                                <RangePicker
+                                    size="small"
+                                    style={{ width: '100%' }}
+                                    format="DD-MM-YYYY"
+                                    value={selectedDates}
+                                    onChange={(dates) => {
+                                        if (dates && dates[0] && dates[1]) {
+                                            setSelectedDates([dates[0], dates[1]]);
+                                        } else {
+                                            setSelectedDates(null);
+                                        }
+                                    }}
+                                    locale={currentAntdLocale}
+                                    disabledDate={disableOutsideRange}
+                                />
+                            </div>
                         </Form.Item>
                     </Col>
 
@@ -529,10 +538,9 @@ const ViewOrders = () => {
                 <Space direction="vertical" style={{ width: "100%" }}>
                     {user && user.isAdmin &&
                         <Input.Search
-                            placeholder={t('viewOrders.order_number')}
-                            value={orderNumberSearch}
-                            onChange={(e) => setOrderNumberSearch(e.target.value)}
-                            size="small"
+                            placeholder={"Search With order number or account name"}
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             enterButton
                             style={{ width: '100%' }}
                         />
@@ -544,9 +552,10 @@ const ViewOrders = () => {
                             [...(orders || [])]
                                 .sort((a, b) => dayjs(b.Bill_Date).valueOf() - dayjs(a.Bill_Date).valueOf())
                                 .filter((order) => {
-                                    const accountMatch = order.Ac_Name?.toLowerCase().includes(searchTerm?.toLowerCase());
-                                    const orderMatch = order.Bill_No?.toString().includes(orderNumberSearch);
-                                    return accountMatch && orderMatch;
+                                    const searchLower = searchTerm.toLowerCase();
+                                    const accountMatch = order.Ac_Name?.toLowerCase().includes(searchLower);
+                                    const orderMatch = order.Bill_No?.toString().includes(searchTerm);
+                                    return accountMatch || orderMatch;
                                 })
                         }
                         onRow={(record) => ({

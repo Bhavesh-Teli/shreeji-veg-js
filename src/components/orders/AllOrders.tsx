@@ -37,6 +37,8 @@ const AllOrders = () => {
   const [originalOrderItemIds, setOriginalOrderItemIds] = useState<number[]>([]);
   const [freezeTime, setFreezeTime] = useState(""); // State to track loading status
 
+  console.log("freeeze Time: ", freezeTime);
+
   const fetchFreezeTime = async () => {
     try {
       const response = await GetFreezeTime();
@@ -390,6 +392,46 @@ const AllOrders = () => {
 
     return current && current < logicalToday.endOf('day');
   };
+
+  // const disableInvalidFutureDates = (current: Dayjs) => {
+  //   if (!freezeTime) return false;
+
+  //   const now = dayjs(); // current real-time
+  //   const today = now.startOf('day');
+
+  //   const [freezeHour, freezeMinute, freezeSecond] = freezeTime.split(':').map(Number);
+  //   const freezeMoment = now.clone().hour(freezeHour).minute(freezeMinute).second(freezeSecond);
+  //   const tomorrow = now.clone().add(1, 'day').startOf('day');
+  //   const tomorrowIsInvalid = now.isAfter(freezeMoment);
+
+  //   // =================== DEBUG LOGS ===================
+  //   console.log("========== DatePicker Debug ==========");
+  //   console.log("Current Time (now):", now.format("YYYY-MM-DD HH:mm:ss"));
+  //   console.log("Freeze Time:", freezeTime);
+  //   console.log("Freeze Moment:", freezeMoment.format("YYYY-MM-DD HH:mm:ss"));
+  //   console.log("Today:", today.format("YYYY-MM-DD"));
+  //   console.log("Tomorrow:", tomorrow.format("YYYY-MM-DD"));
+  //   console.log("Date Under Test (Picker Cell):", current.format("YYYY-MM-DD"));
+  //   console.log("Is Past Date?:", current.isBefore(today, 'day'));
+  //   console.log("Is Tomorrow?:", current.isSame(tomorrow, 'day'));
+  //   console.log("Is Now After Freeze Time?:", tomorrowIsInvalid);
+  //   console.log("Should Disable?:", current.isBefore(today, 'day') || (tomorrowIsInvalid && current.isSame(tomorrow, 'day')));
+  //   console.log("======================================");
+  //   // ================================================
+
+  //   // ❌ Disable past dates
+  //   if (current.isBefore(today, 'day')) {
+  //     return true;
+  //   }
+
+  //   // ❌ Disable tomorrow if current time is past freeze time
+  //   if (tomorrowIsInvalid && current.isSame(tomorrow, 'day')) {
+  //     return true;
+  //   }
+
+  //   return false;
+  // };
+
 
   return (
     <div className="p-4">

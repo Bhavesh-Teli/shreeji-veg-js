@@ -152,6 +152,7 @@ const Login = () => {
                 <Input.Password
                   prefix={<LockOutlined />}
                   placeholder={t("login.passwordPlaceholder")}
+                  onCopy={(e) => e.preventDefault()}
                   size="large"
                 />
               </Form.Item>

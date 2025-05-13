@@ -6,10 +6,28 @@ const Footer = () => {
   const { t } = useTranslation();
   const { token } = theme.useToken();
   return (
-    <AntFooter  className="custom-footer" style={{ background: token.colorPrimaryBg, color: '#fff', padding: '10px 10px', borderTop: "1px solid #fafafa", height: "50px", display: "flex", justifyContent: "center", alignItems: "center", }}>
-      <div style={{ textAlign: 'center', marginTop: 0 }}>
-        © {new Date().getFullYear()} {t('footer.copyright')}
-      </div>
+    <AntFooter
+      className="custom-footer"
+      style={{
+        background: token.colorPrimaryBg,
+        color: '#fff',
+        padding: '10px 20px',
+        borderTop: '1px solid #fafafa',
+        height: '60px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <img
+        className="logo-img"
+        src="/rahulLogo.jpeg"
+        alt="logo"
+        style={{ height: '46px', marginBottom: '4px' ,borderRadius: '40%', marginRight: '10px'}}
+      />
+      <span style={{ fontSize: '14px' }}>
+       © {new Date().getFullYear()} {t('footer.copyright')}
+      </span>
     </AntFooter>
   );
 };

@@ -14,7 +14,7 @@
     "unexpectedError": "कुछ गलत हो गया है"
   },
   "Regester": {
-    "userName": "उपयोगकर्ता नाम",
+    "userName": "खाता नाम(उपयोगकर्ता नाम)",
     "mobileNumber": "मोबाइल नंबर",
     "password": "पासवर्ड",
     "confirmPassword": "पासवर्ड की पुष्टि करें",
@@ -103,7 +103,11 @@
     "danger": "खतरा",
     "cancel": "रद्द करें",
     "orderDelete": "ऑर्डर सफलतापूर्वक हटा दिया गया",
-    "failDelete": "ऑर्डर हटाने में विफल"
+    "failDelete": "ऑर्डर हटाने में विफल",
+    "Freezetimesentsuccessfully": "फ्रीज समय सफलतापूर्वक भेजा गया",
+    "FreezeTime": "फ्रीज समय",
+    "SelectFreezeTime": "फ्रीज समय चुनें",
+    "SearchWithordernumberoraccountname": "ऑर्डर नंबर या खाता नाम से खोजें"
   },
   "AproveUser": {
     "title": "स्वीकृति की प्रतीक्षा कर रहे उपयोगकर्ता",
@@ -115,7 +119,8 @@
     "statusSuccess": "स्थिति सफलतापूर्वक अपडेट की गई",
     "statusError": "स्थिति अपडेट करने में त्रुटि",
     "ApprovedList": "स्वीकृत सूची",
-    "UserList": "उपयोगकर्ता सूची"
+    "UserList": "उपयोगकर्ता सूची",
+    "SearchbyMobileNoorUsername": "मोबाइल नंबर या उपयोगकर्ता नाम द्वारा खोजें"
   },
   "nav": {
     "orders": "ऑर्डर",
@@ -129,7 +134,8 @@
     "installApp": "ऐप इंस्टॉल करें"
   },
   "footer": {
-    "copyright": "श्रीजी वेज। सर्वाधिकार सुरक्षित।"
+    "copyright": "कोड सॉफ्ट। सर्वाधिकार सुरक्षित।",
+    "કોડ સોફ્ટ. સર્વ હકો રાખેલા છે।": "कोड सॉफ्ट। सर्वाधिकार सुरक्षित।"
   },
   "languageChange": {
     "message": "भाषा सफलतापूर्वक बदली गई!"
@@ -150,6 +156,9 @@
     "danger": "खतरा",
     "deleteSuccess": "सूचनाएँ सफलतापूर्वक हटा दी गईं",
     "deleteError": "सूचनाएँ हटाने में त्रुटि",
-    "noNotifications": "कोई सूचनाएँ उपलब्ध नहीं हैं"
+    "noNotifications": "कोई सूचनाएँ उपलब्ध नहीं हैं",
+    "DeleteNotifications": "क्या आप सुनिश्चित हैं?, क्या आप सभी सूचनाएँ हटाना चाहते हैं?",
+    "deleteAllNotifications": "यह सभी सूचनाएँ हटा देगा",
+    "DeleteAll": "सभी हटाएं"
   }
 }

@@ -42,9 +42,15 @@ const AllVeges = () => {
     }, [dispatch, user]);
 
     useEffect(() => {
-        const filtered = allVeges.filter((veg) =>
-            veg.Itm_Name?.toLowerCase().includes(searchText?.toLowerCase())
-        );
+        const filtered = allVeges.filter((veg: Vegetable) => {
+            // If Itm_Name is null, include it only when there's no search text
+            if (!veg.Itm_Name) {
+                return searchText.trim() === ""; // show these only if search is empty
+            }
+
+            return veg.Itm_Name.toLowerCase().includes(searchText.toLowerCase());
+        });
+
         setFilteredVeges(filtered);
     }, [searchText, allVeges]);
 
@@ -80,11 +86,13 @@ const AllVeges = () => {
             title: t('vegetable.name'),
             dataIndex: "Itm_Name",
             key: "Itm_Name",
+            render: (text: string | null) => text ?? <span style={{ color: '#999' }}>N/A</span>,
         },
         {
             title: t('vegetable.groupName'),
             dataIndex: "IGP_NAME",
             key: "IGP_NAME",
+            render: (text: string | null) => text ?? <span style={{ color: '#999' }}>N/A</span>,
         },
         ...(user && !user.isAdmin
             ? [
@@ -145,7 +153,6 @@ const AllVeges = () => {
                     dataSource={filteredVeges}
                     loading={loading}
                     pagination={{
-                        pageSize,
                         current: currentPage,
                         onChange: (page) => setCurrentPage(page),
                     }}

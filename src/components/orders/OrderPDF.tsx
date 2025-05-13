@@ -73,6 +73,7 @@ const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
                         </div>
                     </div>
                 </div>
+                <div/>
             </div>
 
             {/* Middle Section: Invoice Table */}
@@ -101,7 +102,7 @@ const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
                             </tr>
                         ))}
                         {/* Add empty rows to fill page */}
-                        {Array.from({ length: 25 - validItems.length }).map((_, i, arr) => {
+                        {Array.from({ length:22 - validItems.length }).map((_, i, arr) => {
                             const isLastRow = i === arr.length - 1;
                             return (
                                 <tr key={`empty-${i}`}>

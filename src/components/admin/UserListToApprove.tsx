@@ -169,10 +169,33 @@ const UserListToApprove = () => {
         fetchUsers(activeTab);
     }, [activeTab]);
 
-    const filteredUsers = users.filter((user) =>
-        user.Mobile_No?.toString().includes(searchQuery.trim()) ||
-        user.Ac_Name?.toLowerCase().includes(searchQuery.trim().toLowerCase())
-    );
+    const normalizeText = (input: string = ""): string => {
+        const hindiNums = "०१२३४५६७८९";
+        const gujaratiNums = "૦૧૨૩૪૫૬૭૮૯";
+
+        return input
+            .split("")
+            .map((char) => {
+                if (hindiNums.includes(char)) return hindiNums.indexOf(char).toString();
+                if (gujaratiNums.includes(char)) return gujaratiNums.indexOf(char).toString();
+                return char;
+            })
+            .join("")
+            .toLowerCase(); // also normalize case
+    };
+
+    const normalizedSearch = normalizeText(searchQuery.trim());
+
+    const filteredUsers = users.filter((user) => {
+        const normalizedMobile = normalizeText(user.Mobile_No?.toString());
+        const normalizedName = normalizeText(user.Ac_Name);
+
+        return (
+            normalizedMobile.includes(normalizedSearch) ||
+            normalizedName.includes(normalizedSearch)
+        );
+    });
+
 
 
     return (
@@ -195,7 +218,7 @@ const UserListToApprove = () => {
             </div>
             {activeTab === 'toApprove' && (
                 <Input.Search
-                    placeholder="Search by Mobile No or Username"
+                    placeholder={t('AproveUser.SearchbyMobileNoorUsername')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     size="small"
@@ -209,7 +232,7 @@ const UserListToApprove = () => {
                 dataSource={activeTab === 'toApprove' ? filteredUsers : users}
                 rowKey="_id"
                 loading={loading}
-                pagination={{ pageSize: 20 }}
+                pagination={{ pageSize: 20, showSizeChanger: false }}
                 bordered
                 scroll={{ x: 'max-content' }}
                 size='small'

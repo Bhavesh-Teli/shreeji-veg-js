@@ -8,6 +8,7 @@ interface Vegetable {
     Sale_Rate: number;
     Uni_ID?: number;
     Uni_Name?: string;
+    Itm_Code?: string;
 }
 
 interface VegetablesState {

@@ -137,7 +137,7 @@ const Register = () => {
                             form={form}
                         >
                             <Row gutter={16}>
-                                <Col span={12}>
+                                <Col xs={24} md={12}>
                                     <Form.Item
                                         label={t("Regester.userName")}
                                         name="Ac_Name"
@@ -146,7 +146,7 @@ const Register = () => {
                                         <Input prefix={<UserOutlined />} placeholder={t("Regester.userName")} size="large" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={12}>
+                                <Col xs={24} md={12}>
                                     <Form.Item
                                         label={t("Regester.mobileNumber")}
                                         name="Mobile_No"
@@ -177,7 +177,7 @@ const Register = () => {
                             </Row>
 
                             <Row gutter={16}>
-                                <Col span={12}>
+                                <Col xs={24} md={12}>
                                     <Form.Item
                                         label={t("Regester.password")}
                                         name="Book_Pass"
@@ -192,7 +192,7 @@ const Register = () => {
                                         <Input.Password prefix={<LockOutlined />} placeholder={t("Regester.password")} size="large" />
                                     </Form.Item>
                                 </Col>
-                                <Col span={12}>
+                                <Col xs={24} md={12}>
                                     <Form.Item
                                         label={t("Regester.confirmPassword")}
                                         name="confirmPassword"

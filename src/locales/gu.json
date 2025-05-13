@@ -14,7 +14,7 @@
     "unexpectedError": "અનપેક્ષિત ભૂલ થઈ"
   },
   "Regester": {
-    "userName": "યુઝરનામ",
+    "userName": "ખાતાનું નામ(વપરાશકર્તા નામ)",
     "mobileNumber": "મોબાઈલ નંબર",
     "password": "પાસવર્ડ",
     "confirmPassword": "પાસવર્ડ પુષ્ટિ કરો",
@@ -103,7 +103,11 @@
     "danger": "ખતરો",
     "cancel": "રદ કરો",
     "orderDelete": "ઓર્ડર સફળતાપૂર્વક કાઢી નાખવામાં આવ્યો",
-    "failDelete": "ઓર્ડર કાઢવામાં નિષ્ફળ"
+    "failDelete": "ઓર્ડર કાઢવામાં નિષ્ફળ",
+    "Freezetimesentsuccessfully": "ફ્રીઝ સમય સફળતાપૂર્વક મોકલાયો",
+    "FreezeTime": "ફ્રીઝ સમય",
+    "SelectFreezeTime": "ફ્રીઝ સમય પસંદ કરો",
+    "SearchWithordernumberoraccountname": "ઓર્ડર નંબર અથવા ખાતા નામ દ્વારા શોધો"
   },
   "AproveUser": {
     "title": "મંજૂરી માટે રાહ જોઈ રહ્યા વપરાશકર્તાઓ",
@@ -115,7 +119,8 @@
     "statusSuccess": "સ્થિતિ સફળતાપૂર્વક અપડેટ થઈ",
     "statusError": "સ્થિતિ અપડેટ કરતી વખતે ભૂલ",
     "ApprovedList": "મંજૂર કરેલ યાદી",
-    "UserList": "વપરાશકર્તા યાદી"
+    "UserList": "વપરાશકર્તા યાદી",
+    "SearchbyMobileNoorUsername": "મોબાઈલ નંબર અથવા વપરાશકર્તા નામ દ્વારા શોધો"
   },
   "nav": {
     "orders": "ઓર્ડર્સ",
@@ -129,7 +134,7 @@
     "installApp": "એપ્લિકેશન ઇન્સ્ટોલ કરો"
   },
   "footer": {
-    "copyright": "શ્રીજી વેજ. સર્વ હકો રાખેલા છે."
+    "copyright": "કોડ સોફ્ટ. સર્વ હકો રાખેલા છે."
   },
   "languageChange": {
     "message": "ભાષા સફળતાપૂર્વક બદલાઈ ગઈ!"
@@ -150,6 +155,9 @@
     "danger": "ખતરો",
     "deleteSuccess": "સૂચનાઓ સફળતાપૂર્વક કાઢી નાખવામાં આવી",
     "deleteError": "સૂચનાઓ કાઢવામાં નિષ્ફળ",
-    "noNotifications": "કોઈ સૂચનાઓ ઉપલબ્ધ નથી"
+    "noNotifications": "કોઈ સૂચનાઓ ઉપલબ્ધ નથી",
+    "DeleteNotifications": "શું તમે ખાતરી કરો છો?, શું તમે તમામ સૂચનાઓ કાઢી નાખવા માંગો છો?",
+    "deleteAllNotifications": "તે તમામ સૂચનાઓને દૂર કરશે.",
+    "DeleteAll": "બધા કાઢી નાખો"
   }
 }

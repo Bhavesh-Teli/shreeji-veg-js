@@ -470,6 +470,18 @@ const AllOrders = () => {
                 style={{ fontWeight: "bold", color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}
               />
             </Form.Item>
+            {
+              user && user.isAdmin &&
+              <Form.Item label={"Account Name"} colon={false} style={{ marginBottom: 0 }}>
+                <Input
+                  placeholder={(t('allOrders.orderCount'))}
+                  value={orderData?.Ac_Name || ""}
+                  size="small"
+                  disabled
+                  style={{ fontWeight: "bold", color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}
+                />
+              </Form.Item>
+            }
           </div>
 
           <div className="flex flex-wrap gap-3 justify-start mt-4 mb-4">
@@ -495,7 +507,7 @@ const AllOrders = () => {
               columns={columns}
               dataSource={filteredData}
               loading={loading}
-              pagination={{ pageSize: 20 }}
+              pagination={{ pageSize: 20, showSizeChanger: false }}
               scroll={{ x: true }}
               bordered
               size="small"

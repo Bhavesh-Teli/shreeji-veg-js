@@ -28,13 +28,16 @@ const FavoriteVeges = () => {
     }, [dispatch, user]);
 
     useEffect(() => {
-        const filtered = favoriteVeges.filter((veg: Vegetable) =>
-            veg.Itm_Name?.toLowerCase().includes(searchText?.toLowerCase())
-        );
+        const filtered = favoriteVeges.filter((veg: Vegetable) => {
+            // If Itm_Name is null, include it only when there's no search text
+            if (!veg.Itm_Name) {
+                return searchText.trim() === ""; // show these only if search is empty
+            }
 
-        if (JSON.stringify(filtered) !== JSON.stringify(filteredVeges)) {
-            setFilteredVeges(filtered);
-        }
+            return veg.Itm_Name.toLowerCase().includes(searchText.toLowerCase());
+        });
+
+        setFilteredVeges(filtered);
     }, [searchText, favoriteVeges]);
 
 
@@ -49,15 +52,16 @@ const FavoriteVeges = () => {
             title: t('favorite.name'),
             dataIndex: "Itm_Name",
             key: "Itm_Name",
+            render: (text: string | null) => text ?? <span style={{ color: '#999' }}>N/A</span>,
         },
         {
             title: t('favorite.groupName'),
             dataIndex: "IGP_NAME",
             key: "IGP_NAME",
+            render: (text: string | null) => text ?? <span style={{ color: '#999' }}>N/A</span>,
         },
         {
             title: t('favorite.action'),
-            // title: "Action",
             key: "action",
             render: (_: unknown, record: Vegetable) => (
                 <Button danger onClick={() => handleRemoveFav(record)}>
@@ -104,6 +108,7 @@ const FavoriteVeges = () => {
                         pageSize,
                         current: currentPage,
                         onChange: (page) => setCurrentPage(page),
+                        showSizeChanger: false,
                     }}
                     scroll={{ x: true }}
                     bordered

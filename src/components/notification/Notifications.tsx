@@ -130,8 +130,8 @@ const Notifications = () => {
   const handleDeleteAll = async () => {
 
     Modal.confirm({
-      title: "Are You Sure?, Do you want to Delete All the Notification",
-      content: `It will delete All the Notification`,
+      title: t('notifications.DeleteNotifications'),
+      content: t('notifications.deleteAllNotifications'),
       okText: t('notifications.ok'),
       okType: 'danger',
       cancelText: t('notifications.cancel'),
@@ -197,7 +197,7 @@ const Notifications = () => {
             <Row gutter={[8, 8]} justify="end">
               <Col>
                 <Button danger onClick={handleDeleteAll} block={true}>
-                  Delete All <DeleteOutlined />
+                  {t('notifications.DeleteAll')} <DeleteOutlined />
                 </Button>
               </Col>
               <Col>

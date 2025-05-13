@@ -14,7 +14,7 @@
     "unexpectedError": "An unexpected error occurred"
   },
   "Regester": {
-    "userName": "User Name",
+    "userName": " Acount Name(User Name)",
     "mobileNumber": "Mobile Number",
     "password": "Password",
     "confirmPassword": "Confirm Password",
@@ -103,7 +103,11 @@
     "danger": "Danger",
     "cancel": "Cancel",
     "orderDelete": "Order deleted successfully",
-    "failDelete": "Failed to delete order"
+    "failDelete": "Failed to delete order",
+    "Freeze time sent successfully": "Freeze time sent successfully",
+    "FreezeTime": "Freeze Time",
+    "SelectFreezeTime": "Select Freeze Time",
+    "SearchWithordernumberoraccountname": "Search with order number or account name"
   },
   "AproveUser": {
     "title": "Users Pending Approval",
@@ -115,7 +119,8 @@
     "statusSuccess": "Status updated successfully",
     "statusError": "Error updating status",
     "ApprovedList": "Approved List",
-    "UserList": "User List"
+    "UserList": "User List",
+    "SearchbyMobileNoorUsername": "Search by Mobile No or Username"
   },
   "nav": {
     "orders": "Orders",
@@ -129,7 +134,7 @@
     "installApp": "Install App"
   },
   "footer": {
-    "copyright": "Shreeji Veg. All rights reserved."
+    "copyright": "Code Soft. All rights reserved."
   },
   "languageChange": {
     "message": "Language changed successfully!"
@@ -150,6 +155,9 @@
     "danger": "Danger",
     "deleteSuccess": "Notifications deleted successfully",
     "deleteError": "Failed to delete notifications",
-    "noNotifications": "No notifications available"
+    "noNotifications": "No notifications available",
+    "DeleteNotifications": "Are you sure? Do you want to delete all the notifications?",
+    "deleteAllNotifications": "It will delete all the notifications",
+    "DeleteAll": "Delete All"
   }
 }

@@ -162,6 +162,7 @@
     "noNotifications": "कोई सूचनाएँ उपलब्ध नहीं हैं",
     "DeleteNotifications": "क्या आप सुनिश्चित हैं?, क्या आप सभी सूचनाएँ हटाना चाहते हैं?",
     "deleteAllNotifications": "यह सभी सूचनाएँ हटा देगा",
-    "DeleteAll": "सभी हटाएं"
+    "DeleteAll": "सभी हटाएं",
+    "DeleteNotificationsMessage": "यह ऑर्डर हटा दिया गया है।"
   }
 }

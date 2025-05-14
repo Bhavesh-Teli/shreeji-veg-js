@@ -162,6 +162,7 @@
     "noNotifications": "કોઈ સૂચનાઓ ઉપલબ્ધ નથી",
     "DeleteNotifications": "શું તમે ખાતરી કરો છો?, શું તમે તમામ સૂચનાઓ કાઢી નાખવા માંગો છો?",
     "deleteAllNotifications": "તે તમામ સૂચનાઓને દૂર કરશે.",
-    "DeleteAll": "બધા કાઢી નાખો"
+    "DeleteAll": "બધા કાઢી નાખો",
+    "DeleteNotificationsMessage": "આ ઓર્ડર દૂર કરી દેવામાં આવ્યો છે."
   }
 }

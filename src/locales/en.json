@@ -162,6 +162,7 @@
     "noNotifications": "No notifications available",
     "DeleteNotifications": "Are you sure? Do you want to delete all the notifications?",
     "deleteAllNotifications": "It will delete all the notifications",
-    "DeleteAll": "Delete All"
+    "DeleteAll": "Delete All",
+    "DeleteNotificationsMessage": "This order has been deleted."
   }
 }

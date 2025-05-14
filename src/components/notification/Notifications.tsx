@@ -22,7 +22,7 @@ const Notifications = () => {
   const [category, setCategory] = useState<string>('All');
   const navigate = useNavigate();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-
+  const deletedOrders = new Set<number>();
 
   // Fetch notifications when the component mounts
   const fetchNotifications = async () => {
@@ -63,31 +63,81 @@ const Notifications = () => {
   const handleCardClick = (category: string, noti: string) => {
     if (category === 'New User') {
       const str = noti;
-      const mobile = str.match(/\b\d{10}\b/)
+      const mobile = str.match(/\b\d{10}\b/);
       navigate('/user/list', {
         state: {
           mobile: mobile ? mobile[0] : null,
         },
       });
     } else if (category === 'Order') {
-      const str = noti;
-      const regex = /order (\d+)/i;
-      const match = str ? str.match(regex) : null;
-      const billNo = match ? match[1] : null;
-      // Extract date in YYYY-MM-DD format
-      const dateRegex = /\d{4}-\d{2}-\d{2}/;
-      const dateMatch = str.match(dateRegex);
-      const orderDate = dateMatch ? dateMatch[0] : null;
-      if (billNo) {
+      const orderIdMatch = noti.match(/order (\d+)/i);
+      const orderId = orderIdMatch ? parseInt(orderIdMatch[1], 10) : null;
+
+      const isDeleted = /delete(d)?/i.test(noti);
+
+      if (orderId !== null) {
+        if (isDeleted) {
+          deletedOrders.add(orderId);
+          message.info(t('notifications.DeleteNotificationsMessage'));
+          return;
+        }
+
+        // Check if this order is marked as deleted
+        if (deletedOrders.has(orderId)) {
+          message.info(t('notifications.DeleteNotificationsMessage'));
+          return;
+        }
+
+        // Extract date
+        const dateMatch = noti.match(/\d{4}-\d{2}-\d{2}/);
+        const orderDate = dateMatch ? dateMatch[0] : null;
+
         navigate('/', {
           state: {
-            billNo,
+            billNo: orderId,
             orderDate,
           },
         });
       }
     }
   };
+
+
+  // const handleCardClick = (category: string, noti: string) => {
+  //   if (category === 'New User') {
+  //     const str = noti;
+  //     const mobile = str.match(/\b\d{10}\b/)
+  //     navigate('/user/list', {
+  //       state: {
+  //         mobile: mobile ? mobile[0] : null,
+  //       },
+  //     });
+  //   } else if (category === 'Order') {
+
+  //     const isDeleted = /delete(d)?/i.test(noti);
+  //     if (isDeleted) {
+  //       message.info("This order has been deleted.")
+  //       return;
+  //     }
+
+  //     const str = noti;
+  //     const regex = /order (\d+)/i;
+  //     const match = str ? str.match(regex) : null;
+  //     const billNo = match ? match[1] : null;
+  //     // Extract date in YYYY-MM-DD format
+  //     const dateRegex = /\d{4}-\d{2}-\d{2}/;
+  //     const dateMatch = str.match(dateRegex);
+  //     const orderDate = dateMatch ? dateMatch[0] : null;
+  //     if (billNo) {
+  //       navigate('/', {
+  //         state: {
+  //           billNo,
+  //           orderDate,
+  //         },
+  //       });
+  //     }
+  //   }
+  // };
 
   const handleCheckboxChange = (id: number, checked: boolean) => {
     setSelectedIds(prev => {
@@ -210,7 +260,7 @@ const Notifications = () => {
         {loading ? (
           <Spin indicator={antIcon} />
         ) : (
-          <div style={{padding: "20px"}}>
+          <div style={{ padding: "20px" }}>
             <Row gutter={[16, 16]}>
               {filteredNotifications && filteredNotifications.map((notification, index) => (
                 <Col xs={24} sm={12} md={8} lg={6} key={index}>

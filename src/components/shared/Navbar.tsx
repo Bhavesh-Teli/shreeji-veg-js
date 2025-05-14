@@ -86,10 +86,10 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
   }, []);
 
   const handleNotificationClick = async () => {
+    navigate('/notification');
     try {
       await MarkNotificationAsSeen();
       setHasNewNotification(false); // remove badge dot
-      navigate('/notification');
     } catch (err) {
       console.error("Failed to mark notifications as seen", err);
     }

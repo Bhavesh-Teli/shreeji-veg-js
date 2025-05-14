@@ -70,8 +70,6 @@ const ViewOrders = () => {
     const [users, setUsers] = useState<any[]>([]);
     const { token } = theme.useToken();
 
-    console.log("users: ", users);
-
     const fetchUsers = async () => {
         try {
             const response = await getUsersToApprove();
@@ -82,8 +80,10 @@ const ViewOrders = () => {
     };
 
     useEffect(() => {
-        fetchUsers();
-    }, []);
+        if (user && user.isAdmin) {
+            fetchUsers();
+        }
+    }, [user]);
 
     const fetchFreezeTime = async () => {
         try {
@@ -114,7 +114,7 @@ const ViewOrders = () => {
     }, [orderId, orders]);
 
     useEffect(() => {
-        if (orderDate) {
+        if (selectedYear && orderDate) {
             setSelectedDates([dayjs(orderDate), dayjs(orderDate)]);
             setSelectedYear(selectedYear)
         }
@@ -500,7 +500,7 @@ const ViewOrders = () => {
                     )}
                 </Row>
                 <div>
-                    <h2 style={{marginTop:"8px"}} className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>
+                    <h2 style={{ marginTop: "8px" }} className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>
                         Total Orders: {orders?.length}
                     </h2>
                 </div>

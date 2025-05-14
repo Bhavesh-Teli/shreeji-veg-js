@@ -14,8 +14,8 @@
     "unexpectedError": "कुछ गलत हो गया है"
   },
   "Regester": {
-    "userName": "खाता नाम(उपयोगकर्ता नाम)",
-    "mobileNumber": "मोबाइल नंबर",
+    "userName": "खाता नाम",
+    "mobileNumber": "मोबाइल नंबर(उपयोगकर्ता नाम)",
     "password": "पासवर्ड",
     "confirmPassword": "पासवर्ड की पुष्टि करें",
     "otp": "ओटीपी",
@@ -120,7 +120,8 @@
     "statusError": "स्थिति अपडेट करने में त्रुटि",
     "ApprovedList": "स्वीकृत सूची",
     "UserList": "उपयोगकर्ता सूची",
-    "SearchbyMobileNoorUsername": "मोबाइल नंबर या उपयोगकर्ता नाम द्वारा खोजें"
+    "SearchbyMobileNoorUsername": "मोबाइल नंबर या उपयोगकर्ता नाम द्वारा खोजें",
+    "Pleasefilltheapprovalcode": "कृपया स्वीकृति कोड भरें"
   },
   "nav": {
     "orders": "ऑर्डर",

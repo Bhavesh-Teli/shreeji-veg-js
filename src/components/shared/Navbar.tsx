@@ -175,7 +175,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
   const menuItems = [
     ...(user && user.isAdmin
       ? [
-        { key: 'admin-approve', label: "Approve List" },
+        { key: 'admin-approve', label: t('AproveUser.ApprovedList') },
         { key: 'admin-users', label: t('nav.users') },
         { key: 'orders', label: t('nav.orders') },
         {

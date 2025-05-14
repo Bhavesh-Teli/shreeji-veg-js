@@ -14,8 +14,8 @@
     "unexpectedError": "An unexpected error occurred"
   },
   "Regester": {
-    "userName": " Acount Name(User Name)",
-    "mobileNumber": "Mobile Number",
+    "userName": " Acount Name",
+    "mobileNumber": "Mobile Number(User Name)",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "otp": "OTP",
@@ -104,7 +104,7 @@
     "cancel": "Cancel",
     "orderDelete": "Order deleted successfully",
     "failDelete": "Failed to delete order",
-    "Freeze time sent successfully": "Freeze time sent successfully",
+    "Freezetimesentsuccessfully": "Freeze time sent successfully",
     "FreezeTime": "Freeze Time",
     "SelectFreezeTime": "Select Freeze Time",
     "SearchWithordernumberoraccountname": "Search with order number or account name"
@@ -120,7 +120,8 @@
     "statusError": "Error updating status",
     "ApprovedList": "Approved List",
     "UserList": "User List",
-    "SearchbyMobileNoorUsername": "Search by Mobile No or Username"
+    "SearchbyMobileNoorUsername": "Search by Mobile No or Username",
+    "Pleasefilltheapprovalcode": "Please fill the approval code"
   },
   "nav": {
     "orders": "Orders",

@@ -266,7 +266,7 @@ const Register = () => {
                         </Form>
 
                         <div style={{ textAlign: 'center', marginTop: 10 }}>
-                            <span>{t("Regester.alreadyAccount")} </span>
+                            <span>{t("Regester.alreadyAccount")} </span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
                             <span
                                 style={{
                                     color: '#1890ff',

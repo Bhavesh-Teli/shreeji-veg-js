@@ -75,7 +75,7 @@ const UserListToApprove = () => {
 
     const handleStatusChange = async (id: string, status: string) => {
         if (!status) {
-            message.warning('Please fill the approval code');
+            message.warning(t('AproveUser.Pleasefilltheapprovalcode'));
             return;
         }
         try {

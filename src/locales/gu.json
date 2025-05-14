@@ -14,8 +14,8 @@
     "unexpectedError": "અનપેક્ષિત ભૂલ થઈ"
   },
   "Regester": {
-    "userName": "ખાતાનું નામ(વપરાશકર્તા નામ)",
-    "mobileNumber": "મોબાઈલ નંબર",
+    "userName": "ખાતાનું નામ",
+    "mobileNumber": "મોબાઈલ નંબર(વપરાશકર્તા નામ)",
     "password": "પાસવર્ડ",
     "confirmPassword": "પાસવર્ડ પુષ્ટિ કરો",
     "otp": "ઓટીપી",
@@ -120,7 +120,8 @@
     "statusError": "સ્થિતિ અપડેટ કરતી વખતે ભૂલ",
     "ApprovedList": "મંજૂર કરેલ યાદી",
     "UserList": "વપરાશકર્તા યાદી",
-    "SearchbyMobileNoorUsername": "મોબાઈલ નંબર અથવા વપરાશકર્તા નામ દ્વારા શોધો"
+    "SearchbyMobileNoorUsername": "મોબાઈલ નંબર અથવા વપરાશકર્તા નામ દ્વારા શોધો",
+    "Pleasefilltheapprovalcode": "મહેરબાની કરીને મંજૂરી કોડ ભરો"
   },
   "nav": {
     "orders": "ઓર્ડર્સ",

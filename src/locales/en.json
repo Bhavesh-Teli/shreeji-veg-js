@@ -15,8 +15,10 @@
     "mobileNumberMessage": "Mobile number must be exactly 10 digits"
   },
   "Regester": {
-    "userName": " Acount Name",
-    "mobileNumber": "Mobile Number(User Name)",
+    "userName": "Account Name",
+    "userNamePlaceholder": "Enter your account name",
+    "mobileNumber": "Mobile No.(as User Name)",
+    "mobileNumberPlaceholder": "Enter your mobile number",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "otp": "OTP",

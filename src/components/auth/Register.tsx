@@ -143,7 +143,7 @@ const Register = () => {
                                         name="Ac_Name"
                                         rules={[{ required: true, message: t("Regester.userName") + t("Regester.is required") }]}
                                     >
-                                        <Input prefix={<UserOutlined />} placeholder={t("Regester.userName")} size="large" />
+                                        <Input prefix={<UserOutlined />} placeholder={t("Regester.userNamePlaceholder")} size="large" />
                                     </Form.Item>
                                 </Col>
                                 <Col xs={24} md={12}>
@@ -168,7 +168,7 @@ const Register = () => {
                                     >
                                         <Input
                                             prefix={<MobileOutlined />}
-                                            placeholder={t("Regester.mobileNumber")}
+                                            placeholder={t("Regester.mobileNumberPlaceholder")}
                                             size="large"
                                         />
                                     </Form.Item>

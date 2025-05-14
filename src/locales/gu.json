@@ -16,7 +16,9 @@
   },
   "Regester": {
     "userName": "ખાતાનું નામ",
-    "mobileNumber": "મોબાઈલ નંબર(વપરાશકર્તા નામ)",
+    "userNamePlaceholder": "ખાતાનું નામ દાખલ કરો",
+    "mobileNumber": "મોબાઈલ નં.(યુઝર નેમ તરીકે)",
+    "mobileNumberPlaceholder": "મોબાઈલ નંબર દાખલ કરો",
     "password": "પાસવર્ડ",
     "confirmPassword": "પાસવર્ડ પુષ્ટિ કરો",
     "otp": "ઓટીપી",

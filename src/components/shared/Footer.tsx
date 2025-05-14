@@ -21,9 +21,9 @@ const Footer = () => {
     >
       <img
         className="logo-img"
-        src="/rahulLogo.jpeg"
+        src="/CodeSoftLogo.jpeg"
         alt="logo"
-        style={{ height: '38px', marginBottom: '4px' ,borderRadius: '40%', marginRight: '10px'}}
+        style={{ height: '36px', marginBottom: '4px' ,borderRadius: '40%', marginRight: '7px'}}
       />
       <span style={{ fontSize: '14px' }}>
        {t('footer.copyright')} © {new Date().getFullYear()} {t('footer.right')}

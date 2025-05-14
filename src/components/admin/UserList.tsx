@@ -13,7 +13,7 @@ const UserList = () => {
     const [users, setUsers] = useState<IColumns[]>([]);
     const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const [activeTab, setActiveTab] = useState<'approved' | 'toApprove'>('approved');
+    const [activeTab, setActiveTab] = useState<'approved' | 'toApprove'>('toApprove');
     const inputRefs = useRef<Record<string, InputRef | null>>({});
     const location = useLocation();
     const number = location?.state?.mobile || null;
@@ -201,7 +201,6 @@ const UserList = () => {
                     placeholder={t('AproveUser.SearchbyMobileNoorUsername')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    size="small"
                     enterButton
                     style={{ width: '100%', marginBottom: "7px" }}
                 />

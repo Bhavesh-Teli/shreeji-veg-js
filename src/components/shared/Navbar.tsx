@@ -328,7 +328,11 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
             <Menu
               className={token.colorBgLayout === "White" ? "custom-menu-light" : "custom-menu"}
               mode="vertical"
-              items={menuItems.slice(0, 3)} // Only Home, Products, Contact
+              items={
+              user && user.isAdmin ?
+                menuItems.slice(0, 3)
+                : menuItems.slice(0,2)
+              } // Only Home, Products, Contact
               onClick={handleMenuClick}
               selectedKeys={selectedKey ? [selectedKey] : []}
             />

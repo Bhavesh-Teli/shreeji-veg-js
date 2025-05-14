@@ -11,7 +11,8 @@
     "noAccount": "ખાતું નથી?",
     "registerNow": "હમણાં રજીસ્ટર કરો",
     "loginSuccess": "લોગિન સફળ થયું!",
-    "unexpectedError": "અનપેક્ષિત ભૂલ થઈ"
+    "unexpectedError": "અનપેક્ષિત ભૂલ થઈ",
+    "mobileNumberMessage": "મોબાઇલ નંબર ચોક્કસ 10 અંકનો હોવો જોઈએ."
   },
   "Regester": {
     "userName": "ખાતાનું નામ",

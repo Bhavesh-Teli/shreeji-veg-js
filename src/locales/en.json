@@ -11,7 +11,8 @@
     "noAccount": "Don't have an account?",
     "registerNow": "Register Now",
     "loginSuccess": "Login successful!",
-    "unexpectedError": "An unexpected error occurred"
+    "unexpectedError": "An unexpected error occurred",
+    "mobileNumberMessage": "Mobile number must be exactly 10 digits"
   },
   "Regester": {
     "userName": " Acount Name",

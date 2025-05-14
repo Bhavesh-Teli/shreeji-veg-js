@@ -127,10 +127,10 @@ const Login = () => {
                 name="Mobile_No"
                 rules={[
                   { required: true, message: t("login.enterPhoneNo") },
-                  // {
-                  //   pattern: /^\d{10}$/,
-                  //   message: "Mobile number must be exactly 10 digits",
-                  // },
+                  {
+                    pattern: /^\d{10}$/,
+                    message: t('login.mobileNumberMessage'),
+                  },
                 ]}
               >
                 <Input
@@ -150,9 +150,10 @@ const Login = () => {
                 rules={[{ required: true, message: t("login.enterPassword") }]}
               >
                 <Input.Password
-                  prefix={<LockOutlined />}
+                  addonBefore={<LockOutlined />}
                   placeholder={t("login.passwordPlaceholder")}
                   onCopy={(e) => e.preventDefault()}
+                  onPaste={(e) => e.preventDefault()}
                   size="large"
                 />
               </Form.Item>

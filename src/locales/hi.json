@@ -11,7 +11,8 @@
     "noAccount": "क्या आपके पास खाता नहीं है?",
     "registerNow": "अब रजिस्टर करें",
     "loginSuccess": "लॉगिन सफल हुआ!",
-    "unexpectedError": "कुछ गलत हो गया है"
+    "unexpectedError": "कुछ गलत हो गया है",
+    "mobileNumberMessage": "मोबाइल नंबर ठीक 10 अंकों का होना चाहिए।"
   },
   "Regester": {
     "userName": "खाता नाम",

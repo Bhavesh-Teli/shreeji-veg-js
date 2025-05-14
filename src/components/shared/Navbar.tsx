@@ -101,6 +101,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
     '/': 'orders',
     '/favourites': 'favourites',
     '/contact': 'contact',
+    '/user/approve': 'admin-approve',
     '/user/list': 'admin-users',
     '/all/veges': 'admin-veges',
   };
@@ -118,6 +119,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
     if (key === 'orders') navigate('/');
     else if (key === 'favourites') navigate('/favourites');
     else if (key === 'contact') navigate('/contact');
+    else if (key === 'admin-approve') navigate('/user/approve');
     else if (key === 'admin-users') navigate('/user/list');
     else if (key === 'admin-veges') navigate('/all/veges');
     setVisible(false);
@@ -173,6 +175,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
   const menuItems = [
     ...(user && user.isAdmin
       ? [
+        { key: 'admin-approve', label: "Approve List" },
         { key: 'admin-users', label: t('nav.users') },
         { key: 'orders', label: t('nav.orders') },
         {
@@ -272,7 +275,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexGrow: 1 }}>
           <Menu
             mode="horizontal"
-            items={menuItems.slice(0, 5)} // Only nav items here
+            items={menuItems.slice(0, 6)} // Only nav items here
             theme="dark"
             onClick={handleMenuClick}
             selectedKeys={selectedKey ? [selectedKey] : []}
@@ -325,7 +328,7 @@ const Navbar = ({ onToggleTheme, currentTheme }: NavbarProps) => {
             <Menu
               className={token.colorBgLayout === "White" ? "custom-menu-light" : "custom-menu"}
               mode="vertical"
-              items={menuItems.slice(0, 2)} // Only Home, Products, Contact
+              items={menuItems.slice(0, 3)} // Only Home, Products, Contact
               onClick={handleMenuClick}
               selectedKeys={selectedKey ? [selectedKey] : []}
             />

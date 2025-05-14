@@ -1,23 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Input, message, Table, TableProps } from 'antd';
+import { Button, Input, message, Table, TableProps, theme } from 'antd';
 import { IColumns } from '../../types/IUserList';
-import { ApproveUser, GetUsersList, getUsersToApprove } from '../../services/adminAPI';
+import { ApproveUser, getUsersToApprove } from '../../services/adminAPI';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, } from 'react-router-dom';
 import type { InputRef } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-
 
 const UserListToApprove = () => {
     const { t } = useTranslation();
     const [users, setUsers] = useState<IColumns[]>([]);
     const [loading, setLoading] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [activeTab, setActiveTab] = useState<'approved' | 'toApprove'>('approved');
     const inputRefs = useRef<Record<string, InputRef | null>>({});
     const location = useLocation();
     const number = location?.state?.mobile || null;
-    const navigate = useNavigate();
+    const { token } = theme.useToken();
 
     useEffect(() => {
         if (users.length > 0 && number) {
@@ -42,42 +38,11 @@ const UserListToApprove = () => {
             dataIndex: 'Mobile_No',
             key: 'Mobile_No',
         },
-        ...(activeTab === 'toApprove' ? [
-            {
-                title: "Password",
-                dataIndex: 'Book_Pass',
-                key: 'Book_Pass',
-            },
-        ] : []),
-
-        // {
-        //     title: t('AproveUser.code'),
-        //     dataIndex: 'approvalCode',
-        //     key: 'approvalCode',
-        //     render: (_, record) => (
-
-        //         <Input
-        //             defaultValue={record.approvalCode || ''}
-        //             style={{ width: 120 }}
-        //             onChange={(e) => record.approvalCode = e.target.value}
-        //             ref={(el) => {
-        //                 if (record.Mobile_No === number && record.Id) {
-        //                     inputRefs.current[record.Id] = el;
-        //                 }
-        //             }}
-        //         />
-        //     ),
-        // },
-
         {
             title: t('AproveUser.code'),
             dataIndex: 'approvalCode',
             key: 'approvalCode',
             render: (_, record) => {
-                if (activeTab === 'toApprove') {
-                    return <span>{record.Ac_Code || '-'}</span>;
-                }
-
                 return (
                     <Input
                         defaultValue={record.approvalCode || ''}
@@ -96,34 +61,14 @@ const UserListToApprove = () => {
             title: t('AproveUser.action'),
             key: 'action',
             render: (_, record) => {
-                if (activeTab === 'toApprove') {
-                    return <Button
-                        size='small'
-                        onClick={() =>
-                            navigate('/add-orders', {
-                                state: {
-                                    Ac_Name: record.Ac_Name,
-                                    Mobile_No: record.Mobile_No,
-                                    Book_Pass: record.Book_Pass,
-                                    Ac_Code: record.Ac_Code,
-                                    Id: record.Id,
-                                    Our_Shop_Ac: record.Our_Shop_Ac,
-                                },
-                            })
-                        }
+                return (
+                    <Button
+                        type="primary"
+                        onClick={() => record.Id && handleStatusChange(record.Id, record.approvalCode || '')}
                     >
-                        <PlusOutlined />
-                    </Button >
-                } else if (activeTab === 'approved') {
-                    return (
-                        <Button
-                            type="primary"
-                            onClick={() => record.Id && handleStatusChange(record.Id, record.approvalCode || '')}
-                        >
-                            {t('AproveUser.approve')}
-                        </Button>
-                    )
-                }
+                        {t('AproveUser.approve')}
+                    </Button>
+                )
             },
         },
     ];
@@ -140,7 +85,7 @@ const UserListToApprove = () => {
             };
             await ApproveUser(payload);
             message.success(t('AproveUser.statusSuccess'));
-            fetchUsers('approved');
+            fetchUsers();
         } catch (error) {
             console.error(t('AproveUser.statusError'), error);
             message.error(t('AproveUser.statusError'));
@@ -148,15 +93,10 @@ const UserListToApprove = () => {
     };
 
 
-    const fetchUsers = async (type: 'approved' | 'toApprove') => {
+    const fetchUsers = async () => {
         setLoading(true);
         try {
-            let response;
-            if (type === 'approved') {
-                response = await getUsersToApprove(); // You need to define this API
-            } else {
-                response = await GetUsersList();
-            }
+            const response = await getUsersToApprove();
             setUsers(response.data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -166,70 +106,20 @@ const UserListToApprove = () => {
     };
 
     useEffect(() => {
-        fetchUsers(activeTab);
-    }, [activeTab]);
-
-    const normalizeText = (input: string = ""): string => {
-        const hindiNums = "०१२३४५६७८९";
-        const gujaratiNums = "૦૧૨૩૪૫૬૭૮૯";
-
-        return input
-            .split("")
-            .map((char) => {
-                if (hindiNums.includes(char)) return hindiNums.indexOf(char).toString();
-                if (gujaratiNums.includes(char)) return gujaratiNums.indexOf(char).toString();
-                return char;
-            })
-            .join("")
-            .toLowerCase(); // also normalize case
-    };
-
-    const normalizedSearch = normalizeText(searchQuery.trim());
-
-    const filteredUsers = users.filter((user) => {
-        const normalizedMobile = normalizeText(user.Mobile_No?.toString());
-        const normalizedName = normalizeText(user.Ac_Name);
-
-        return (
-            normalizedMobile.includes(normalizedSearch) ||
-            normalizedName.includes(normalizedSearch)
-        );
-    });
-
+        fetchUsers();
+    }, []);
 
 
     return (
-        <div style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', marginBottom: '16px' }}>
-                <Button
-                    type={activeTab === 'approved' ? 'primary' : 'default'}
-                    onClick={() => setActiveTab('approved')}
-                    style={{}}
-                >
-                    {t('AproveUser.ApprovedList')}
-                </Button>
-                <Button
-                    type={activeTab === 'toApprove' ? 'primary' : 'default'}
-                    style={{ marginLeft: '8px' }}
-                    onClick={() => setActiveTab('toApprove')}
-                >
-                    {t('AproveUser.UserList')}
-                </Button>
+        <div style={{ padding: '2px', }}>
+
+            <div>
+                <h2 className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>Approve User List</h2>
             </div>
-            {activeTab === 'toApprove' && (
-                <Input.Search
-                    placeholder={t('AproveUser.SearchbyMobileNoorUsername')}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    size="small"
-                    enterButton
-                    style={{ width: '100%', marginBottom: "7px" }}
-                />
-            )}
 
             <Table
                 columns={columns}
-                dataSource={activeTab === 'toApprove' ? filteredUsers : users}
+                dataSource={users}
                 rowKey="_id"
                 loading={loading}
                 pagination={{ pageSize: 20, showSizeChanger: false }}

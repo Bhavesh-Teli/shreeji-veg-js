@@ -18,6 +18,7 @@ import OrderPDF from './components/orders/OrderPDF'
 import Notifications from './components/notification/Notifications'
 import { I18nextProvider } from 'react-i18next';
 import ForgotPassword from './components/auth/ForgotPassword'
+import UserList from './components/admin/UserList'
 
 const router = createBrowserRouter([
   {
@@ -34,8 +35,12 @@ const router = createBrowserRouter([
         element: <AllFavorites />
       },
       {
-        path: "/user/list",
+        path: "/user/approve",
         element: <UserListToApprove />
+      },
+      {
+        path: "/user/list",
+        element: <UserList />
       },
       {
         path: "/all/veges",

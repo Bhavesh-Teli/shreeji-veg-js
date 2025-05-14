@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Input, Space, DatePicker, Row, Col, Form, Button, message, Modal, Select, Tooltip, TimePicker, } from "antd";
+import { Table, Input, Space, DatePicker, Row, Col, Form, Button, message, Modal, Select, Tooltip, TimePicker, theme, } from "antd";
 import { AppDispatch, RootState } from "../../redux/store";
 import dayjs, { Dayjs } from "dayjs";
 import { fetchOrders } from "../../redux/actions/ordersAction";
@@ -16,6 +16,8 @@ import localeHi from 'antd/es/date-picker/locale/hi_IN';
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import OrderPDF from "./OrderPDF";
+import UserListToApprove from "../admin/UserListToApprove.tsx";
+import { getUsersToApprove } from "../../services/adminAPI.ts";
 
 interface OrderRecord {
     Bill_No: string;
@@ -65,7 +67,23 @@ const ViewOrders = () => {
     const orderId = location?.state?.billNo || null;
     const orderDate = location?.state?.orderDate || null;
     const [freezeTime, setFreezeTime] = useState(""); // State to track loading status
-    console.log("orderDate: ", orderDate);
+    const [users, setUsers] = useState<any[]>([]);
+    const { token } = theme.useToken();
+
+    console.log("users: ", users);
+
+    const fetchUsers = async () => {
+        try {
+            const response = await getUsersToApprove();
+            setUsers(response.data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     const fetchFreezeTime = async () => {
         try {
@@ -466,6 +484,12 @@ const ViewOrders = () => {
                             </div>
                         </Form.Item>
                     </Col>
+                    {user && user.isAdmin && users.length > 0 && (
+                        <Col xs={26} sm={14} md={8} lg={24}>
+                            <UserListToApprove />
+                        </Col>
+
+                    )}
 
                     {user && !user.isAdmin && (
                         <Col xs={24} sm={12} md={8} lg={6}>
@@ -476,8 +500,8 @@ const ViewOrders = () => {
                     )}
                 </Row>
                 <div>
-                    <h2 className="text-[20px] font-bold mt-2">
-                       Total Orders: {orders?.length}
+                    <h2 style={{marginTop:"8px"}} className={token.colorBgLayout === "White" ? "BgTextBefore" : "BgText"}>
+                        Total Orders: {orders?.length}
                     </h2>
                 </div>
                 <Space direction="vertical" style={{ width: "100%" }}>

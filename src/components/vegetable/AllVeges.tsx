@@ -58,8 +58,9 @@ const AllVeges = () => {
 
     const handleAddToFav = async (vege: Vegetable) => {
         try {
+            const finalSortIndex = 0;
             if (vege.Itm_ID !== undefined) {
-                await AddToFavorite(vege.Itm_ID);
+                await AddToFavorite(vege.Itm_ID, finalSortIndex);
             } else {
                 message.error(t('vegetable.addError'));
             }

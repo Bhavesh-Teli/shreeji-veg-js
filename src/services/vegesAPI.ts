@@ -32,9 +32,9 @@ export const GetFavorites = async (lang: string, id: string) => {
 }
 
 
-export const AddToFavorite = async (userData: number) => {
+export const AddToFavorite = async (userData: number, sortIndex: number = 0) => {
     try {
-        const res = await axios.post(`${API_END_POINT}/addToFavorites`, { Itm_Id: userData }, {
+        const res = await axios.post(`${API_END_POINT}/addToFavorites`, { Itm_Id: userData, Sort_Index: sortIndex }, {
             headers: getAuthHeaders(),
         })
         return res.data
@@ -55,3 +55,16 @@ export const RemoveFavorite = async (userData: number) => {
         throw error;
     }
 }
+
+export const updateSortIndexAPI = async (userData: number, sortIndex: number) => {
+    try {
+        const res = await axios.post(`${API_END_POINT}/updateFavoriteSortIndex`, { Itm_Id: userData, Sort_Index: sortIndex }, {
+            headers: getAuthHeaders(),
+        })
+        return res.data
+    } catch (error) {
+        console.error('Error While Deleting the Favorites:', error)
+        throw error;
+    }
+}
+

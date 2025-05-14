@@ -4,7 +4,7 @@ import { fetchFavoriteVegetables } from "../../redux/actions/vegesAction";
 import { AppDispatch, RootState } from "../../redux/store";
 import { Table, Input, Space, Button, message, theme } from "antd";
 import { useNavigate } from "react-router-dom";
-import { RemoveFavorite } from "../../services/vegesAPI";
+import { RemoveFavorite, updateSortIndexAPI } from "../../services/vegesAPI";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Vegetable } from "../../redux/slice/vegesSlice";
 import { useTranslation } from "react-i18next";
@@ -19,6 +19,8 @@ const FavoriteVeges = () => {
     const [filteredVeges, setFilteredVeges] = useState<Vegetable[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean, Id: string, Our_Shop_Ac: boolean, Ac_Code: string } | null };
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editedSortIndex, setEditedSortIndex] = useState<number | null>(null);
     const pageSize = 20;
 
     const favoriteVeges = favorites || [];
@@ -47,6 +49,8 @@ const FavoriteVeges = () => {
             key: "serial",
             render: (_: unknown, __: unknown, index: number) =>
                 (currentPage - 1) * pageSize + index + 1,
+            // dataIndex: 'Sort_Index',  // <-- bind directly to the backend field
+            // key: 'sortIndex',
         },
         {
             title: t('favorite.name'),
@@ -61,15 +65,94 @@ const FavoriteVeges = () => {
             render: (text: string | null) => text ?? <span style={{ color: '#999' }}>N/A</span>,
         },
         {
+            title: t('favorite.sortIndex'),
+            dataIndex: "Sort_Index",
+            key: "Sort_Index",
+            render: (text: number, record: Vegetable) => {
+                const isEditing = editingId === record.Itm_Id;
+                const value = text ?? 0;
+                return isEditing ? (
+                    <Input
+                        type="text"
+                        value={editedSortIndex ?? ""}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            // Allow only digits
+                            if (/^\d*$/.test(value)) {
+                                setEditedSortIndex(value === "" ? null : Number(value));
+                            }
+                        }}
+                        style={{ width: 80 }}
+                    />
+
+                ) : (
+                    value
+                );
+            },
+        },
+        {
             title: t('favorite.action'),
             key: "action",
-            render: (_: unknown, record: Vegetable) => (
-                <Button danger onClick={() => handleRemoveFav(record)}>
-                    <DeleteOutlined />
-                </Button>
-            ),
+            render: (_: unknown, record: Vegetable) => {
+                const isEditing = editingId === record.Itm_Id;
+
+                return (
+                    <Space>
+                        {isEditing ? (
+                            <>
+                                <Button
+                                    type="primary"
+                                    size="small"
+                                    onClick={() => handleSaveSortIndex(record)}
+                                >
+                                    Save
+                                </Button>
+                                <Button
+                                    size="small"
+                                    onClick={() => {
+                                        setEditingId(null);
+                                        setEditedSortIndex(null);
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Button
+                                    size="small"
+                                    onClick={() => {
+                                        setEditingId(record.Itm_Id ?? null);
+                                        setEditedSortIndex(record.Sort_Index ?? null);
+                                    }}
+                                >
+                                    Edit
+                                </Button>
+                                <Button danger size="small" onClick={() => handleRemoveFav(record)}>
+                                    <DeleteOutlined />
+                                </Button>
+                            </>
+                        )}
+                    </Space>
+                );
+            },
         },
     ];
+
+    const handleSaveSortIndex = async (record: Vegetable) => {
+        if (editedSortIndex === null || record.Itm_Id === undefined) return;
+        try {
+            await updateSortIndexAPI(record.Itm_Id, editedSortIndex);
+            message.success(t('favorite.sortIndexMessage'));
+
+            dispatch(fetchFavoriteVegetables(user?.Id || ""));
+            setEditingId(null);
+            setEditedSortIndex(null);
+        } catch {
+            message.error("Failed to update Sort Index");
+        }
+    };
+
 
     const handleRemoveFav = async (record: Vegetable) => {
         if (record.Itm_Id !== undefined) {

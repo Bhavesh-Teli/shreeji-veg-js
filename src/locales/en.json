@@ -45,7 +45,9 @@
     "action": "Action",
     "removeSuccess": "Removed vege from favorites Successfully!",
     "removeError": "Invalid vegetable ID.",
-    "groupName": "Group Name"
+    "groupName": "Group Name",
+    "sortIndex": "Sort Index",
+    "sortIndexMessage": "Index Updated Successfully"
   },
   "vegetable": {
     "title": "All Vegetables",
@@ -135,7 +137,8 @@
     "installApp": "Install App"
   },
   "footer": {
-    "copyright": "Code Soft. All rights reserved."
+    "copyright": "Code Soft. ",
+    "right": "All rights reserved."
   },
   "languageChange": {
     "message": "Language changed successfully!"

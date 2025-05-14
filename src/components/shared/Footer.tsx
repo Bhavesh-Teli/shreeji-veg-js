@@ -23,10 +23,10 @@ const Footer = () => {
         className="logo-img"
         src="/rahulLogo.jpeg"
         alt="logo"
-        style={{ height: '46px', marginBottom: '4px' ,borderRadius: '40%', marginRight: '10px'}}
+        style={{ height: '38px', marginBottom: '4px' ,borderRadius: '40%', marginRight: '10px'}}
       />
       <span style={{ fontSize: '14px' }}>
-       © {new Date().getFullYear()} {t('footer.copyright')}
+       {t('footer.copyright')} © {new Date().getFullYear()} {t('footer.right')}
       </span>
     </AntFooter>
   );

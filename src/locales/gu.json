@@ -45,7 +45,9 @@
     "action": "ક્રિયા",
     "removeSuccess": "શાકભાજીને સફળતાપૂર્વક પસંદીદામાંથી હટાવવામાં આવ્યું!",
     "removeError": "અમાન્ય શાકભાજી આઈડી.",
-    "groupName": "ગ્રુપ નામ"
+    "groupName": "ગ્રુપ નામ",
+    "sortIndex": "ક્રમ સૂચકાંક",
+    "sortIndexMessage": "સૂચકાંક સફળતાપૂર્વક અપડેટ થયો"
   },
   "vegetable": {
     "title": "બધી શાકભાજી",
@@ -135,7 +137,8 @@
     "installApp": "એપ્લિકેશન ઇન્સ્ટોલ કરો"
   },
   "footer": {
-    "copyright": "કોડ સોફ્ટ. સર્વ હકો રાખેલા છે."
+    "copyright": "કોડ સોફ્ટ.",
+    "right": "બધા હકો રાખવામાં આવેલ છે."
   },
   "languageChange": {
     "message": "ભાષા સફળતાપૂર્વક બદલાઈ ગઈ!"
@@ -149,8 +152,8 @@
     "no_notifications": "કોઈ સૂચનાઓ ઉપલબ્ધ નથી",
     "Please select at least one notification.": "કૃપા કરીને ઓછામાં ઓછા એક સૂચના પસંદ કરો.",
     "deleteConfermation": "શું તમે ખરેખર આ સૂચનાઓ કાઢી નાખવા માંગો છો?",
-    "deleteMessage":"આ",
-    "notifications":"સૂચના(ઓ)ને કાયમ માટે દૂર કરી દેશે.",
+    "deleteMessage": "આ",
+    "notifications": "સૂચના(ઓ)ને કાયમ માટે દૂર કરી દેશે.",
     "ok": "હાં",
     "cancel": "ના",
     "danger": "ખતરો",

@@ -436,7 +436,8 @@ const ViewOrders = () => {
 
         // Only apply this when there’s no orderId
         if (!orderId) {
-            setFilteredOrders(orders);
+            // setFilteredOrders(orders);
+            setFilteredOrders((orders ?? []).slice().sort((a, b) => b.Bill_No - a.Bill_No));
             setShowUserTable(false);
             setShowOrderTable(true);
             return;
@@ -447,7 +448,8 @@ const ViewOrders = () => {
         setSearchTerm(value);
 
         if (!value.trim()) {
-            setFilteredOrders(orders ?? []);
+            // setFilteredOrders(orders ?? []);
+            setFilteredOrders((orders ?? []).slice().sort((a, b) => b.Bill_No - a.Bill_No));
             setUserSearchResults([]);
             setSelectedOrderItems([]);
             setShowOrderTable(true);
@@ -460,7 +462,10 @@ const ViewOrders = () => {
             const filteredByOrderNo = orders?.filter(order =>
                 order.Bill_No.toString().includes(value)
             );
-            setFilteredOrders(filteredByOrderNo ?? []);
+            // setFilteredOrders(filteredByOrderNo ?? []);
+            setFilteredOrders(
+                (filteredByOrderNo ?? []).slice().sort((a, b) => b.Bill_No - a.Bill_No)
+            );
             setShowOrderTable(true);
             setShowUserTable(false);
 

@@ -113,3 +113,16 @@ export const GetFreezeTime = async () => {
         throw error;
     }
 };
+
+export const GetUnits = async () => {
+    try {
+        const res = await axios.get(`${API_END_POINT}/getUnit`, {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (error) {
+        console.error("Error while Getting All Order:", error);
+        throw error;
+    }
+};
+

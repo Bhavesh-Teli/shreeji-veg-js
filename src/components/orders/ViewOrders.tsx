@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Input, Space, DatePicker, Row, Col, Form, Button, message, Modal, Select, Tooltip, TimePicker, theme, } from "antd";
 import { AppDispatch, RootState } from "../../redux/store";
@@ -17,7 +17,8 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import OrderPDF from "./OrderPDF";
 import UserListToApprove from "../admin/UserListToApprove.tsx";
-import { getUsersToApprove } from "../../services/adminAPI.ts";
+import { GetUsersList, getUsersToApprove } from "../../services/adminAPI.ts";
+import debounce from 'lodash/debounce';
 
 interface OrderRecord {
     Bill_No: string;
@@ -69,6 +70,17 @@ const ViewOrders = () => {
     const [freezeTime, setFreezeTime] = useState(""); // State to track loading status
     const [users, setUsers] = useState<any[]>([]);
     const { token } = theme.useToken();
+    interface UserSearchResult {
+        Ac_Name: string;
+        Ac_Code: string;
+        Mobile_No: string;
+    }
+    const [userSearchResults, setUserSearchResults] = useState<UserSearchResult[]>([]);
+    const [filteredOrders, setFilteredOrders] = useState<any[]>([]);
+    // const [allUsers, setAllUser] = useState([]);
+    const [showUserTable, setShowUserTable] = useState(false);
+    const [showOrderTable, setShowOrderTable] = useState(false);
+
 
     const fetchUsers = async () => {
         try {
@@ -99,26 +111,38 @@ const ViewOrders = () => {
     }, [])
 
     useEffect(() => {
-        if (orderId) {
-            setSearchTerm(orderId.toString());
+        if (!orders || orders.length === 0) {
+            setShowOrderTable(true);
+            console.log("Waiting for orders to load...");
+            return;
         }
-    }, [orderId]);
 
-    useEffect(() => {
-        if (orderId && orders && orders.length > 0) {
-            const matchedOrder = orders?.find((order) => order.Bill_No === Number(orderId));
-            if (matchedOrder) {
-                setSelectedOrderItems(matchedOrder.Details || []);
-            }
+        if (!orderId) return;
+
+        const matchedOrder = orders.find(order =>
+            Number(order.Bill_No) === Number(orderId)
+        );
+
+        console.log("matchedOrder:", matchedOrder);
+
+        if (matchedOrder) {
+            setSearchTerm(orderId.toString());
+            setFilteredOrders([matchedOrder]);
+            setSelectedOrderItems(matchedOrder.Details || []);
+            setShowOrderTable(true);
+            setShowUserTable(false);
         }
     }, [orderId, orders]);
 
     useEffect(() => {
         if (selectedYear && orderDate) {
             setSelectedDates([dayjs(orderDate), dayjs(orderDate)]);
-            setSelectedYear(selectedYear)
+            setSelectedYear(selectedYear);
+            if (user && !user.isAdmin) {
+                setFilteredOrders([]);
+            }
         }
-    }, [orderDate, selectedYear]);
+    }, [orderDate, selectedYear, user]);
 
     useEffect(() => {
         const fetchAllYear = async () => {
@@ -155,8 +179,11 @@ const ViewOrders = () => {
                 db_name: selectedYear,
             };
             dispatch(fetchOrders(payload));
+            if (user && !user.isAdmin) {
+                setFilteredOrders([]);
+            }
         }
-    }, [selectedDates, dispatch, selectedYear]);
+    }, [selectedDates, dispatch, selectedYear, user]);
 
 
     const columns = [
@@ -356,7 +383,7 @@ const ViewOrders = () => {
     };
 
     const handleYearChange = (value: string) => {
-        setSelectedYear(value);
+        // setSelectedYear(value);
         try {
 
             const selected = allYear?.find((item) => item.db_name === value);
@@ -389,9 +416,80 @@ const ViewOrders = () => {
 
     const handleSendFreezeTime = async (time: string) => {
         await SendFreezeTime(time);
-        message.success(t('viewOrders.Freezetimesentsuccessfully'));;
-        // Add your logic to send the freeze time to the server or perform any action
+        message.success(t('viewOrders.Freezetimesentsuccessfully'));
     }
+
+    const handleUserClick = (acCode: string) => {
+        // Filter existing order data using Ac_Code
+        const userOrders = orders?.filter(order => order.Ac_Code === acCode);
+
+        setFilteredOrders(userOrders ?? []); // Show only selected user's orders
+        setShowUserTable(false); // Hide the user table
+        setShowOrderTable(true); // Show the orders now
+    };
+
+    useEffect(() => {
+        if (!orders || orders.length === 0) {
+            setShowOrderTable(true);
+            return;
+        }
+
+        // Only apply this when there’s no orderId
+        if (!orderId) {
+            setFilteredOrders(orders);
+            setShowUserTable(false);
+            setShowOrderTable(true);
+            return;
+        }
+    }, [orders]);
+
+    const handleSearchInputChange = useCallback(async (value: string) => {
+        setSearchTerm(value);
+
+        if (!value.trim()) {
+            setFilteredOrders(orders ?? []);
+            setUserSearchResults([]);
+            setSelectedOrderItems([]);
+            setShowOrderTable(true);
+            setShowUserTable(false);
+            return;
+        }
+
+        if (/^\d+$/.test(value)) {
+            // Numeric - filter by Order Number
+            const filteredByOrderNo = orders?.filter(order =>
+                order.Bill_No.toString().includes(value)
+            );
+            setFilteredOrders(filteredByOrderNo ?? []);
+            setShowOrderTable(true);
+            setShowUserTable(false);
+
+            // Don't auto-open details here
+            setSelectedOrderItems([]);
+            return;
+        }
+
+        // Textual - search by Account Name
+        try {
+            const allUsers = await GetUsersList();
+            const matchedUsers = (allUsers?.data ?? []).filter((user: any) =>
+                user.Ac_Name?.toLowerCase().includes(value.toLowerCase())
+            );
+            setUserSearchResults(matchedUsers);
+            setShowUserTable(true);
+            setShowOrderTable(false);
+            setFilteredOrders([]);
+            setSelectedOrderItems([]);
+        } catch {
+            message.error("Failed to search users");
+        }
+    }, [orders]);
+
+    const debouncedSearchHandler = useMemo(() => {
+        return debounce((value: string) => {
+            handleSearchInputChange(value);
+        }, 500); // 500ms debounce
+    }, [handleSearchInputChange]);
 
     return (
         <div className="p-4">
@@ -509,40 +607,77 @@ const ViewOrders = () => {
                         <Input.Search
                             placeholder={t('viewOrders.SearchWithordernumberoraccountname')}
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            // onChange={(e) => setSearchTerm(e.target.value)}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                setSearchTerm(value);
+                                debouncedSearchHandler(e.target.value);
+                            }}
                             enterButton
                             style={{ width: '100%' }}
                             allowClear
                         />
                     }
-                    <Table
-                        columns={columns}
-                        rowKey={(record) => record.Bill_No}
-                        dataSource={
-                            [...(orders || [])]
-                                .sort((a, b) => {
-                                    const billNoDiff = b.Bill_No - a.Bill_No; // Assuming Bill_No is numeric
-                                    if (billNoDiff !== 0) return billNoDiff;
-                                    return dayjs(b.Bill_Date).valueOf() - dayjs(a.Bill_Date).valueOf();
-                                })
-                                .filter((order) => {
-                                    const searchLower = searchTerm.toLowerCase();
-                                    const accountMatch = order.Ac_Name?.toLowerCase().includes(searchLower);
-                                    const orderMatch = order.Bill_No?.toString().includes(searchTerm);
-                                    return accountMatch || orderMatch;
-                                })
-                        }
-                        onRow={(record) => ({
-                            onClick: () => setSelectedOrderItems((record as any).Details || []),
-                        })}
-                        loading={loading}
-                        scroll={{ x: true, }}
-                        pagination={{ pageSize: 5, showSizeChanger: false }}
-                        bordered
-                        size="small"
-                    />
-
-                    {selectedOrderItems.length > 0 && (
+                    {showUserTable && (
+                        <Table
+                            dataSource={userSearchResults}
+                            rowKey="Ac_Code"
+                            columns={[
+                                {
+                                    title: "Account Name",
+                                    dataIndex: "Ac_Name",
+                                    key: "Ac_Name",
+                                },
+                                {
+                                    title: "Account Code",
+                                    dataIndex: "Ac_Code",
+                                    key: "Ac_Code",
+                                },
+                                {
+                                    title: "Mobile Number",
+                                    dataIndex: "Mobile_No",
+                                    key: "Ac_Code",
+                                },
+                            ]}
+                            onRow={(record) => ({
+                                onClick: () => {
+                                    handleUserClick(record.Ac_Code);
+                                },
+                            })}
+                            pagination={false}
+                            bordered
+                        />
+                    )}
+                    {showOrderTable && (
+                        <Table
+                            columns={columns}
+                            rowKey={(record) => record.Bill_No}
+                            // dataSource={
+                            //     [...(orders || [])]
+                            //         .sort((a, b) => {
+                            //             const billNoDiff = b.Bill_No - a.Bill_No; // Assuming Bill_No is numeric
+                            //             if (billNoDiff !== 0) return billNoDiff;
+                            //             return dayjs(b.Bill_Date).valueOf() - dayjs(a.Bill_Date).valueOf();
+                            //         })
+                            //         .filter((order) => {
+                            //             const searchLower = searchTerm.toLowerCase();
+                            //             const accountMatch = order.Ac_Name?.toLowerCase().includes(searchLower);
+                            //             const orderMatch = order.Bill_No?.toString().includes(searchTerm);
+                            //             return accountMatch || orderMatch;
+                            //         })
+                            // }
+                            dataSource={filteredOrders}
+                            onRow={(record) => ({
+                                onClick: () => setSelectedOrderItems((record as any).Details || []),
+                            })}
+                            loading={loading}
+                            scroll={{ x: true, }}
+                            pagination={{ pageSize: 5, showSizeChanger: false }}
+                            bordered
+                            size="small"
+                        />
+                    )}
+                    {selectedOrderItems && selectedOrderItems.length > 0 && (
                         <>
                             <h2 style={{ marginTop: "3px", marginBottom: "3px" }}>{t('viewOrders.item_details')} </h2>
                             <Table

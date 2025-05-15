@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Input, Space, DatePicker, Form, Button, message, Spin, theme } from "antd";
+import { Table, Input, Space, DatePicker, Form, Button, message, Spin, theme, Select } from "antd";
 import { fetchAllVegetables, fetchFavoriteVegetables } from "../../redux/actions/vegesAction";
 import { AppDispatch, RootState } from "../../redux/store";
 import dayjs, { Dayjs } from "dayjs";
-import { AddOrder, GetFreezeTime, GetLrNo, UpdateOrder } from "../../services/orderAPI";
+import { AddOrder, GetFreezeTime, GetLrNo, GetUnits, UpdateOrder } from "../../services/orderAPI";
 import { Vegetable } from "../../redux/slice/vegesSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,13 @@ import 'dayjs/locale/hi';
 import '../../locales/dayJs-gu.ts';
 import localeEn from 'antd/es/date-picker/locale/en_US';
 import localeHi from 'antd/es/date-picker/locale/hi_IN';
+
+
+// Define Unit type if not already imported
+type Unit = {
+  Uni_ID: number;
+  Uni_Name: string;
+};
 
 const AllOrders = () => {
 
@@ -36,6 +43,15 @@ const AllOrders = () => {
   const [isOrderMode, setIsOrderMode] = useState(false);
   const [originalOrderItemIds, setOriginalOrderItemIds] = useState<number[]>([]);
   const [freezeTime, setFreezeTime] = useState(""); // State to track loading status
+  const [units, setUnits] = useState<Unit[]>([]);
+  const [unitSelections, setUnitSelections] = useState<{ [itemId: string]: number }>({});
+
+  const fetchUnits = async () => {
+    const res = await GetUnits();
+    console.log("res", res);
+    setUnits(res.data);
+  }
+
 
   const fetchFreezeTime = async () => {
     try {
@@ -48,6 +64,7 @@ const AllOrders = () => {
 
   useEffect(() => {
     fetchFreezeTime();
+    fetchUnits();
   }, [])
 
   useEffect(() => {
@@ -174,10 +191,16 @@ const AllOrders = () => {
 
       const initialQuantities: Record<string, string> = {};
       const updatedData: any[] = [];
+      const initialUnits: Record<string, number> = {};
 
       orderData.Details.forEach((item: any) => {
         if (item.Itm_Id !== undefined) {
           initialQuantities[item.Itm_Id] = item.Qty;
+
+          if (item.Uni_ID !== undefined) {
+            initialUnits[item.Itm_Id] = item.Uni_ID;
+          }
+
           updatedData.push({
             Itm_Id: item.Itm_Id,
             Itm_Name: item.Itm_Name,
@@ -188,6 +211,7 @@ const AllOrders = () => {
       });
 
       setQuantities(initialQuantities);
+      setUnitSelections(initialUnits);
       setFilteredData(updatedData);
       setIsOrderMode(true);
       setOriginalOrderItemIds(orderData.Details.map((item: { Itm_Id: number }) => item.Itm_Id));
@@ -248,10 +272,11 @@ const AllOrders = () => {
         .filter(item => item.Itm_Id !== undefined)
         .map(item => {
           const quantity = parseFloat(quantities[item.Itm_Id!] || "0");
+          const selectedUnitId = unitSelections[item.Itm_Id!] ?? item.Uni_ID;
           return {
             Itm_Id: item.Itm_Id!,
             Inward: quantity,
-            Uni_ID: item.Uni_ID,
+            Uni_ID: selectedUnitId,
             Itm_Name: item.Itm_Name,
           };
         }),
@@ -263,13 +288,18 @@ const AllOrders = () => {
           !favorites.some(fav => fav.Itm_Id === item.Itm_Id) &&
           parseFloat(quantities[item.Itm_Id!] || "0") > 0
         )
-        .map(item => ({
-          Itm_Id: item.Itm_Id!,
-          Inward: parseFloat(quantities[item.Itm_Id!] || "0"),
-          Uni_ID: item.Uni_ID,
-          Itm_Name: item.Itm_Name,
-        })),
+        .map(item => {
+          const selectedUnitId = unitSelections[item.Itm_Id!] ?? item.Uni_ID
+          return {
+            Itm_Id: item.Itm_Id!,
+            Inward: parseFloat(quantities[item.Itm_Id!] || "0"),
+            Uni_ID: selectedUnitId,
+            Itm_Name: item.Itm_Name,
+          }
+        }),
     ];
+
+    console.log("details: ", details)
 
     const allQuantitiesZero = details.every(item => item.Inward === 0);
 
@@ -293,6 +323,7 @@ const AllOrders = () => {
       setAddLoding(true);
       await AddOrder(payload);
       setQuantities({});
+      setUnitSelections({});
       await handleDateChange(billDate);
       message.success(t('allOrders.orderAdded'));
       navigate("/");
@@ -334,13 +365,41 @@ const AllOrders = () => {
         />
       ),
     },
+    // {
+    //   title: t('allOrders.unit'),
+    //   dataIndex: "Uni_Name",
+    //   key: "Uni_Name",
+    // },
     {
       title: t('allOrders.unit'),
-      dataIndex: "Uni_Name",
-      key: "Uni_Name",
-    },
+      key: "unit",
+      render: (_: unknown, record: Vegetable) => {
+        const selectedUnitId = unitSelections[record.Itm_Id ?? ""] ?? record.Uni_ID;
+
+        return (
+          <Select
+            value={selectedUnitId}
+            onChange={(value) => record.Itm_Id !== undefined && handleUnitChange(String(record.Itm_Id), value)}
+            size="small"
+            className="w-[70px]"
+          >
+            {units.map((unit) => (
+              <Select.Option key={unit.Uni_ID} value={unit.Uni_ID}>
+                {unit.Uni_Name}
+              </Select.Option>
+            ))}
+          </Select>
+        );
+      },
+    }
+
 
   ];
+
+  const handleUnitChange = (itemId: string, unitId: number) => {
+    setUnitSelections((prev) => ({ ...prev, [itemId]: unitId }));
+  };
+
 
   const handleUpdateOrder = async (Id: string) => {
     if (!billNo || !lrNo) {
@@ -349,12 +408,15 @@ const AllOrders = () => {
     }
     const details = filteredData
       .filter(item => item.Itm_Id !== undefined)
-      .map(item => ({
-        Itm_Id: item.Itm_Id!,
-        Inward: parseFloat(quantities[item.Itm_Id!] || "0"),
-        Uni_ID: item.Uni_ID,
-        Itm_Name: item.Itm_Name,
-      }));
+      .map(item => {
+        const selectedUnitId = unitSelections[item.Itm_Id!] ?? item.Uni_ID;
+        return {
+          Itm_Id: item.Itm_Id!,
+          Inward: parseFloat(quantities[item.Itm_Id!] || "0"),
+          Uni_ID: selectedUnitId,
+          Itm_Name: item.Itm_Name,
+        }
+      });
 
     const payload = {
       mode: "edit",

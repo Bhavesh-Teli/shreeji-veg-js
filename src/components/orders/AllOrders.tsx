@@ -471,6 +471,16 @@ const AllOrders = () => {
               size="small"
             />
           </Space>
+          <div className="flex flex-wrap gap-3 justify-start mt-1 mb-4">
+            <Button type="primary" onClick={orderData ? () => handleUpdateOrder(orderData.Id) : handleAddOrder}>
+              {orderData ? t('allOrders.updateOrder') : t('allOrders.updateOrder')}
+            </Button>
+            {
+              <Button type="default" onClick={() => navigate("/")}>
+                {t('allOrders.cancel')}
+              </Button>
+            }
+          </div>
         </>
       )}
     </div>

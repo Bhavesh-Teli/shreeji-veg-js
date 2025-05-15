@@ -64,7 +64,7 @@ const Notifications = () => {
     if (category === 'New User') {
       const str = noti;
       const mobile = str.match(/\b\d{10}\b/);
-      navigate('/user/list', {
+      navigate('/user/approve', {
         state: {
           mobile: mobile ? mobile[0] : null,
         },

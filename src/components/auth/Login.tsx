@@ -9,8 +9,6 @@ import { AppDispatch } from "../../redux/store";
 import { setUser } from "../../redux/slice/authSlice";
 import { ILogin } from "../../types/ILogin";
 import { useTranslation } from "react-i18next";
-// import { askNotificationPermission } from "../../utils/notifications";
-
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -141,6 +139,8 @@ const Login = () => {
                   onKeyPress={(e) => {
                     if (!/^\d$/.test(e.key)) e.preventDefault(); // Allow only digits
                   }}
+                  onCopy={(e) => e.preventDefault()}
+                  onPaste={(e) => e.preventDefault()}
                 />
               </Form.Item>
 

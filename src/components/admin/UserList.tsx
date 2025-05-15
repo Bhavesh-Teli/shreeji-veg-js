@@ -36,11 +36,47 @@ const UserList = () => {
             title: t('AproveUser.name'),
             dataIndex: 'Ac_Name',
             key: 'Ac_Name',
+            width: "20vw"
         },
         {
             title: t('AproveUser.mobile'),
             dataIndex: 'Mobile_No',
             key: 'Mobile_No',
+        },
+        {
+            title: t('AproveUser.action'),
+            key: 'action',
+            render: (_, record) => {
+                console.log("rectors: ", record)
+                if (activeTab === 'toApprove') {
+                    return <Button
+                        size='small'
+                        onClick={() =>
+                            navigate('/add-orders', {
+                                state: {
+                                    Ac_Name: record.Ac_Name,
+                                    Mobile_No: record.Mobile_No,
+                                    Book_Pass: record.Book_Pass,
+                                    Ac_Code: record.Ac_Code,
+                                    Id: record.Id,
+                                    Our_Shop_Ac: record.Our_Shop_Ac,
+                                },
+                            })
+                        }
+                    >
+                        <PlusOutlined />
+                    </Button >
+                } else if (activeTab === 'approved') {
+                    return (
+                        <Button
+                            type="primary"
+                            onClick={() => record.Id && handleStatusChange(record.Id, record.approvalCode || '')}
+                        >
+                            {t('AproveUser.approve')}
+                        </Button>
+                    )
+                }
+            },
         },
         ...(activeTab === 'toApprove' ? [
             {
@@ -72,40 +108,7 @@ const UserList = () => {
                 );
             },
         },
-        {
-            title: t('AproveUser.action'),
-            key: 'action',
-            render: (_, record) => {
-                if (activeTab === 'toApprove') {
-                    return <Button
-                        size='small'
-                        onClick={() =>
-                            navigate('/add-orders', {
-                                state: {
-                                    Ac_Name: record.Ac_Name,
-                                    Mobile_No: record.Mobile_No,
-                                    Book_Pass: record.Book_Pass,
-                                    Ac_Code: record.Ac_Code,
-                                    Id: record.Id,
-                                    Our_Shop_Ac: record.Our_Shop_Ac,
-                                },
-                            })
-                        }
-                    >
-                        <PlusOutlined />
-                    </Button >
-                } else if (activeTab === 'approved') {
-                    return (
-                        <Button
-                            type="primary"
-                            onClick={() => record.Id && handleStatusChange(record.Id, record.approvalCode || '')}
-                        >
-                            {t('AproveUser.approve')}
-                        </Button>
-                    )
-                }
-            },
-        },
+
     ];
 
     const handleStatusChange = async (id: string, status: string) => {
@@ -201,6 +204,7 @@ const UserList = () => {
                     placeholder={t('AproveUser.SearchbyMobileNoorUsername')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    allowClear
                     enterButton
                     style={{ width: '100%', marginBottom: "7px" }}
                 />

@@ -433,7 +433,7 @@ const AllOrders = () => {
               <Form.Item label={"Account Name"} colon={false} style={{ marginBottom: 0 }}>
                 <Input
                   placeholder={(t('allOrders.orderCount'))}
-                  value={orderData?.Ac_Name || ""}
+                  value={orderData?.Ac_Name || userDetails?.Ac_Name}
                   size="small"
                   disabled
                   style={{ fontWeight: "bold", color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}

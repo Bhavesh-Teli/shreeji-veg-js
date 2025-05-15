@@ -116,7 +116,7 @@
   },
   "AproveUser": {
     "title": "મંજૂરી માટે રાહ જોઈ રહ્યા વપરાશકર્તાઓ",
-    "name": "નામ",
+    "name": "ખાતાનું નામ",
     "mobile": "મોબાઈલ નંબર",
     "code": "કોડ",
     "action": "ક્રિયા",
@@ -125,7 +125,7 @@
     "statusError": "સ્થિતિ અપડેટ કરતી વખતે ભૂલ",
     "ApprovedList": "મંજૂર કરેલ યાદી",
     "UserList": "વપરાશકર્તા યાદી",
-    "SearchbyMobileNoorUsername": "મોબાઈલ નંબર અથવા વપરાશકર્તા નામ દ્વારા શોધો",
+    "SearchbyMobileNoorUsername": "મોબાઇલ નંબર અથવા ખાતાના નામ દ્વારા શોધો",
     "Pleasefilltheapprovalcode": "મહેરબાની કરીને મંજૂરી કોડ ભરો"
   },
   "nav": {

@@ -93,7 +93,7 @@ const Register = () => {
         setIntervalId(id);
 
         try {
-            await RequestOTP({mobileNo: values.Mobile_No, Ac_Name: values.Ac_Name});
+            await RequestOTP({ mobileNo: values.Mobile_No, Ac_Name: values.Ac_Name });
             message.success(t("Regester.otpSentSuccess"));
             setOtpSent(true);
         } catch {
@@ -142,6 +142,7 @@ const Register = () => {
                                         label={t("Regester.userName")}
                                         name="Ac_Name"
                                         rules={[{ required: true, message: t("Regester.userName") + t("Regester.is required") }]}
+                                        normalize={(value: string) => value.replace(/[^a-zA-Z0-9\s]/g, "")}
                                     >
                                         <Input prefix={<UserOutlined />} placeholder={t("Regester.userNamePlaceholder")} size="large" />
                                     </Form.Item>
@@ -266,7 +267,7 @@ const Register = () => {
                         </Form>
 
                         <div style={{ textAlign: 'center', marginTop: 10 }}>
-                            <span>{t("Regester.alreadyAccount")} </span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                            <span>{t("Regester.alreadyAccount")} </span>
                             <span
                                 style={{
                                     color: '#1890ff',

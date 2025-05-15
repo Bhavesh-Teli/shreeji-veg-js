@@ -8,6 +8,9 @@ import { RemoveFavorite, updateSortIndexAPI } from "../../services/vegesAPI";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Vegetable } from "../../redux/slice/vegesSlice";
 import { useTranslation } from "react-i18next";
+import { useRef } from "react";
+import type { InputRef } from "antd";
+
 
 const FavoriteVeges = () => {
     const { t } = useTranslation();
@@ -22,8 +25,15 @@ const FavoriteVeges = () => {
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editedSortIndex, setEditedSortIndex] = useState<number | null>(null);
     const pageSize = 20;
+    const inputRef = useRef<InputRef>(null);
 
     const favoriteVeges = favorites || [];
+
+    useEffect(() => {
+        if (editingId !== null && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [editingId]);
 
     useEffect(() => {
         dispatch(fetchFavoriteVegetables(user?.Id || ""));
@@ -74,6 +84,7 @@ const FavoriteVeges = () => {
                 return isEditing ? (
                     <Input
                         type="text"
+                        ref={inputRef}
                         value={editedSortIndex ?? ""}
                         onChange={(e) => {
                             const value = e.target.value;

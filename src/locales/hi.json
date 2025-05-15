@@ -116,7 +116,7 @@
   },
   "AproveUser": {
     "title": "स्वीकृति की प्रतीक्षा कर रहे उपयोगकर्ता",
-    "name": "नाम",
+    "name": "खाता नाम",
     "mobile": "मोबाइल नंबर",
     "code": "कोड",
     "action": "क्रिया",
@@ -125,7 +125,7 @@
     "statusError": "स्थिति अपडेट करने में त्रुटि",
     "ApprovedList": "स्वीकृत सूची",
     "UserList": "उपयोगकर्ता सूची",
-    "SearchbyMobileNoorUsername": "मोबाइल नंबर या उपयोगकर्ता नाम द्वारा खोजें",
+    "SearchbyMobileNoorUsername": "मोबाइल नंबर या खाता नाम से खोजें",
     "Pleasefilltheapprovalcode": "कृपया स्वीकृति कोड भरें"
   },
   "nav": {

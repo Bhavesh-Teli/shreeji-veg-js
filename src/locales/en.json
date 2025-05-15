@@ -116,7 +116,7 @@
   },
   "AproveUser": {
     "title": "Users Pending Approval",
-    "name": "Name",
+    "name": "Account Name",
     "mobile": "Mobile No",
     "code": "Code",
     "action": "Action",
@@ -125,7 +125,7 @@
     "statusError": "Error updating status",
     "ApprovedList": "Approved List",
     "UserList": "User List",
-    "SearchbyMobileNoorUsername": "Search by Mobile No or Username",
+    "SearchbyMobileNoorUsername": "Search by Mobile No or Account Name",
     "Pleasefilltheapprovalcode": "Please fill the approval code"
   },
   "nav": {

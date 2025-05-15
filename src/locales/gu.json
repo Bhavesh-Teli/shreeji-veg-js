@@ -12,7 +12,8 @@
     "registerNow": "હમણાં રજીસ્ટર કરો",
     "loginSuccess": "લોગિન સફળ થયું!",
     "unexpectedError": "અનપેક્ષિત ભૂલ થઈ",
-    "mobileNumberMessage": "મોબાઇલ નંબર ચોક્કસ 10 અંકનો હોવો જોઈએ."
+    "mobileNumberMessage": "મોબાઇલ નંબર ચોક્કસ 10 અંકનો હોવો જોઈએ.",
+    "ForgotPassword": "પાસવર્ડ ભૂલી ગયા છો?"
   },
   "Regester": {
     "userName": "ખાતાનું નામ",
@@ -167,5 +168,29 @@
     "deleteAllNotifications": "તે તમામ સૂચનાઓને દૂર કરશે.",
     "DeleteAll": "બધા કાઢી નાખો",
     "DeleteNotificationsMessage": "આ ઓર્ડર દૂર કરી દેવામાં આવ્યો છે."
+  },
+  "forgotPassword": {
+    "otpSentSuccess": "ઓટીપી સફળતાપૂર્વક મોકલાયો!",
+    "FailedtosendOTP": "ઓટીપી મોકલવામાં નિષ્ફળ",
+    "Passwordupdatedsuccessfully!": "પાસવર્ડ સફળતાપૂર્વક અપડેટ થયો!",
+    "Failedtoresetpassword": "પાસવર્ડ ફરીથી સેટ કરવામાં નિષ્ફળ",
+    "ForgotPassword": "પાસવર્ડ ભૂલી ગયા છો",
+    "MobileNumber": "મોબાઇલ નંબર",
+    "Pleaseenteryourmobilenumber": "મહેરબાની કરીને તમારો મોબાઇલ નંબર દાખલ કરો",
+    "Pleaseenteravalid10-digitmobilenumber": "મહેરબાની કરીને માન્ય 10-અંકનો મોબાઇલ નંબર દાખલ કરો",
+    "Entermobilenumber": "મોબાઇલ નંબર દાખલ કરો",
+    "OTP": "ઓટીપી",
+    "PleaseentertheOTP": "મહેરબાની કરીને ઓટીપી દાખલ કરો",
+    "OTPmustbeexactly6digits": "ઓટીપી ચોક્કસ 6 અંકનો હોવો જોઈએ",
+    "EnterOTP": "ઓટીપી દાખલ કરો",
+    "NewPassword": "નવો પાસવર્ડ",
+    "Pleaseenteranewpassword": "મહેરબાની કરીને નવો પાસવર્ડ દાખલ કરો",
+    "passwordmustbe": "પાસવર્ડ 5-20 અક્ષરનો હોવો જોઈએ જેમાં એક અપરકેસ, એક લોઅરકેસ અને એક વિશિષ્ટ અક્ષર હોય",
+    "ConfirmPassword": "પાસવર્ડની પુષ્ટિ કરો",
+    "Pleaseconfirmyourpassword": "મહેરબાની કરીને તમારો પાસવર્ડ પુષ્ટિ કરો",
+    "Passwordsdonotmatch!": "પાસવર્ડ મેળ ખાતા નથી!",
+    "SendOTP": "ઓટીપી મોકલો",
+    "ResetPassword": "પાસવર્ડ ફરીથી સેટ કરો",
+    "BacktoLogin": "લોગિન પર પાછા જાઓ"
   }
 }

@@ -12,7 +12,8 @@
     "registerNow": "Register Now",
     "loginSuccess": "Login successful!",
     "unexpectedError": "An unexpected error occurred",
-    "mobileNumberMessage": "Mobile number must be exactly 10 digits"
+    "mobileNumberMessage": "Mobile number must be exactly 10 digits",
+    "ForgotPassword": "Forgot Password?"
   },
   "Regester": {
     "userName": "Account Name",
@@ -167,5 +168,29 @@
     "deleteAllNotifications": "It will delete all the notifications",
     "DeleteAll": "Delete All",
     "DeleteNotificationsMessage": "This order has been deleted."
+  },
+  "forgotPassword": {
+    "otpSentSuccess": "OTP sent successfully!",
+    "FailedtosendOTP": "Failed to send OTP",
+   "Passwordupdatedsuccessfully!": "Password updated successfully!",
+   "Failedtoresetpassword": "Failed to reset password",
+   "ForgotPassword": "Forgot Password",
+   "MobileNumber": "Mobile Number",
+   "Pleaseenteryourmobilenumber": "Please enter your mobile number",
+   "Pleaseenteravalid10-digitmobilenumber": "Please enter a valid 10-digit mobile number",
+   "Entermobilenumber": "Enter mobile number",
+   "OTP": "OTP",
+   "PleaseentertheOTP": "Please enter the OTP",
+   "OTPmustbeexactly6digits": "OTP must be exactly 6 digits",
+   "EnterOTP": "Enter OTP",
+   "NewPassword": "New Password",
+    "PleaseentertheNewPassword": "Please enter the new password",
+    "passwordmustbe": "Password must be 5-20 characters with uppercase, lowercase & a special character",
+    "ConfirmPassword": "Confirm Password",
+    "Pleaseconfirmyourpassword": "Please confirm your password",
+    "Passwordsdonotmatch!": "Passwords do not match!",
+    "SendOTP": "Send OTP",
+    "ResetPassword": "Reset Password",
+    "BacktoLogin": "Back to Login"
   }
 }

@@ -3,8 +3,10 @@ import { LockOutlined, NumberOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ForgetPassword, ResetPassword } from "../../services/authAPI";
+import { useTranslation } from "react-i18next";
 
 const ForgotPassword = () => {
+    const { t } = useTranslation();
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const [step, setStep] = useState<"mobile" | "otp">("mobile");
@@ -15,10 +17,10 @@ const ForgotPassword = () => {
             const { Mobile_No } = await form.validateFields(["Mobile_No"]);
             setLoading(true);
             await ForgetPassword({ Mobile_No });
-            message.success("OTP sent successfully!");
+            message.success(t('forgotPassword.otpSentSuccess'));
             setStep("otp");
         } catch {
-            message.error("Failed to send OTP");
+            message.error(t('forgotPassword.FailedtosendOTP'));
         } finally {
             setLoading(false);
         }
@@ -29,10 +31,10 @@ const ForgotPassword = () => {
             const { Mobile_No, otp, newPassword } = await form.validateFields();
             setLoading(true);
             await ResetPassword({ Mobile_No, otp, newPassword });
-            message.success("Password updated successfully!");
+            message.success(t('forgotPassword.Passwordupdatedsuccessfully'));
             navigate("/login");
         } catch {
-            message.error("Failed to reset password");
+            message.error(t('forgotPassword.Failedtoresetpassword'));
         } finally {
             setLoading(false);
         }
@@ -40,23 +42,23 @@ const ForgotPassword = () => {
 
     return (
         <div style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#f0f2f5" }}>
-            <Card title="Forgot Password" style={{ width: 400 }}>
+            <Card title={t('forgotPassword.ForgotPassword')} style={{ width: 400 }}>
                 <Form form={form} layout="vertical">
                     <Form.Item
-                        label="Mobile Number"
+                        label={t('forgotPassword.MobileNumber')}
                         name="Mobile_No"
                         rules={[
-                            { required: true, message: "Please enter your mobile number" },
+                            { required: true, message: t('forgotPassword.Pleaseenteryourmobilenumber') },
                             {
                                 pattern: /^[6-9]\d{9}$/,
-                                message: "Please enter a valid 10-digit mobile number",
+                                message: t('forgotPassword.Pleaseenteravalid10-digitmobilenumber'),
                             },
                         ]}
                     >
                         <Input
                             addonBefore="+91"
                             maxLength={10}
-                            placeholder="Enter mobile number"
+                            placeholder={t('forgotPassword.Entermobilenumber')}
                             onKeyPress={(e) => {
                                 if (!/^\d$/.test(e.key)) e.preventDefault(); // block non-numeric input
                             }}
@@ -67,19 +69,19 @@ const ForgotPassword = () => {
                     {step === "otp" && (
                         <>
                             <Form.Item
-                                label="OTP"
+                                label={t('forgotPassword.OTP')}
                                 name="otp"
                                 rules={[
-                                    { required: true, message: "Please enter the OTP" },
+                                    { required: true, message: t('forgotPassword.PleaseentertheOTP') },
                                     {
                                         pattern: /^\d{6}$/,
-                                        message: "OTP must be exactly 6 digits",
+                                        message: t('forgotPassword.OTPmustbeexactly6digits'),
                                     },
                                 ]}
                             >
                                 <Input
                                     prefix={<NumberOutlined />}
-                                    placeholder="Enter OTP"
+                                    placeholder={t('forgotPassword.EnterOTP')}
                                     maxLength={6}
                                     onKeyPress={(e) => {
                                         if (!/^\d$/.test(e.key)) e.preventDefault(); // allow digits only
@@ -88,36 +90,36 @@ const ForgotPassword = () => {
                             </Form.Item>
 
                             <Form.Item
-                                label="New Password"
+                                label={t('forgotPassword.NewPassword')}
                                 name="newPassword"
                                 rules={[
-                                    { required: true, message: "Please enter new password" },
+                                    { required: true, message: t('forgotPassword.Pleaseenternewpassword') },
                                     {
                                         pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{5,20}$/,
-                                        message: "Password: 5-20 chars, 1 upper, 1 lower & 1 special!"
+                                        message: t('forgotPassword.passwordmustbe'),
                                     }
                                 ]}
                             >
-                                <Input.Password prefix={<LockOutlined />} placeholder="New password" />
+                                <Input.Password prefix={<LockOutlined />} placeholder={t('forgotPassword.Newpassword')} />
                             </Form.Item>
 
                             <Form.Item
-                                label="Confirm Password"
+                                label={t('forgotPassword.ConfirmPassword')}
                                 name="confirmPassword"
                                 dependencies={['newPassword']}
                                 rules={[
-                                    { required: true, message: "Please confirm your password" },
+                                    { required: true, message: t('forgotPassword.Pleaseconfirmyourpassword') },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (!value || getFieldValue('newPassword') === value) {
                                                 return Promise.resolve();
                                             }
-                                            return Promise.reject(new Error("Passwords do not match"));
+                                            return Promise.reject(new Error(t('forgotPassword.Passwordsdonotmatch!')));
                                         },
                                     }),
                                 ]}
                             >
-                                <Input.Password prefix={<LockOutlined />} placeholder="Confirm password" />
+                                <Input.Password prefix={<LockOutlined />} placeholder={t('forgotPassword.ConfirmPassword')} />
                             </Form.Item>
                         </>
                     )}
@@ -125,18 +127,18 @@ const ForgotPassword = () => {
                     <Form.Item>
                         {step === "mobile" ? (
                             <Button type="primary" block loading={loading} onClick={handleSendOtp}>
-                                Send OTP
+                                {t('forgotPassword.SendOTP')}
                             </Button>
                         ) : (
                             <Button type="primary" block loading={loading} onClick={handleResetPassword}>
-                                Reset Password
+                                {t('forgotPassword.ResetPassword')}
                             </Button>
                         )}
                     </Form.Item>
 
                     <Form.Item>
                         <Button type="link" block onClick={() => navigate("/login")}>
-                            Back to Login
+                            {t('forgotPassword.BacktoLogin')}
                         </Button>
                     </Form.Item>
                 </Form>

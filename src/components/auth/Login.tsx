@@ -170,7 +170,7 @@ const Login = () => {
                       onClick={() => navigate("/forgot-password")}
                       style={{ padding: 0, margin: 0 }}
                     >
-                      Forgot Password?
+                      {t("login.ForgotPassword")}
                     </Button>
                   </Col>
                 </Row>

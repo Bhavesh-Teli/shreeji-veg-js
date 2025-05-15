@@ -12,7 +12,8 @@
     "registerNow": "अब रजिस्टर करें",
     "loginSuccess": "लॉगिन सफल हुआ!",
     "unexpectedError": "कुछ गलत हो गया है",
-    "mobileNumberMessage": "मोबाइल नंबर ठीक 10 अंकों का होना चाहिए।"
+    "mobileNumberMessage": "मोबाइल नंबर ठीक 10 अंकों का होना चाहिए।",
+    "ForgotPassword": "पासवर्ड भूल गए?"
   },
   "Regester": {
     "userName": "खाता नाम",
@@ -167,5 +168,29 @@
     "deleteAllNotifications": "यह सभी सूचनाएँ हटा देगा",
     "DeleteAll": "सभी हटाएं",
     "DeleteNotificationsMessage": "यह ऑर्डर हटा दिया गया है।"
+  },
+  "forgotPassword": {
+   "otpSentSuccess": "ओटीपी सफलतापूर्वक भेजा गया!",
+   "FailedtosendOTP": "ओटीपी भेजने में विफल",
+   "Passwordupdatedsuccessfully!": "पासवर्ड सफलतापूर्वक अपडेट किया गया!",
+   "Failedtoresetpassword": "पासवर्ड रीसेट करने में विफल",
+   "ForgotPassword": "पासवर्ड भूल गए",
+   "MobileNumber": "मोबाइल नंबर",
+   "Pleaseenteryourmobilenumber": "कृपया अपना मोबाइल नंबर दर्ज करें",
+   "Pleaseenteravalid10-digitmobilenumber": "कृपया एक मान्य 10-अंक का मोबाइल नंबर दर्ज करें",
+   "Entermobilenumber": "कृपया मोबाइल नंबर दर्ज करें",
+   "OTP": "ओटीपी",
+   "PleaseentertheOTP": "कृपया ओटीपी दर्ज करें",
+   "OTPmustbeexactly6digits": "ओटीपी को ठीक 6 अंकों का होना चाहिए",
+   "EnterOTP": "ओटीपी दर्ज करें",
+    "NewPassword": "नया पासवर्ड",
+    "Pleaseenternewpassword": "कृपया नया पासवर्ड दर्ज करें",
+    "passwordmustbe": "पासवर्ड 5-20 अक्षरों का होना चाहिए जिसमें एक अपरकेस, एक लोअरकेस और एक विशेष वर्ण हो",
+    "ConfirmPassword": "पासवर्ड की पुष्टि करें",
+    "Pleaseconfirmyourpassword": "कृपया अपना पासवर्ड की पुष्टि करें",
+    "Passwordsdonotmatch!": "पासवर्ड मेल नहीं खाते!",
+    "SendOTP": "ओटीपी भेजें",
+    "ResetPassword": "पासवर्ड रीसेट करें",
+    "BacktoLogin": "लॉगिन पर वापस जाएं"
   }
 }

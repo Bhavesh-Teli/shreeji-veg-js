@@ -42,13 +42,18 @@ const AllVeges = () => {
     }, [dispatch, user]);
 
     useEffect(() => {
+        const search = searchText.trim().toLowerCase();
+
         const filtered = allVeges.filter((veg: Vegetable) => {
-            // If Itm_Name is null, include it only when there's no search text
-            if (!veg.Itm_Name) {
-                return searchText.trim() === ""; // show these only if search is empty
+            const itmName = veg.Itm_Name?.toLowerCase().trim() || "";
+            const itmNameEn = veg.Itm_Name_en?.toLowerCase().trim() || "";
+
+            if (!search) {
+                return true;
             }
 
-            return veg.Itm_Name.toLowerCase().includes(searchText.toLowerCase());
+            const match = itmName.includes(search) || itmNameEn.includes(search);
+            return match;
         });
 
         setFilteredVeges(filtered);
@@ -87,7 +92,9 @@ const AllVeges = () => {
             title: t('vegetable.name'),
             dataIndex: "Itm_Name",
             key: "Itm_Name",
-            render: (text: string | null) => text ?? <span style={{ color: '#999' }}>N/A</span>,
+            render: (_: any, record: Vegetable) => (
+                record.Itm_Name ?? record.Itm_Name_en ?? <span style={{ color: '#999' }}>N/A</span>
+            ),
         },
         {
             title: t('vegetable.groupName'),

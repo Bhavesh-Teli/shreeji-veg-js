@@ -17,7 +17,7 @@ const ForgotPassword = () => {
             await ForgetPassword({ Mobile_No });
             message.success("OTP sent successfully!");
             setStep("otp");
-        } catch{
+        } catch {
             message.error("Failed to send OTP");
         } finally {
             setLoading(false);
@@ -90,16 +90,34 @@ const ForgotPassword = () => {
                             <Form.Item
                                 label="New Password"
                                 name="newPassword"
-                                rules={
-                                    [{ required: true, message: "Please enter new password" },
+                                rules={[
+                                    { required: true, message: "Please enter new password" },
                                     {
                                         pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{5,20}$/,
-                                        message: ("Regester.Password: 5-20 chars, 1 upper, 1 lower & 1 special!")
+                                        message: "Password: 5-20 chars, 1 upper, 1 lower & 1 special!"
                                     }
-
-                                    ]}
+                                ]}
                             >
                                 <Input.Password prefix={<LockOutlined />} placeholder="New password" />
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Confirm Password"
+                                name="confirmPassword"
+                                dependencies={['newPassword']}
+                                rules={[
+                                    { required: true, message: "Please confirm your password" },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value || getFieldValue('newPassword') === value) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error("Passwords do not match"));
+                                        },
+                                    }),
+                                ]}
+                            >
+                                <Input.Password prefix={<LockOutlined />} placeholder="Confirm password" />
                             </Form.Item>
                         </>
                     )}

@@ -10,6 +10,7 @@ interface Vegetable {
     Uni_Name?: string;
     Itm_Code?: string;
     Sort_Index?: number;
+    Itm_Name_en?:string;
 }
 
 interface VegetablesState {

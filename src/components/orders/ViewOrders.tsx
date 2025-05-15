@@ -49,13 +49,13 @@ const ViewOrders = () => {
                 return localeEn;
         }
     };
-
+    const tomorrow = dayjs().add(1, 'day');
     const currentAntdLocale = getAntdLocale();
     const dispatch = useDispatch<AppDispatch>();
     const { orders, loading } = useSelector((state: RootState) => state.orders) as { orders: any[] | null; loading: boolean };
     const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean } | null };
     const { RangePicker } = DatePicker;
-    const [selectedDates, setSelectedDates] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(null);
+    const [selectedDates, setSelectedDates] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>();
     const { Option } = Select;
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
@@ -155,8 +155,8 @@ const ViewOrders = () => {
                 if (currentYear) {
                     setSelectedYear(currentYear.db_name);
                     if (currentYear.year_type === "C") {
-                        const today = dayjs().startOf('day');
-                        setSelectedDates([today, today]);
+                        // const today = dayjs().startOf('day');
+                        setSelectedDates([tomorrow, tomorrow]);
                     } else {
                         const startDate = dayjs(`${currentYear.year1}-04-01`).startOf("day");
                         const endDate = dayjs(`${currentYear.year2}-03-31`).endOf("day");
@@ -390,8 +390,8 @@ const ViewOrders = () => {
             if (selected) {
                 setSelectedYear(selected.db_name);
                 if (selected.year_type === "C") {
-                    const today = dayjs().startOf('day');
-                    setSelectedDates([today, today]);
+                    // const today = dayjs().startOf('day');
+                    setSelectedDates([tomorrow, tomorrow]);
                 } else {
                     const startDate = dayjs(`${selected.year1}-04-01`).startOf("day");
                     const endDate = dayjs(`${selected.year2}-03-31`).endOf("day");
@@ -672,7 +672,7 @@ const ViewOrders = () => {
                             })}
                             loading={loading}
                             scroll={{ x: true, }}
-                            pagination={{ pageSize: 5, showSizeChanger: false }}
+                            pagination={{ pageSize: 10, showSizeChanger: false }}
                             bordered
                             size="small"
                         />

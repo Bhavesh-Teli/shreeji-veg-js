@@ -172,7 +172,7 @@ const ViewOrders = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedDates) {
+        if (selectedDates  && user) {
             const payload = {
                 fromDate: selectedDates[0].format("YYYY-MM-DD"),
                 toDate: selectedDates[1].format("YYYY-MM-DD"),

@@ -102,43 +102,6 @@ const Notifications = () => {
     }
   };
 
-
-  // const handleCardClick = (category: string, noti: string) => {
-  //   if (category === 'New User') {
-  //     const str = noti;
-  //     const mobile = str.match(/\b\d{10}\b/)
-  //     navigate('/user/list', {
-  //       state: {
-  //         mobile: mobile ? mobile[0] : null,
-  //       },
-  //     });
-  //   } else if (category === 'Order') {
-
-  //     const isDeleted = /delete(d)?/i.test(noti);
-  //     if (isDeleted) {
-  //       message.info("This order has been deleted.")
-  //       return;
-  //     }
-
-  //     const str = noti;
-  //     const regex = /order (\d+)/i;
-  //     const match = str ? str.match(regex) : null;
-  //     const billNo = match ? match[1] : null;
-  //     // Extract date in YYYY-MM-DD format
-  //     const dateRegex = /\d{4}-\d{2}-\d{2}/;
-  //     const dateMatch = str.match(dateRegex);
-  //     const orderDate = dateMatch ? dateMatch[0] : null;
-  //     if (billNo) {
-  //       navigate('/', {
-  //         state: {
-  //           billNo,
-  //           orderDate,
-  //         },
-  //       });
-  //     }
-  //   }
-  // };
-
   const handleCheckboxChange = (id: number, checked: boolean) => {
     setSelectedIds(prev => {
       const updated = checked ? [...prev, id] : prev.filter(item => item !== id);
@@ -265,7 +228,6 @@ const Notifications = () => {
               {filteredNotifications && filteredNotifications.map((notification, index) => (
                 <Col xs={24} sm={12} md={8} lg={6} key={index}>
                   <Card
-                    // title={category === "Order" ? `Order` : `New User`}
                     title={<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span>{getCardTitle(notification.Cat)}</span>
                       <Checkbox

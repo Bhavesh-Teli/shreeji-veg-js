@@ -19,6 +19,7 @@ import Notifications from './components/notification/Notifications'
 import { I18nextProvider } from 'react-i18next';
 import ForgotPassword from './components/auth/ForgotPassword'
 import UserList from './components/admin/UserList'
+import ProtectedAdminRoute from './components/ProtectedAdminRoute'
 
 const router = createBrowserRouter([
   {
@@ -36,11 +37,21 @@ const router = createBrowserRouter([
       },
       {
         path: "/user/approve",
-        element: <UserListToApprove />
+        element:
+          (
+            <ProtectedAdminRoute>
+              <UserListToApprove />
+            </ProtectedAdminRoute>
+          )
       },
       {
         path: "/user/list",
-        element: <UserList />
+        element:
+          (
+            <ProtectedAdminRoute>
+              <UserList />
+            </ProtectedAdminRoute>
+          )
       },
       {
         path: "/all/veges",
@@ -56,7 +67,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/notification",
-        element: <Notifications />
+        element:
+          (
+            <ProtectedAdminRoute>
+              <Notifications />
+            </ProtectedAdminRoute>
+          )
       },
     ]
   },

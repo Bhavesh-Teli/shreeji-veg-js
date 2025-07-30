@@ -1,6 +1,6 @@
 {
   "login": {
-    "UserPhoneNo": "Phone No.",
+    "UserPhoneNo": "Mobile No.",
     "enterPhoneNo": "Please enter your PhoneNo!",
     "PhoneNoPlaceholder": "Enter your PhoneNo",
     "password": "Password",
@@ -17,8 +17,11 @@
   },
   "Regester": {
     "userName": "Account Name",
+    "least": " must be at least 12 characters",
+    "most": " must be at most 60 characters",
     "userNamePlaceholder": "Enter your account name",
-    "mobileNumber": "Mobile No.(as User Name)",
+    "mobileNumber": "WhatsApp Mobile No.",
+    "asUserName": "(As User Name)",
     "mobileNumberPlaceholder": "Enter your mobile number",
     "password": "Password",
     "confirmPassword": "Confirm Password",
@@ -38,7 +41,9 @@
     "unexpectedError": "An unexpected error occurred",
     "otpSentSuccess": "OTP sent successfully!",
     "otpSendFail": "Failed to send OTP",
-    "enterMobileWarning": "Please enter a valid mobile number first"
+    "enterMobileWarning": "Please enter a valid mobile number first",
+    "bookPassWarning": "Please enter a Password first",
+    "confirmPasswordWarning": "Please enter Confirm Password first"
   },
   "favorite": {
     "title": "Favorite Vegetables",
@@ -83,12 +88,16 @@
     "orderUpdated": "Order updated successfully",
     "orderAddFailed": "order not saved",
     "orderUpdateFailed": "order not saved",
-    "addAtlestOne": "Please enter at least one quantity greater than zero."
+    "addAtlestOne": "Please enter at least one quantity greater than zero.",
+    "deliveryAddress1": "Delivery Address 1",
+    "deliveryAddress2": "Delivery Address 2",
+    "deliveryTime": "Delivery Time"
   },
   "viewOrders": {
     "account_code": "Account Code",
     "account_name": "Account Name",
     "order_number": "Order Number",
+    "billType": "Bill Type",
     "order_date": "Order Date",
     "action": "Action",
     "invalidBillNo": "Invalid Bill Number",
@@ -124,7 +133,7 @@
     "approve": "Approve",
     "statusSuccess": "Status updated successfully",
     "statusError": "Error updating status",
-    "ApprovedList": "Approved List",
+    "ApprovedList": "Pending Approval List",
     "UserList": "User List",
     "SearchbyMobileNoorUsername": "Search by Mobile No or Account Name",
     "Pleasefilltheapprovalcode": "Please fill the approval code"
@@ -141,7 +150,7 @@
     "installApp": "Install App"
   },
   "footer": {
-    "copyright": "The Code Soft. ",
+    "copyright": "The Code Soft. Contact No. 9265722877 ",
     "right": "All rights reserved."
   },
   "languageChange": {
@@ -172,18 +181,18 @@
   "forgotPassword": {
     "otpSentSuccess": "OTP sent successfully!",
     "FailedtosendOTP": "Failed to send OTP",
-   "Passwordupdatedsuccessfully!": "Password updated successfully!",
-   "Failedtoresetpassword": "Failed to reset password",
-   "ForgotPassword": "Forgot Password",
-   "MobileNumber": "Mobile Number",
-   "Pleaseenteryourmobilenumber": "Please enter your mobile number",
-   "Pleaseenteravalid10-digitmobilenumber": "Please enter a valid 10-digit mobile number",
-   "Entermobilenumber": "Enter mobile number",
-   "OTP": "OTP",
-   "PleaseentertheOTP": "Please enter the OTP",
-   "OTPmustbeexactly6digits": "OTP must be exactly 6 digits",
-   "EnterOTP": "Enter OTP",
-   "NewPassword": "New Password",
+    "Passwordupdatedsuccessfully!": "Password updated successfully!",
+    "Failedtoresetpassword": "Failed to reset password",
+    "ForgotPassword": "Forgot Password",
+    "MobileNumber": "Mobile Number",
+    "Pleaseenteryourmobilenumber": "Please enter your mobile number",
+    "Pleaseenteravalid10-digitmobilenumber": "Please enter a valid 10-digit mobile number",
+    "Entermobilenumber": "Enter mobile number",
+    "OTP": "OTP",
+    "PleaseentertheOTP": "Please enter the OTP",
+    "OTPmustbeexactly6digits": "OTP must be exactly 6 digits",
+    "EnterOTP": "Enter OTP",
+    "NewPassword": "New Password",
     "PleaseentertheNewPassword": "Please enter the new password",
     "passwordmustbe": "Password must be 5-20 characters with uppercase, lowercase & a special character",
     "ConfirmPassword": "Confirm Password",

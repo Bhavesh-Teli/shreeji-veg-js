@@ -1,6 +1,6 @@
 {
   "login": {
-    "UserPhoneNo": "फोन नंबर",
+    "UserPhoneNo": "मोबाइल नंबर",
     "enterPhoneNo": "कृपया अपना फोन नंबर दर्ज करें!",
     "PhoneNoPlaceholder": "अपना फोन नंबर दर्ज करें",
     "password": "पासवर्ड",
@@ -17,8 +17,11 @@
   },
   "Regester": {
     "userName": "खाता नाम",
+    "least": " कम से कम 12 अक्षर होने चाहिए",
+    "most": " अधिकतम 60 अक्षर होने चाहिए",
     "userNamePlaceholder": "अपना खाता नाम दर्ज करें",
-    "mobileNumber": "मोबाइल नं.(यूज़र नेम के रूप में)",
+    "mobileNumber": "व्हाट्सएप मोबाइल नंबर",
+    "asUserName": "(यूज़र नेम के रूप में)",
     "mobileNumberPlaceholder": "अपना मोबाइल नंबर दर्ज करें",
     "password": "पासवर्ड",
     "confirmPassword": "पासवर्ड की पुष्टि करें",
@@ -38,7 +41,8 @@
     "unexpectedError": "कुछ गलत हो गया है",
     "otpSentSuccess": "ओटीपी सफलतापूर्वक भेजा गया!",
     "otpSendFail": "ओटीपी भेजने में विफल",
-    "enterMobileWarning": "कृपया पहले एक मान्य मोबाइल नंबर दर्ज करें"
+    "enterMobileWarning": "कृपया पहले एक मान्य मोबाइल नंबर दर्ज करें",
+    "bookPassWarning": "कृपया पहले पासवर्ड दर्ज करें"
   },
   "favorite": {
     "title": "पसंदीदा सब्ज़ियाँ",
@@ -83,12 +87,16 @@
     "orderUpdated": "ऑर्डर सफलतापूर्वक अपडेट किया गया",
     "orderAddFailed": "ऑर्डर जोड़ने में विफल",
     "orderUpdateFailed": "ऑर्डर अपडेट करने में विफल",
-    "addAtlestOne": "कृपया एक मात्रा दर्ज करें जो शून्य से अधिक हो।"
+    "addAtlestOne": "कृपया एक मात्रा दर्ज करें जो शून्य से अधिक हो।",
+    "deliveryAddress1": "डिलीवरी एड्रेस 1",
+    "deliveryAddress2": "डिलीवरी एड्रेस 2",
+    "deliveryTime": "डिलीवरी समय"
   },
   "viewOrders": {
     "account_code": "खाता कोड",
     "account_name": "खाता नाम",
     "order_number": "ऑर्डर नंबर",
+    "billType": "बिल टाइप",
     "order_date": "ऑर्डर तिथि",
     "action": "क्रिया",
     "invalidBillNo": "अमान्य बिल नंबर",
@@ -124,7 +132,7 @@
     "approve": "स्वीकृत करें",
     "statusSuccess": "स्थिति सफलतापूर्वक अपडेट की गई",
     "statusError": "स्थिति अपडेट करने में त्रुटि",
-    "ApprovedList": "स्वीकृत सूची",
+    "ApprovedList": "अनुमोदन लंबित सूची",
     "UserList": "उपयोगकर्ता सूची",
     "SearchbyMobileNoorUsername": "मोबाइल नंबर या खाता नाम से खोजें",
     "Pleasefilltheapprovalcode": "कृपया स्वीकृति कोड भरें"
@@ -141,7 +149,7 @@
     "installApp": "ऐप इंस्टॉल करें"
   },
   "footer": {
-    "copyright": "द कोड सॉफ्ट।",
+    "copyright": "द कोड सॉफ्ट। संपर्क नंबर: 9265722877",
     "right": "सर्वाधिकार सुरक्षित।"
   },
   "languageChange": {
@@ -170,19 +178,19 @@
     "DeleteNotificationsMessage": "यह ऑर्डर हटा दिया गया है।"
   },
   "forgotPassword": {
-   "otpSentSuccess": "ओटीपी सफलतापूर्वक भेजा गया!",
-   "FailedtosendOTP": "ओटीपी भेजने में विफल",
-   "Passwordupdatedsuccessfully!": "पासवर्ड सफलतापूर्वक अपडेट किया गया!",
-   "Failedtoresetpassword": "पासवर्ड रीसेट करने में विफल",
-   "ForgotPassword": "पासवर्ड भूल गए",
-   "MobileNumber": "मोबाइल नंबर",
-   "Pleaseenteryourmobilenumber": "कृपया अपना मोबाइल नंबर दर्ज करें",
-   "Pleaseenteravalid10-digitmobilenumber": "कृपया एक मान्य 10-अंक का मोबाइल नंबर दर्ज करें",
-   "Entermobilenumber": "कृपया मोबाइल नंबर दर्ज करें",
-   "OTP": "ओटीपी",
-   "PleaseentertheOTP": "कृपया ओटीपी दर्ज करें",
-   "OTPmustbeexactly6digits": "ओटीपी को ठीक 6 अंकों का होना चाहिए",
-   "EnterOTP": "ओटीपी दर्ज करें",
+    "otpSentSuccess": "ओटीपी सफलतापूर्वक भेजा गया!",
+    "FailedtosendOTP": "ओटीपी भेजने में विफल",
+    "Passwordupdatedsuccessfully!": "पासवर्ड सफलतापूर्वक अपडेट किया गया!",
+    "Failedtoresetpassword": "पासवर्ड रीसेट करने में विफल",
+    "ForgotPassword": "पासवर्ड भूल गए",
+    "MobileNumber": "मोबाइल नंबर",
+    "Pleaseenteryourmobilenumber": "कृपया अपना मोबाइल नंबर दर्ज करें",
+    "Pleaseenteravalid10-digitmobilenumber": "कृपया एक मान्य 10-अंक का मोबाइल नंबर दर्ज करें",
+    "Entermobilenumber": "कृपया मोबाइल नंबर दर्ज करें",
+    "OTP": "ओटीपी",
+    "PleaseentertheOTP": "कृपया ओटीपी दर्ज करें",
+    "OTPmustbeexactly6digits": "ओटीपी को ठीक 6 अंकों का होना चाहिए",
+    "EnterOTP": "ओटीपी दर्ज करें",
     "NewPassword": "नया पासवर्ड",
     "Pleaseenternewpassword": "कृपया नया पासवर्ड दर्ज करें",
     "passwordmustbe": "पासवर्ड 5-20 अक्षरों का होना चाहिए जिसमें एक अपरकेस, एक लोअरकेस और एक विशेष वर्ण हो",

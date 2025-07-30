@@ -1,6 +1,6 @@
 {
   "login": {
-    "UserPhoneNo": "મોબાઈલ નંબર",
+    "UserPhoneNo": "મોબાઇલ નંબર",
     "enterPhoneNo": "મોબાઈલ નંબર દાખલ કરો!",
     "PhoneNoPlaceholder": "મોબાઈલ નંબર દાખલ કરો",
     "password": "પાસવર્ડ",
@@ -17,8 +17,11 @@
   },
   "Regester": {
     "userName": "ખાતાનું નામ",
+    "least": " ઓછામાં ઓછા 12 અક્ષરો હોવા જોઈએ",
+    "most": " વધુમાં વધુ 60 અક્ષરો હોવા જોઈએ",
     "userNamePlaceholder": "ખાતાનું નામ દાખલ કરો",
-    "mobileNumber": "મોબાઈલ નં.(યુઝર નેમ તરીકે)",
+    "mobileNumber": "વોટ્સએપ મોબાઇલ નંબર",
+    "asUserName": "(યૂઝર નામ તરીકે)",
     "mobileNumberPlaceholder": "મોબાઈલ નંબર દાખલ કરો",
     "password": "પાસવર્ડ",
     "confirmPassword": "પાસવર્ડ પુષ્ટિ કરો",
@@ -38,7 +41,8 @@
     "unexpectedError": "અનપેક્ષિત ભૂલ થઈ",
     "otpSentSuccess": "ઓટીપી સફળતાપૂર્વક મોકલાયો!",
     "otpSendFail": "ઓટીપી મોકલવામાં નિષ્ફળ",
-    "enterMobileWarning": "મહેરબાની કરીને પહેલા માન્ય મોબાઈલ નંબર દાખલ કરો"
+    "enterMobileWarning": "મહેરબાની કરીને પહેલા માન્ય મોબાઈલ નંબર દાખલ કરો",
+    "bookPassWarning": "કૃપા કરીને પહેલે પાસવર્ડ દાખલ કરો"
   },
   "favorite": {
     "title": "પસંદીદા શાકભાજી",
@@ -83,12 +87,16 @@
     "orderUpdated": "ઓર્ડર સફળતાપૂર્વક અપડેટ થયો",
     "orderAddFailed": "ઓર્ડર ઉમેરવામાં નિષ્ફળ",
     "orderUpdateFailed": "ઓર્ડર અપડેટ કરવામાં નિષ્ફળ",
-    "addAtlestOne": "કૃપા કરીને એક જથ્થો દાખલ કરો જે શૂન્ય કરતાં વધુ હોય."
+    "addAtlestOne": "કૃપા કરીને એક જથ્થો દાખલ કરો જે શૂન્ય કરતાં વધુ હોય.",
+    "deliveryAddress1": "ડિલિવરી એડ્રેસ 1",
+    "deliveryAddress2": "ડિલિવરી એડ્રેસ 2",
+    "deliveryTime": "ડિલિવરી સમય"
   },
   "viewOrders": {
     "account_code": "ખાતાની કોડ",
     "account_name": "ખાતાનું નામ",
     "order_number": "ઓર્ડર નંબર",
+    "billType": "બિલ ટાઇપ",
     "order_date": "ઓર્ડર તારીખ",
     "action": "ક્રિયા",
     "invalidBillNo": "અમાન્ય બિલ નંબર",
@@ -124,7 +132,7 @@
     "approve": "મંજૂરી આપો",
     "statusSuccess": "સ્થિતિ સફળતાપૂર્વક અપડેટ થઈ",
     "statusError": "સ્થિતિ અપડેટ કરતી વખતે ભૂલ",
-    "ApprovedList": "મંજૂર કરેલ યાદી",
+    "ApprovedList": "મંજૂરી માટે રાહ જોતી સૂચિ",
     "UserList": "વપરાશકર્તા યાદી",
     "SearchbyMobileNoorUsername": "મોબાઇલ નંબર અથવા ખાતાના નામ દ્વારા શોધો",
     "Pleasefilltheapprovalcode": "મહેરબાની કરીને મંજૂરી કોડ ભરો"
@@ -141,7 +149,7 @@
     "installApp": "એપ્લિકેશન ઇન્સ્ટોલ કરો"
   },
   "footer": {
-    "copyright": "ધ કોડ સોફ્ટ.",
+    "copyright": "ધ કોડ સોફ્ટ. સંપર્ક નં. 9265722877",
     "right": "બધા હકો રાખવામાં આવેલ છે."
   },
   "languageChange": {

@@ -3,7 +3,6 @@ import { API_END_POINT } from "../utils/constant";
 import { getAuthHeaders } from "../utils/getAuthHeaders";
 
 export const GetLrNo = async (Bill_Date: string, Id: string) => {
-    // ({mobileNo, Ac_Name}: {mobileNo: string, Ac_Name: string})
     try {
         const res = await axios.post(`${API_END_POINT}/getLrNo`, { Bill_Date: Bill_Date, Ac_Id: Id }, {
             headers: getAuthHeaders(),

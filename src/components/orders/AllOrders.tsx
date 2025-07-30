@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Input, Space, DatePicker, Form, Button, message, Spin, theme, Select } from "antd";
+import { Table, Input, Space, DatePicker, Form, Button, message, Spin, theme, Select, TimePicker } from "antd";
 import { fetchAllVegetables, fetchFavoriteVegetables } from "../../redux/actions/vegesAction";
 import { AppDispatch, RootState } from "../../redux/store";
 import dayjs, { Dayjs } from "dayjs";
@@ -23,7 +23,7 @@ type Unit = {
 
 const AllOrders = () => {
 
-  const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean, Id: string, Our_Shop_Ac: boolean, Ac_Code: string } | null };
+  const { user } = useSelector((state: RootState) => state.auth) as { user: { Ac_Name?: string, isAdmin: boolean, Id: string, Our_Shop_Ac: boolean, Ac_Code: string, Mobile_No?: string } | null };
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const { favorites, loading, all } = useSelector((state: RootState) => state.vegetables);
@@ -45,14 +45,16 @@ const AllOrders = () => {
   const [freezeTime, setFreezeTime] = useState(""); // State to track loading status
   const [units, setUnits] = useState<Unit[]>([]);
   const [unitSelections, setUnitSelections] = useState<{ [itemId: string]: number }>({});
+  const [addedNonFavItemsOrder, setAddedNonFavItemsOrder] = useState<number[]>([]);
+  const [address1, setAddress1] = useState<string>("");
+  const [address2, setAddress2] = useState<string>("");
+  const [deliveryTime, setDeliveryTime] = useState<Dayjs | null>(null);
 
   const fetchUnits = async () => {
     const res = await GetUnits();
-    console.log("res", res);
     setUnits(res.data);
   }
-
-
+console.log("orderData",orderData)
   const fetchFreezeTime = async () => {
     try {
       const response = await GetFreezeTime();
@@ -118,6 +120,7 @@ const AllOrders = () => {
     setFilteredData(favorites);
   }, [favorites, all]);
 
+  // original
   useEffect(() => {
 
     const lowerSearch = searchText?.trim().toLowerCase() || "";
@@ -125,54 +128,83 @@ const AllOrders = () => {
     if (isOrderMode) {
       const lowerSearch = searchText?.trim().toLowerCase() || "";
 
-      // Maintain original order
-      const orderItems = originalOrderItemIds
-        .map(id => mergedData.find(item => item.Itm_Id === id))
-        .filter((item): item is Vegetable => item !== undefined);
-      // filter out undefined, if any
+      // Get orderItems once, in fixed order
+      const orderItemsMap = new Map<number, Vegetable>();
+      originalOrderItemIds.forEach(id => {
+        const found = mergedData.find(item => item.Itm_Id === id);
+        if (found) orderItemsMap.set(id, found);
+      });
+
+      const orderItems = Array.from(orderItemsMap.values());
+
+      // Get quantity items (added after initial order), fixed once
+      const quantityItemsMap = new Map<number, Vegetable>();
+      addedNonFavItemsOrder.forEach(id => {
+        if (!originalOrderItemIds.includes(id)) {
+          const found = mergedData.find(item => item.Itm_Id === id);
+          if (found) quantityItemsMap.set(id, found);
+        }
+      });
+
+      const quantityItems = Array.from(quantityItemsMap.values());
+
+      let merged: Vegetable[] = [];
 
       if (lowerSearch) {
-        const extraMatches = mergedData.filter(item =>
-          item?.Itm_Name?.toLowerCase().includes(lowerSearch) &&
-          !originalOrderItemIds.includes(item.Itm_Id ?? -1)
+        // Always do full search on mergedData
+        const searchMatched = mergedData.filter(item =>
+          item.Itm_Name?.toLowerCase().includes(lowerSearch)
         );
 
-        const merged = [...orderItems, ...extraMatches];
-        setFilteredData(merged);
-      } else {
-        const quantityItems = mergedData.filter(item => {
-          const quantity = item.Itm_Id !== undefined ? parseFloat(quantities[item.Itm_Id] || "0") : 0;
-          return !originalOrderItemIds.includes(item.Itm_Id ?? -1) && quantity > 0;
-        });
+        // Make a Set of IDs already included (to avoid duplication)
+        const existingIds = new Set<number>([
+          ...orderItems.map(i => i.Itm_Id).filter((id): id is number => id !== undefined),
+          ...quantityItems.map(i => i.Itm_Id).filter((id): id is number => id !== undefined),
+        ]);
 
-        const merged = [...orderItems, ...quantityItems];
-        setFilteredData(merged);
+        // Get only those search results that are not already shown
+        const extraMatches = searchMatched.filter(item => item.Itm_Id !== undefined && !existingIds.has(item.Itm_Id));
+
+        // Merge all in consistent order
+        merged = [...orderItems, ...quantityItems, ...extraMatches];
+      } else {
+        merged = [...orderItems, ...quantityItems];
       }
 
+      setFilteredData(merged);
       return;
     }
+
 
     // normal search-based logic
     const searchMatched = mergedData.filter(item =>
       item?.Itm_Name?.toLowerCase().includes(lowerSearch)
     );
 
-    const quantityItems = mergedData.filter(item => {
-      const quantity = item.Itm_Id !== undefined ? parseFloat(quantities[item.Itm_Id] || "0") : 0;
-      return quantity > 0;
-    });
+    const quantityItems: Vegetable[] = addedNonFavItemsOrder
+      .map(id => mergedData.find(item => item.Itm_Id === id))
+      .filter((item): item is Vegetable => item !== undefined);
 
     const favoriteWithQuantity = favorites.filter(item => {
       const quantity = item.Itm_Id !== undefined ? parseFloat(quantities[item.Itm_Id] || "0") : 0;
       return quantity > 0 || item.Itm_Id === item.Itm_Id;
     });
 
+    const nonFavoriteSearchMatched = searchMatched.filter(
+      item => !favoriteWithQuantity.some(fav => fav.Itm_Id === item.Itm_Id)
+    );
+
     let merged = [];
 
     if (lowerSearch) {
       merged = [
-        ...searchMatched,
-        ...quantityItems.filter(item => !searchMatched.some(i => i.Itm_Id === item.Itm_Id)),
+        ...favoriteWithQuantity,
+        ...quantityItems.filter(
+          item =>
+            !favoriteWithQuantity.some(fav => fav.Itm_Id === item.Itm_Id) &&
+            !nonFavoriteSearchMatched.some(match => match.Itm_Id === item.Itm_Id)
+        ),
+        ...nonFavoriteSearchMatched,
       ];
       setIsOrderMode(false);
     } else {
@@ -183,8 +215,8 @@ const AllOrders = () => {
     }
 
     setFilteredData(merged);
-  }, [searchText, mergedData, favorites, quantities, isOrderMode, originalOrderItemIds]);
 
+  }, [searchText, mergedData, favorites, quantities, isOrderMode, originalOrderItemIds, addedNonFavItemsOrder]);
 
   useEffect(() => {
     if (orderData && Array.isArray(orderData.Details)) {
@@ -223,6 +255,9 @@ const AllOrders = () => {
 
       SetBillNo(orderData.Bill_No || null);
       setLrNo(orderData.Order_Count || null);
+      setAddress1(orderData.Address1 || "");
+      setAddress2(orderData.Address2 || "");
+      setDeliveryTime(orderData.DeliveryTime ? dayjs(orderData.DeliveryTime, "hh:mm A") : null);
     }
   }, [orderData]);
 
@@ -231,10 +266,25 @@ const AllOrders = () => {
     dispatch(fetchAllVegetables());
   }, [dispatch, userDetails, user]);
 
+  useEffect(() => {
+    if (isOrderMode) {
+      dispatch(fetchFavoriteVegetables(userDetails ? userDetails?.orderData?.Ac_Id : user?.Id));
+      dispatch(fetchAllVegetables());
+    }
+  }, [dispatch, userDetails, user, isOrderMode, orderData]);
 
   const handleManualInput = (itemId: number, value: string) => {
     if (value === "" || /^\d*\.?\d{0,3}$/.test(value)) {
       setQuantities((prev) => ({ ...prev, [itemId]: value }));
+
+      // Track the order of non-favorite items when quantity is added
+      if (
+        parseFloat(value) > 0 &&
+        !addedNonFavItemsOrder.includes(itemId) &&
+        !favorites.some(fav => fav.Itm_Id === itemId)
+      ) {
+        setAddedNonFavItemsOrder((prev) => [...prev, itemId]);
+      }
     }
   };
 
@@ -263,43 +313,33 @@ const AllOrders = () => {
       handleDateChange(billDate);
     }
   }, [orderData]);
-
   const handleAddOrder = async () => {
 
-    const details = [
-      // 1. All favorites (quantity 0 or more)
-      ...favorites
-        .filter(item => item.Itm_Id !== undefined)
-        .map(item => {
-          const quantity = parseFloat(quantities[item.Itm_Id!] || "0");
-          const selectedUnitId = unitSelections[item.Itm_Id!] ?? item.Uni_ID;
+    const favoriteOrdered = favorites
+      .map(fav => mergedData.find(item => item.Itm_Id === fav.Itm_Id))
+      .filter((item): item is Vegetable => item !== undefined);
+
+    const nonFavOrdered = addedNonFavItemsOrder
+      .map(id => mergedData.find(item => item.Itm_Id === id))
+      .filter((item): item is Vegetable => item !== undefined);
+
+    const orderedItems = [...favoriteOrdered, ...nonFavOrdered];
+
+    const details = orderedItems
+      .map(item => {
+        const qty = parseFloat(quantities[item.Itm_Id!] || "0");
+        const isFavorite = favorites.some(fav => fav.Itm_Id === item.Itm_Id);
+        if (qty > 0 || isFavorite) {
           return {
-            Itm_Id: item.Itm_Id!,
-            Inward: quantity,
-            Uni_ID: selectedUnitId,
+            Itm_Id: item.Itm_Id,
+            Inward: qty,
+            Uni_ID: unitSelections[item.Itm_Id!] ?? item.Uni_ID,
             Itm_Name: item.Itm_Name,
           };
-        }),
-
-      // 2. Any searched/merged item with quantity > 0 that is NOT already in favorites
-      ...mergedData
-        .filter(item =>
-          item.Itm_Id !== undefined &&
-          !favorites.some(fav => fav.Itm_Id === item.Itm_Id) &&
-          parseFloat(quantities[item.Itm_Id!] || "0") > 0
-        )
-        .map(item => {
-          const selectedUnitId = unitSelections[item.Itm_Id!] ?? item.Uni_ID
-          return {
-            Itm_Id: item.Itm_Id!,
-            Inward: parseFloat(quantities[item.Itm_Id!] || "0"),
-            Uni_ID: selectedUnitId,
-            Itm_Name: item.Itm_Name,
-          }
-        }),
-    ];
-
-    console.log("details: ", details)
+        }
+        return null;
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null);
 
     const allQuantitiesZero = details.every(item => item.Inward === 0);
 
@@ -307,16 +347,18 @@ const AllOrders = () => {
       message.warning(t('allOrders.addAtlestOne'));
       return;
     }
-
     const payload = {
       mode: "add",
       Ac_Id: userDetails ? userDetails?.Id : user?.Id,
       details,
-      Ac_Code: user?.Ac_Code,
-      Our_Shop_Ac: user?.Our_Shop_Ac,
-      // Bill_No: billNo,
+      Ac_Code: userDetails ? userDetails?.Ac_Code : user?.Ac_Code,
+      Our_Shop_Ac: userDetails ? userDetails?.Our_Shop_Ac : user?.Our_Shop_Ac,
+      Mobile_No: userDetails?.Mobile_No || user?.Mobile_No || "",
       Order_Count: lrNo,
       Bill_Date: billDate.format("YYYY-MM-DD"),
+      Address1: address1,
+      Address2: address2,
+      DeliveryTime: deliveryTime?.format("HH:mm A") || "",
     };
 
     try {
@@ -365,11 +407,6 @@ const AllOrders = () => {
         />
       ),
     },
-    // {
-    //   title: t('allOrders.unit'),
-    //   dataIndex: "Uni_Name",
-    //   key: "Uni_Name",
-    // },
     {
       title: t('allOrders.unit'),
       key: "unit",
@@ -395,49 +432,65 @@ const AllOrders = () => {
 
 
   ];
-
   const handleUnitChange = (itemId: string, unitId: number) => {
     setUnitSelections((prev) => ({ ...prev, [itemId]: unitId }));
   };
 
-
   const handleUpdateOrder = async (Id: string) => {
+    setSearchText("");
+
     if (!billNo || !lrNo) {
       message.error(t('allOrders.orderUpdateFailed'));
       return;
     }
-    const details = filteredData
-      .filter(item => item.Itm_Id !== undefined)
-      .map(item => {
-        const selectedUnitId = unitSelections[item.Itm_Id!] ?? item.Uni_ID;
-        return {
-          Itm_Id: item.Itm_Id!,
-          Inward: parseFloat(quantities[item.Itm_Id!] || "0"),
-          Uni_ID: selectedUnitId,
-          Itm_Name: item.Itm_Name,
-        }
-      });
+    setTimeout(async () => {
+      const orderedItems = [...filteredData];
 
-    const payload = {
-      mode: "edit",
-      Ac_Id: orderData ? orderData?.Ac_Id : user?.Id,
-      Ac_Code: orderData ? orderData?.Ac_Code : user?.Ac_Code,
-      Our_Shop_Ac: orderData ? orderData?.Our_Shop_Ac : user?.Our_Shop_Ac,
-      details,
-      Id: Id,
-      Order_Count: lrNo,
-      Bill_Date: billDate.format("YYYY-MM-DD"),
-    };
-    try {
-      setAddLoding(true);
-      await UpdateOrder(payload);
-      message.success(t('allOrders.orderUpdated'));
-      navigate("/");
-    } catch {
-      message.error(t('allOrders.orderUpdateFailed'));
-    } finally {
-      setAddLoding(false);
-    }
+      const details = orderedItems
+        .filter(item => {
+          const qty = item.Itm_Id !== undefined ? parseFloat(quantities[item.Itm_Id] || "0") : 0;
+          const isFavorite = favorites.some(fav => {
+            return Number(fav.Itm_Id) === Number(item.Itm_Id);
+          });
+          return qty > 0 || isFavorite;
+        })
+        .map(item => {
+          // const selectedUnitId = unitSelections[item.Itm_Id] ?? item.Uni_ID;
+          const selectedUnitId = item.Itm_Id !== undefined ? (unitSelections[item.Itm_Id] ?? item.Uni_ID) : item.Uni_ID;
+          return {
+            Itm_Id: item.Itm_Id,
+            Inward: parseFloat(quantities[item.Itm_Id!] || "0"),
+            Uni_ID: selectedUnitId,
+            Itm_Name: item.Itm_Name,
+          };
+        });
+
+      const payload = {
+        mode: "edit",
+        Ac_Id: orderData ? orderData?.Ac_Id : user?.Id,
+        Ac_Code: orderData ? orderData?.Ac_Code : user?.Ac_Code,
+        Our_Shop_Ac: orderData ? orderData?.Our_Shop_Ac : user?.Our_Shop_Ac,
+        Mobile_No: orderData?.Mobile_No || user?.Mobile_No || "",
+        details,
+        Id: Id,
+        Order_Count: lrNo,
+        Bill_Date: billDate.format("YYYY-MM-DD"),
+        Address1: address1,
+        Address2: address2,
+        DeliveryTime: deliveryTime?.format("HH:mm A") || "",
+      };
+
+      try {
+        setAddLoding(true);
+        await UpdateOrder(payload);
+        message.success(t('allOrders.orderUpdated'));
+        navigate("/");
+      } catch {
+        message.error(t('allOrders.orderUpdateFailed'));
+      } finally {
+        setAddLoding(false);
+      }
+    }, 100);
   };
 
   const disablePastDates = (current: Dayjs) => {
@@ -490,6 +543,35 @@ const AllOrders = () => {
                 style={{ fontWeight: "bold", color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}
               />
             </Form.Item>
+
+            <Form.Item label={t('allOrders.deliveryAddress1')} colon={false} style={{ marginBottom: 0 }}>
+              <Input
+                placeholder={t('allOrders.deliveryAddress1')}
+                value={address1}
+                onChange={(e) => setAddress1(e.target.value)}
+                size="small"
+                style={{ color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}
+              />
+            </Form.Item>
+            <Form.Item label={t('allOrders.deliveryAddress2')} colon={false} style={{ marginBottom: 0 }}>
+              <Input
+                placeholder={t('allOrders.deliveryAddress2')}
+                value={address2}
+                onChange={(e) => setAddress2(e.target.value)}
+                size="small"
+                style={{ color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}
+              />
+            </Form.Item>
+            <Form.Item label={t('allOrders.deliveryTime')} colon={false} style={{ marginBottom: 0 }}>
+              <TimePicker
+                value={deliveryTime}
+                onChange={(time) => setDeliveryTime(time)}
+                format="hh:mm A"
+                use12Hours
+                size="small"
+                style={{ color: token.colorBgLayout === "White" ? "rgba(0, 0, 0, 0.85)" : "white" }}
+              />
+            </Form.Item>
             {
               user && user.isAdmin &&
               <Form.Item label={"Account Name"} colon={false} style={{ marginBottom: 0 }}>
@@ -526,6 +608,7 @@ const AllOrders = () => {
             <Table
               columns={columns}
               dataSource={filteredData}
+              rowKey={(record) => record.Itm_Id?.toString() || ""}
               loading={loading}
               pagination={{ pageSize: 20, showSizeChanger: false }}
               scroll={{ x: true }}

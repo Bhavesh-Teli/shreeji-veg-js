@@ -22,7 +22,7 @@ export const RequestOTP = async ({mobileNo, Ac_Name}: {mobileNo: string, Ac_Name
         })
         return res.data
     } catch (error) {
-        console.error('Error While Login:', error)
+        console.error('Error While Requesting the OTP:', error)
         throw error;
     }
 }

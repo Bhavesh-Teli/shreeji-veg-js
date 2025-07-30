@@ -99,6 +99,7 @@ const ForgotPassword = () => {
                                         message: t('forgotPassword.passwordmustbe'),
                                     }
                                 ]}
+                                hasFeedback
                             >
                                 <Input.Password prefix={<LockOutlined />} placeholder={t('forgotPassword.Newpassword')} />
                             </Form.Item>
@@ -118,6 +119,7 @@ const ForgotPassword = () => {
                                         },
                                     }),
                                 ]}
+                                hasFeedback
                             >
                                 <Input.Password prefix={<LockOutlined />} placeholder={t('forgotPassword.ConfirmPassword')} />
                             </Form.Item>

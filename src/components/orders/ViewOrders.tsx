@@ -77,9 +77,15 @@ const ViewOrders = () => {
     }
     const [userSearchResults, setUserSearchResults] = useState<UserSearchResult[]>([]);
     const [filteredOrders, setFilteredOrders] = useState<any[]>([]);
-    // const [allUsers, setAllUser] = useState([]);
     const [showUserTable, setShowUserTable] = useState(false);
     const [showOrderTable, setShowOrderTable] = useState(false);
+
+    useEffect(() => {
+        if (orders?.length === 0) {
+            setFilteredOrders([]);
+            setSelectedOrderItems([]);
+        }
+    }, [orders])
 
 
     const fetchUsers = async () => {
@@ -113,7 +119,6 @@ const ViewOrders = () => {
     useEffect(() => {
         if (!orders || orders.length === 0) {
             setShowOrderTable(true);
-            console.log("Waiting for orders to load...");
             return;
         }
 
@@ -122,8 +127,6 @@ const ViewOrders = () => {
         const matchedOrder = orders.find(order =>
             Number(order.Bill_No) === Number(orderId)
         );
-
-        console.log("matchedOrder:", matchedOrder);
 
         if (matchedOrder) {
             setSearchTerm(orderId.toString());
@@ -155,7 +158,6 @@ const ViewOrders = () => {
                 if (currentYear) {
                     setSelectedYear(currentYear.db_name);
                     if (currentYear.year_type === "C") {
-                        // const today = dayjs().startOf('day');
                         setSelectedDates([tomorrow, tomorrow]);
                     } else {
                         const startDate = dayjs(`${currentYear.year1}-04-01`).startOf("day");
@@ -172,7 +174,7 @@ const ViewOrders = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedDates  && user) {
+        if (selectedDates && user) {
             const payload = {
                 fromDate: selectedDates[0].format("YYYY-MM-DD"),
                 toDate: selectedDates[1].format("YYYY-MM-DD"),
@@ -205,6 +207,11 @@ const ViewOrders = () => {
             title: t('viewOrders.order_number'),
             dataIndex: "Bill_No",
             key: "Bill_No",
+        },
+        {
+            title: t('viewOrders.billType'),
+            dataIndex: "Bill_Type",
+            key: "Bill_Type",
         },
         {
             title: t('viewOrders.order_date'),
@@ -390,7 +397,6 @@ const ViewOrders = () => {
             if (selected) {
                 setSelectedYear(selected.db_name);
                 if (selected.year_type === "C") {
-                    // const today = dayjs().startOf('day');
                     setSelectedDates([tomorrow, tomorrow]);
                 } else {
                     const startDate = dayjs(`${selected.year1}-04-01`).startOf("day");
@@ -423,7 +429,7 @@ const ViewOrders = () => {
         // Filter existing order data using Ac_Code
         const userOrders = orders?.filter(order => order.Ac_Code === acCode);
 
-        setFilteredOrders(userOrders ?? []); // Show only selected user's orders
+        setFilteredOrders((userOrders ?? []).slice().sort((a, b) => b.Bill_No - a.Bill_No));
         setShowUserTable(false); // Hide the user table
         setShowOrderTable(true); // Show the orders now
     };
@@ -436,7 +442,6 @@ const ViewOrders = () => {
 
         // Only apply this when there’s no orderId
         if (!orderId) {
-            // setFilteredOrders(orders);
             setFilteredOrders((orders ?? []).slice().sort((a, b) => b.Bill_No - a.Bill_No));
             setShowUserTable(false);
             setShowOrderTable(true);
@@ -448,7 +453,6 @@ const ViewOrders = () => {
         setSearchTerm(value);
 
         if (!value.trim()) {
-            // setFilteredOrders(orders ?? []);
             setFilteredOrders((orders ?? []).slice().sort((a, b) => b.Bill_No - a.Bill_No));
             setUserSearchResults([]);
             setSelectedOrderItems([]);
@@ -493,7 +497,7 @@ const ViewOrders = () => {
     const debouncedSearchHandler = useMemo(() => {
         return debounce((value: string) => {
             handleSearchInputChange(value);
-        }, 500); // 500ms debounce
+        }, 500);
     }, [handleSearchInputChange]);
 
     return (
@@ -612,7 +616,6 @@ const ViewOrders = () => {
                         <Input.Search
                             placeholder={t('viewOrders.SearchWithordernumberoraccountname')}
                             value={searchTerm}
-                            // onChange={(e) => setSearchTerm(e.target.value)}
                             onChange={(e) => {
                                 const value = e.target.value;
                                 setSearchTerm(value);
@@ -657,20 +660,6 @@ const ViewOrders = () => {
                         <Table
                             columns={columns}
                             rowKey={(record) => record.Bill_No}
-                            // dataSource={
-                            //     [...(orders || [])]
-                            //         .sort((a, b) => {
-                            //             const billNoDiff = b.Bill_No - a.Bill_No; // Assuming Bill_No is numeric
-                            //             if (billNoDiff !== 0) return billNoDiff;
-                            //             return dayjs(b.Bill_Date).valueOf() - dayjs(a.Bill_Date).valueOf();
-                            //         })
-                            //         .filter((order) => {
-                            //             const searchLower = searchTerm.toLowerCase();
-                            //             const accountMatch = order.Ac_Name?.toLowerCase().includes(searchLower);
-                            //             const orderMatch = order.Bill_No?.toString().includes(searchTerm);
-                            //             return accountMatch || orderMatch;
-                            //         })
-                            // }
                             dataSource={filteredOrders}
                             onRow={(record) => ({
                                 onClick: () => setSelectedOrderItems((record as any).Details || []),

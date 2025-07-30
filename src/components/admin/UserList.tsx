@@ -47,7 +47,6 @@ const UserList = () => {
             title: t('AproveUser.action'),
             key: 'action',
             render: (_, record) => {
-                console.log("rectors: ", record)
                 if (activeTab === 'toApprove') {
                     return <Button
                         size='small'

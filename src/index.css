@@ -57,14 +57,9 @@
 }
 
 .custom-input {
-    /* w-14 text-center */
     width: 70px !important;
     text-align: center !important;
 }
-
-/* .ant-menu-overflow-item-rest {
-    display: none !important;
-  } */
 
 .time-freeze{
   margin-left: 10px;

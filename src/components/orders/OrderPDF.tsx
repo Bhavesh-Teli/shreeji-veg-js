@@ -7,6 +7,7 @@ interface OrderPDFProps {
 
 const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
     const validItems = orderData?.Details.filter((item: any) => item.Qty > 0) || [];
+    // const validItems = "h"
 
     return (
         <div
@@ -51,8 +52,8 @@ const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
                                 <p style={{ fontSize: '18px', margin: 0 }}>
                                     <strong>{orderData.Ac_Name}</strong>
                                 </p>
-                                <p style={{ margin: 0 }}>Mob. No: 9825430600</p>
-                                <p style={{ margin: 0 }}>Ph. No: 0261 2894442</p>
+                                <p style={{ margin: 0 }}>Mob. No: {orderData.Mobile_No}</p>
+                                {/* <p style={{ margin: 0 }}>Ph. No: 0261 2894442</p> */}
                             </div>
                             <div>
                             </div>
@@ -64,10 +65,15 @@ const OrderPDF: React.FC<OrderPDFProps> = ({ orderData }) => {
                     <div style={{ border: "1px solid black", padding: "10px", width: "40%" }}>
                         <div style={{ display: "flex", gap: '40px', marginBottom: "10px", textAlign: "left" }}>
                             <p><strong>Order No:</strong> {orderData && orderData?.Bill_No}</p>
-                            <p><strong>Date:</strong> {orderData && dayjs(orderData?.Bill_Date).format('DD-MM-YYYY')}</p>
+                            <p><strong>Date:</strong> {orderData && dayjs(orderData?.Bill_Date).format('DD-MM-YYYY')} {" "} {orderData.DeliveryTime}</p>
                         </div>
                         <div style={{ textAlign: "left" }}>
-                            <p><strong>Delivery Address:</strong></p>
+                            <p><strong>Delivery Address:</strong>{" "}
+                                {orderData.Address1
+                                    ? orderData.Address1
+                                    : orderData.Address2
+                                        ? orderData.Address2
+                                        : "N/A"}</p>
                         </div>
                     </div>
                 </div>

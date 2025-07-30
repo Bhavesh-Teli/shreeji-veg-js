@@ -54,7 +54,6 @@ const AllOrders = () => {
     const res = await GetUnits();
     setUnits(res.data);
   }
-console.log("orderData",orderData)
   const fetchFreezeTime = async () => {
     try {
       const response = await GetFreezeTime();
@@ -360,7 +359,6 @@ console.log("orderData",orderData)
       Address2: address2,
       DeliveryTime: deliveryTime?.format("HH:mm A") || "",
     };
-
     try {
       setAddLoding(true);
       await AddOrder(payload);
@@ -547,6 +545,7 @@ console.log("orderData",orderData)
             <Form.Item label={t('allOrders.deliveryAddress1')} colon={false} style={{ marginBottom: 0 }}>
               <Input
                 placeholder={t('allOrders.deliveryAddress1')}
+                maxLength={50}
                 value={address1}
                 onChange={(e) => setAddress1(e.target.value)}
                 size="small"
@@ -556,6 +555,7 @@ console.log("orderData",orderData)
             <Form.Item label={t('allOrders.deliveryAddress2')} colon={false} style={{ marginBottom: 0 }}>
               <Input
                 placeholder={t('allOrders.deliveryAddress2')}
+                maxLength={50}
                 value={address2}
                 onChange={(e) => setAddress2(e.target.value)}
                 size="small"
